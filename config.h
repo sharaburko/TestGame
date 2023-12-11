@@ -27,17 +27,16 @@ class Config {
 
     vector <ConnectionsBetweenPoints> connection;
 public:
-    void readConfig(string const &configFilePath);
+    inline void readConfig(string const &configFilePath);
 };
  
     //СЧИТЫВАНИЕ ВХОДНЫХ ДАННЫХ
 void Config::readConfig(string  const &configFilePath) {
-    string str;
     ifstream cfg;
-    cfg.open("config.txt");
+    cfg.open(configFilePath);
 
     if (!cfg.is_open()) {
-        cout << "Файл конфигурации не найден!\n";
+        cout << "Configuration file not found!\n";
         return;
     }
 
@@ -111,6 +110,7 @@ void Config::readConfig(string  const &configFilePath) {
         }
 
     }
+    cfg.close();
 }
 	
 
