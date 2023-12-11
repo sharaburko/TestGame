@@ -27,11 +27,11 @@ class Config {
 
     vector <ConnectionsBetweenPoints> connection;
 public:
-    void readConfig(string configFilePath);
+    void readConfig(string const &configFilePath);
 };
  
     //явхршбюмхе бундмшу дюммшу
-void Config::readConfig(string  configFilePath) {
+void Config::readConfig(string  const &configFilePath) {
     string str;
     ifstream cfg;
     cfg.open("config.txt");
