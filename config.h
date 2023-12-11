@@ -1,0 +1,118 @@
+#pragma once
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Config {
+    struct Coordinate { //структура для хранения координат точек
+        int x, y;
+        Coordinate() { x = y = 0; }
+        Coordinate(const int x, const int y) : x(x), y(y) {}
+    };
+
+    int chipCount = 0;                 //количество фишек
+    int pointsCount = 0;               //количество точек
+    vector <Coordinate> points;        //вектор с координатами точек
+    vector <int> arrStartPoints;       //стартовые позиции фишек
+    vector <int> arrWinnerPoints;      //победные позиции фишек
+    int connectCount = 0;              //количество соединений
+
+    struct ConnectionsBetweenPoints { //структура для хранения соединенных точек
+        int p1, p2; // параметры сединеных точек
+        ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}
+    };
+
+    vector <ConnectionsBetweenPoints> connection;
+public:
+    void readConfig(string configFilePath);
+};
+ 
+    //СЧИТЫВАНИЕ ВХОДНЫХ ДАННЫХ
+void Config::readConfig(string  configFilePath) {
+    string str;
+    ifstream cfg;
+    cfg.open("config.txt");
+
+    if (!cfg.is_open()) {
+        cout << "Файл конфигурации не найден!\n";
+        return;
+    }
+
+    cfg >> сhipСount;
+    cfg >> pointsCount;
+    points.reserve(pointsCount);
+    arrStartPoints.reserve(сhipСount);
+    arrWinnerPoints.reserve(сhipСount);
+
+    for (int i = 0; i < pointsCount; i++) {
+        int x, y;
+        string str;
+        cfg >> str;
+
+        if (!str.empty()) {
+            int positionComma = str.find(',');
+            x = atoi(str.c_str());
+            str.erase(0, positionComma + 1);
+            y = atoi(str.c_str());
+            Coordinate coordTemp(x, y);
+            points.push_back(coordTemp);
+        }
+
+    }
+
+    for (int i = 0; i < сhipСount; i++) {
+	    string str;
+        int temp;
+
+        if (i < сhipСount - 1) {
+            getline(cfg, str, ',');
+        }
+        else
+        {
+            cfg >> str;
+        }
+
+        temp = atoi(str.c_str());
+        arrStartPoints.push_back(temp);
+    }
+
+    for (int i = 0; i < сhipСount; i++) {
+        string str;
+        int temp;
+        if (i < сhipСount - 1) {
+            getline(cfg, str, ',');
+        }
+        else
+        {
+            cfg >> str;
+        }
+        temp = atoi(str.c_str());
+        arrWinnerPoints.push_back(temp);
+    }
+
+    cfg >> connectCount;
+    connection.reserve(connectCount);
+
+    for (int i = 0; i < connectCount; i++) {
+        int p1, p2;
+        string str;
+        cfg >> str;
+
+        if (!str.empty()) {
+            int positionComma = str.find(',');
+            p1 = atoi(str.c_str());
+            str.erase(0, positionComma + 1);
+            p2 = atoi(str.c_str());
+            ConnectionsBetweenPoints connPoint(p1, p2);
+            connection.push_back(connPoint);
+        }
+
+    }
+}
+	
+
+
+
