@@ -41,11 +41,11 @@ void Config::readConfig(string  configFilePath) {
         return;
     }
 
-    cfg >> Òhip—ount;
+    cfg >> chipCount;
     cfg >> pointsCount;
     points.reserve(pointsCount);
-    arrStartPoints.reserve(Òhip—ount);
-    arrWinnerPoints.reserve(Òhip—ount);
+    arrStartPoints.reserve(chipCount);
+    arrWinnerPoints.reserve(chipCount);
 
     for (int i = 0; i < pointsCount; i++) {
         int x, y;
@@ -63,11 +63,11 @@ void Config::readConfig(string  configFilePath) {
 
     }
 
-    for (int i = 0; i < Òhip—ount; i++) {
+    for (int i = 0; i < chipCount; i++) {
 	    string str;
         int temp;
 
-        if (i < Òhip—ount - 1) {
+        if (i < chipCount - 1) {
             getline(cfg, str, ',');
         }
         else
@@ -79,10 +79,10 @@ void Config::readConfig(string  configFilePath) {
         arrStartPoints.push_back(temp);
     }
 
-    for (int i = 0; i < Òhip—ount; i++) {
+    for (int i = 0; i < chipCount; i++) {
         string str;
         int temp;
-        if (i < Òhip—ount - 1) {
+        if (i < chipCount - 1) {
             getline(cfg, str, ',');
         }
         else
