@@ -8,9 +8,12 @@ using namespace std;
 
 class Config {
     struct Coordinate { //структура для хранения координат точек
-        int x, y;
+        float x, y;
         Coordinate() { x = y = 0; }
-        Coordinate(const int x, const int y) : x(x), y(y) {}
+        Coordinate(const float x, const float y) : x(x), y(y) {}
+        float getCoordinateX() const { return x; }
+        float getCoordinateY() const { return y; }
+
     };
 
     int chipCount = 0;                 //количество фишек
@@ -20,18 +23,24 @@ class Config {
     vector <int> arrWinnerPoints;      //победные позиции фишек
     int connectCount = 0;              //количество соединений
 
+
     struct ConnectionsBetweenPoints { //структура для хранения соединенных точек
         int p1, p2; // параметры сединеных точек
-        ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}
+        ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}        
     };
 
     vector <ConnectionsBetweenPoints> connection;
 public:
-    inline void readConfig(string const &configFilePath);
+    inline void readConfig(string const configFilePath);
+    Coordinate getCoordinatePoints(int pointNumber) { return points[pointNumber - 1]; }
+    int getPointsCount() const {return pointsCount;}
+    int getChipCount() const { return chipCount; }
+    int getArrStartPoints(int i) { return arrStartPoints[i]; }
+	
 };
  
     //СЧИТЫВАНИЕ ВХОДНЫХ ДАННЫХ
-void Config::readConfig(string  const &configFilePath) {
+void Config::readConfig(string  const configFilePath) {
     ifstream cfg;
     cfg.open(configFilePath);
 
@@ -40,7 +49,7 @@ void Config::readConfig(string  const &configFilePath) {
         return;
     }
 
-    cfg >> chipCount;
+    cfg >> chipCount;	
     cfg >> pointsCount;
     points.reserve(pointsCount);
     arrStartPoints.reserve(chipCount);
