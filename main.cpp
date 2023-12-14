@@ -16,7 +16,7 @@ int main()
 	
     //Clock clock;	
     sf::CircleShape chip(20,30);
-    sf::RectangleShape square(Vector2f(30, 30));
+    sf::RectangleShape square(Vector2f(40, 40));
 
 	
     while (window.isOpen())
@@ -34,21 +34,34 @@ int main()
         //time = time / 800;
     	
         window.clear();
-    	for(int i = 0; i < config.getChipCount(); i++)
-    	{
-            int j = config.getArrWinnerPoints(i);
-            chip.setPosition(config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
-            chip.setFillColor(arrColor[i]);
-            window.draw(chip);
-    	}
+
+        for (int i = 0; i < config.getConnectCount(); i++) {
+            int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
+            int p2 = config.getConnectionsBetweenPoints(i).getConnectionP1();
+            int p1X = config.getCoordinatePoints(p1).getCoordinateX();
+            int p1Y = config.getCoordinatePoints(p2).getCoordinateY();
+        
+        }
 
         for (int i = 0; i < config.getChipCount(); i++)
         {
             int j = config.getArrStartPoints(i);
             square.setPosition(config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
             square.setFillColor(arrColor[i]);
+            square.setOutlineColor(sf::Color::White);
             window.draw(square);
         }
+
+    	for(int i = 0; i < config.getChipCount(); i++)
+    	{
+            int j = config.getArrWinnerPoints(i);
+            chip.setPosition(config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
+            chip.setFillColor(arrColor[i]);
+            chip.setOutlineColor(sf::Color::White);
+            window.draw(chip);
+    	}
+
+
 
 
         window.display();

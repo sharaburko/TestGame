@@ -26,7 +26,9 @@ class Config {
 
     struct ConnectionsBetweenPoints { //структура для хранения соединенных точек
         int p1, p2; // параметры сединеных точек
-        ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}        
+        ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}
+        int getConnectionP1() { return p1; }
+        int getConnectionP2() { return p2; }
     };
 
     vector <ConnectionsBetweenPoints> connection;
@@ -36,7 +38,9 @@ public:
     int getPointsCount() const {return pointsCount;}
     int getChipCount() const { return chipCount; }
     int getArrStartPoints(int i) { return arrStartPoints[i]; }
-	
+    int getArrWinnerPoints(int i) { return arrWinnerPoints[i]; }
+    int getConnectCount() const { return connectCount; }
+    ConnectionsBetweenPoints getConnectionsBetweenPoints(int connectCount) { return connection[connectCount]; }
 };
  
     //СЧИТЫВАНИЕ ВХОДНЫХ ДАННЫХ
