@@ -27,8 +27,8 @@ class Config {
     struct ConnectionsBetweenPoints { //структура для хранения соединенных точек
         int p1, p2; // параметры сединеных точек
         ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}
-        int getConnectionP1() { return p1; }
-        int getConnectionP2() { return p2; }
+        int getConnectionP1() const { return p1; }
+        int getConnectionP2() const { return p2; }
     };
 
     vector <ConnectionsBetweenPoints> connection;

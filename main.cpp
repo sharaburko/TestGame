@@ -13,10 +13,12 @@ int main()
     RenderWindow window(VideoMode(640, 480), "Game");
     Config config;
     config.readConfig("config.txt");
+    float radiusChip = 15;
+    sf::Vector2f sizePoints(40, 40);
 	
     //Clock clock;	
-    sf::CircleShape chip(20,30);
-    sf::RectangleShape square(Vector2f(40, 40));
+    sf::CircleShape chip(radiusChip,30);
+    sf::RectangleShape square(sizePoints);
 
 	
     while (window.isOpen())
@@ -33,37 +35,58 @@ int main()
         //clock.restart();
         //time = time / 800;
     	
-        window.clear();
+        window.clear(sf::Color(214,203,174));
 
         for (int i = 0; i < config.getConnectCount(); i++) {
             int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
-            int p2 = config.getConnectionsBetweenPoints(i).getConnectionP1();
-            int p1X = config.getCoordinatePoints(p1).getCoordinateX();
-            int p1Y = config.getCoordinatePoints(p2).getCoordinateY();
-        
+            int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
+            float p1X = config.getCoordinatePoints(p1).getCoordinateX();
+            float p1Y = config.getCoordinatePoints(p1).getCoordinateY();
+            float p2X = config.getCoordinatePoints(p2).getCoordinateX();
+            float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
+            float widthConnection = 20;
+            sf::RectangleShape connectingPoints;
+
+        	
+            if (p1X == p2X)
+            {
+                sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
+                sf::Vector2f position(p1X + ((sizePoints.x - widthConnection)/2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                connectingPoints.setSize(size);
+                connectingPoints.setPosition(position);
+            }
+            else
+            {
+                sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
+                connectingPoints.setSize(size);
+                sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                connectingPoints.setPosition(position);
+            }        	
+      	
+            connectingPoints.setFillColor(sf::Color(216, 216, 216));
+            window.draw(connectingPoints);
         }
 
         for (int i = 0; i < config.getChipCount(); i++)
         {
-            int j = config.getArrStartPoints(i);
-            square.setPosition(config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
+            int j = config.getArrWinnerPoints(i);
+            float positionX = config.getCoordinatePoints(j).getCoordinateX();
+            float positionY = config.getCoordinatePoints(j).getCoordinateY();
+            square.setPosition(positionX, positionY);
             square.setFillColor(arrColor[i]);
-            square.setOutlineColor(sf::Color::White);
             window.draw(square);
         }
-
-    	for(int i = 0; i < config.getChipCount(); i++)
-    	{
-            int j = config.getArrWinnerPoints(i);
-            chip.setPosition(config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
+    	
+        for (int i = 0; i < config.getChipCount(); i++)
+        {
+            int j = config.getArrStartPoints(i);
+            float positionX = config.getCoordinatePoints(j).getCoordinateX();
+            float positionY = config.getCoordinatePoints(j).getCoordinateY();
+            chip.setPosition(positionX + (sizePoints.x - 2 * radiusChip)/2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
             chip.setFillColor(arrColor[i]);
-            chip.setOutlineColor(sf::Color::White);
             window.draw(chip);
-    	}
-
-
-
-
+        }
+        
         window.display();
     }
 
