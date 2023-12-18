@@ -15,6 +15,10 @@ int main()
     config.readConfig("config.txt");
     float radiusChip = 15;
     sf::Vector2f sizePoints(40, 40);
+    Mouse mouse;
+    Vector2i mousePosition (0, 0);
+	
+
 	
     //Clock clock;	
     sf::CircleShape chip(radiusChip,30);
@@ -34,8 +38,15 @@ int main()
         //float time = clock.getElapsedTime().asMicroseconds();
         //clock.restart();
         //time = time / 800;
-    	
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            mousePosition = mouse.getPosition(window);
+            std::cout << "mouse click: " << mousePosition.x << " " << mousePosition.y << "\n";
+        }
+
         window.clear(sf::Color(214,203,174));
+    	
 
         for (int i = 0; i < config.getConnectCount(); i++) {
             int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
@@ -82,9 +93,15 @@ int main()
             int j = config.getArrStartPoints(i);
             float positionX = config.getCoordinatePoints(j).getCoordinateX();
             float positionY = config.getCoordinatePoints(j).getCoordinateY();
-            chip.setPosition(positionX + (sizePoints.x - 2 * radiusChip)/2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
+            IntRect chipObject(positionX, positionY, radiusChip*2, radiusChip*2);
+      	    chip.setPosition(positionX + (sizePoints.x - 2 * radiusChip)/2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
             chip.setFillColor(arrColor[i]);
-            window.draw(chip);
+        	
+            if (chipObject.contains(positionX, positionY)) {
+                chip.scale(1.5, 1.5);
+                window.draw(chip);
+        	
+
         }
         
         window.display();
