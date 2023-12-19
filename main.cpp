@@ -100,7 +100,7 @@ int main()
             if (chipObject.contains(positionX, positionY)) {
                 chip.scale(1.5, 1.5);
                 window.draw(chip);
-        	
+            }
 
         }
         
