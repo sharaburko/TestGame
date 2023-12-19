@@ -93,15 +93,14 @@ int main()
             int j = config.getArrStartPoints(i);
             float positionX = config.getCoordinatePoints(j).getCoordinateX();
             float positionY = config.getCoordinatePoints(j).getCoordinateY();
-            IntRect chipObject(positionX, positionY, radiusChip*2, radiusChip*2);
       	    chip.setPosition(positionX + (sizePoints.x - 2 * radiusChip)/2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
             chip.setFillColor(arrColor[i]);
         	
-            if (chipObject.contains(positionX, positionY)) {
-                chip.scale(1.5, 1.5);
-                window.draw(chip);
+            if (chip.getLocalBounds().contains(mousePosition.x, mousePosition.y)) {
+                chip.scale(1.5, 1.5);                
             }
 
+            window.draw(chip);
         }
         
         window.display();
