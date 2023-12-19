@@ -96,11 +96,13 @@ int main()
       	    chip.setPosition(positionX + (sizePoints.x - 2 * radiusChip)/2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
             chip.setFillColor(arrColor[i]);
         	
-            if (chip.getLocalBounds().contains(mousePosition.x, mousePosition.y)) {
-                chip.scale(1.5, 1.5);                
+            if (chip.getTextureRect().contains(mousePosition.x, mousePosition.y)) {
+                chip.scale(1.5, 1.5);
             }
-
+            else  std::cout << chip.getTextureRect().getPosition().x << " " << chip.getTextureRect().getPosition().y << std::endl;
             window.draw(chip);
+
+           
         }
         
         window.display();
