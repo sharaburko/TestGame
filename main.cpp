@@ -8,21 +8,45 @@ using namespace sf;
 vector <sf::Color> arrColor{Color::Black, sf::Color::White, Color::Red, Color::Green, Color::Blue, Color::Magenta, Color::Cyan, Color::Transparent };    //color points and chip
 Color yellow(sf::Color::Yellow);
 
+
+
 int main()
 { 
     RenderWindow window(VideoMode(640, 480), "Game");
     Config config;
     config.readConfig("config.txt");
-    float radiusChip = 15;
-    sf::Vector2f sizePoints(40, 40);
     Mouse mouse;
-    Vector2i mousePosition (0, 0);
-	
-
-	
-    //Clock clock;	
-    sf::CircleShape chip(radiusChip,30);
+    Vector2i mousePosition (0, 0);    	
+    //sf::CircleShape chip(radiusChip,30);
     sf::RectangleShape square(sizePoints);
+
+    int activChip = 0;
+
+    struct Chip {
+        CircleShape shape;
+        int numberPositionShape;
+        Chip(int position, sf::Color color, float positionX, float positionY) {
+            shape.setRadius(radiusChip);
+            numberPositionShape = position;
+            shape.setFillColor(color);            
+            shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
+        }
+    };
+
+    struct Point{
+
+    
+    };
+
+    vector <Chip> chip;   
+
+    for (int i = 0; i < config.getChipCount(); i++) {
+
+        int numberPositionShape = config.getArrStartPoints(i);
+        Chip tempChip(numberPositionShape, arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY());
+        chip.push_back(tempChip);
+    }
+	
 
 	
     while (window.isOpen())
@@ -42,7 +66,6 @@ int main()
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             mousePosition = mouse.getPosition(window);
-            std::cout << "mouse click: " << mousePosition.x << " " << mousePosition.y << "\n";
         }
 
         window.clear(sf::Color(214,203,174));
@@ -88,21 +111,22 @@ int main()
             window.draw(square);
         }
     	
-        for (int i = 0; i < config.getChipCount(); i++)
+        for (int i = 0; i < chip.size(); i++)
         {
-            int j = config.getArrStartPoints(i);
-            float positionX = config.getCoordinatePoints(j).getCoordinateX();
-            float positionY = config.getCoordinatePoints(j).getCoordinateY();
-      	    chip.setPosition(positionX + (sizePoints.x - 2 * radiusChip)/2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
-            chip.setFillColor(arrColor[i]);
-        	
-            if (chip.getTextureRect().contains(mousePosition.x, mousePosition.y)) {
-                chip.scale(1.5, 1.5);
-            }
-            else  std::cout << chip.getTextureRect().getPosition().x << " " << chip.getTextureRect().getPosition().y << std::endl;
-            window.draw(chip);
 
-           
+           IntRect areaChip(chip[i].shape.getPosition().x, chip[i].shape.getPosition().y, chip[i].shape.getRadius() * 2, chip[i].shape.getRadius() * 2);
+
+        	if (areaChip.contains(mousePosition.x, mousePosition.y)) {
+                chip[i].shape.setRadius(radiusChip * 1.1);
+                chip[i].shape.setOutlineThickness(2);
+                chip[i].shape.setOutlineColor(sf::Color::White);
+            }
+            else {
+                chip[i].shape.setRadius(radiusChip);
+                chip[i].shape.setOutlineThickness(0);
+            }
+        	
+            window.draw(chip[i].shape);                       
         }
         
         window.display();

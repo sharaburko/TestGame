@@ -6,6 +6,9 @@
 
 using namespace std;
 
+float radiusChip = 15;
+sf::Vector2f sizePoints(40, 40);
+
 class Config {
     struct Coordinate { //структура для хранения координат точек
         float x, y;
