@@ -6,7 +6,7 @@
 
 using namespace sf;
 vector <sf::Color> arrColor{Color::Black, sf::Color::White, Color::Red, Color::Green, Color::Blue, Color::Magenta, Color::Cyan, Color::Transparent };    //color points and chip
-Color yellow(sf::Color::Yellow);
+//Color yellow(sf::Color::Yellow);
 
 
 
@@ -25,26 +25,44 @@ int main()
     struct Chip {
         CircleShape shape;
         int numberPositionShape;
-        Chip(int position, sf::Color color, float positionX, float positionY) {
+        int numberWinPOsitionShape;
+        Chip(int position, int winPosition, sf::Color color, float positionX, float positionY) {
             shape.setRadius(radiusChip);
             numberPositionShape = position;
+            numberWinPOsitionShape = winPosition;
             shape.setFillColor(color);            
             shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
         }
     };
 
-    struct Point{
-
+    struct Square{
+        int numberPositionSquare;
+        RectangleShape point;
+        Square(int position, float positionX, float positionY, sf::Color color) {
+            numberPositionSquare = position;
+            point.setPosition(positionX, positionY);
+            point.setFillColor(color);
+        }
     
     };
 
     vector <Chip> chip;   
+    vector <Square> square;
 
     for (int i = 0; i < config.getChipCount(); i++) {
 
         int numberPositionShape = config.getArrStartPoints(i);
-        Chip tempChip(numberPositionShape, arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY());
+        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i),arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY());
         chip.push_back(tempChip);
+    }
+
+    for (int i = 0; i < config.getChipCount(); i++) {
+        Square tempSquare(config.getArrWinnerPoints(i), config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
+        int j = config.getArrWinnerPoints(i);
+        float positionX = config.getCoordinatePoints(j).getCoordinateX();
+        float positionY = config.getCoordinatePoints(j).getCoordinateY();
+        square.setPosition(positionX, positionY);
+        square.setFillColor(arrColor[i]);
     }
 	
 
