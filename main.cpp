@@ -17,8 +17,6 @@ int main()
     config.readConfig("config.txt");
     Mouse mouse;
     Vector2i mousePosition (0, 0);    	
-    //sf::CircleShape chip(radiusChip,30);
-    sf::RectangleShape square(sizePoints);
 
     int activChip = 0;
 
@@ -40,32 +38,27 @@ int main()
         RectangleShape point;
         Square(int position, float positionX, float positionY, sf::Color color) {
             numberPositionSquare = position;
+            point.setSize(sizePoints);
             point.setPosition(positionX, positionY);
             point.setFillColor(color);
-        }
-    
+        }    
     };
 
     vector <Chip> chip;   
     vector <Square> square;
 
     for (int i = 0; i < config.getChipCount(); i++) {
-
         int numberPositionShape = config.getArrStartPoints(i);
         Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i),arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY());
         chip.push_back(tempChip);
     }
 
     for (int i = 0; i < config.getChipCount(); i++) {
-        Square tempSquare(config.getArrWinnerPoints(i), config.getCoordinatePoints(j).getCoordinateX(), config.getCoordinatePoints(j).getCoordinateY());
-        int j = config.getArrWinnerPoints(i);
-        float positionX = config.getCoordinatePoints(j).getCoordinateX();
-        float positionY = config.getCoordinatePoints(j).getCoordinateY();
-        square.setPosition(positionX, positionY);
-        square.setFillColor(arrColor[i]);
+        int NumberPositionPoint = config.getArrWinnerPoints(i);
+        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i]);
+        square.push_back(tempSquare);
     }
 	
-
 	
     while (window.isOpen())
     {
@@ -121,12 +114,7 @@ int main()
 
         for (int i = 0; i < config.getChipCount(); i++)
         {
-            int j = config.getArrWinnerPoints(i);
-            float positionX = config.getCoordinatePoints(j).getCoordinateX();
-            float positionY = config.getCoordinatePoints(j).getCoordinateY();
-            square.setPosition(positionX, positionY);
-            square.setFillColor(arrColor[i]);
-            window.draw(square);
+            window.draw(square[i].point);
         }
     	
         for (int i = 0; i < chip.size(); i++)
