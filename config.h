@@ -11,12 +11,13 @@ sf::Vector2f sizePoints(40, 40);
 
 class Config {
     struct Coordinate { //структура для хранения координат точек
-        float x, y;
+
         Coordinate() { x = y = 0; }
         Coordinate(const float x, const float y) : x(x), y(y) {}
         float getCoordinateX() const { return x; }
         float getCoordinateY() const { return y; }
-
+    private:
+        float x, y;
     };
 
     int chipCount = 0;                 //количество фишек
@@ -28,10 +29,11 @@ class Config {
 
 
     struct ConnectionsBetweenPoints { //структура для хранения соединенных точек
-        int p1, p2; // параметры сединеных точек
         ConnectionsBetweenPoints(const int p1, const int p2) : p1(p1), p2(p2) {}
         int getConnectionP1() const { return p1; }
         int getConnectionP2() const { return p2; }
+     private:
+        int p1, p2; // параметры сединеных точек
     };
 
     vector <ConnectionsBetweenPoints> connection;

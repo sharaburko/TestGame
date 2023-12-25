@@ -8,6 +8,43 @@ using namespace sf;
 vector <sf::Color> arrColor{Color::Black, sf::Color::White, Color::Red, Color::Green, Color::Blue, Color::Magenta, Color::Cyan, Color::Transparent };    //color points and chip
 //Color yellow(sf::Color::Yellow);
 
+struct Chip {
+    CircleShape shape;
+    int numberPositionShape;
+    int numberWinPOsitionShape;
+    bool avtivChip = false;
+    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY) {
+        shape.setRadius(radiusChip);
+        numberPositionShape = position;
+        numberWinPOsitionShape = winPosition;
+        shape.setFillColor(color);
+        shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
+    }
+};
+
+struct Square {
+    int numberPositionSquare;
+    RectangleShape point;
+    Square(int position, float positionX, float positionY, sf::Color color) {
+        numberPositionSquare = position;
+        point.setSize(sizePoints);
+        point.setPosition(positionX, positionY);
+        point.setFillColor(color);
+    }
+};
+
+struct PositionPoints {
+    int position;
+    float coordinateX;
+    float coordinateY;
+    bool freePoints = true;
+    IntRect areaPoints;
+    PositionPoints(int position, float x, float y) {
+        this->position = position;
+        coordinateX = x;
+        coordinateY = y;
+    }
+};
 
 
 int main()
@@ -16,36 +53,18 @@ int main()
     Config config;
     config.readConfig("config.txt");
     Mouse mouse;
-    Vector2i mousePosition (0, 0);    	
-
+    Vector2i mousePosition (0, 0);
+    int activPosition = 0;
     int activChip = 0;
-
-    struct Chip {
-        CircleShape shape;
-        int numberPositionShape;
-        int numberWinPOsitionShape;
-        Chip(int position, int winPosition, sf::Color color, float positionX, float positionY) {
-            shape.setRadius(radiusChip);
-            numberPositionShape = position;
-            numberWinPOsitionShape = winPosition;
-            shape.setFillColor(color);            
-            shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
-        }
-    };
-
-    struct Square{
-        int numberPositionSquare;
-        RectangleShape point;
-        Square(int position, float positionX, float positionY, sf::Color color) {
-            numberPositionSquare = position;
-            point.setSize(sizePoints);
-            point.setPosition(positionX, positionY);
-            point.setFillColor(color);
-        }    
-    };
 
     vector <Chip> chip;   
     vector <Square> square;
+    vector <PositionPoints> positionPoints;
+
+    chip.reserve(config.getChipCount());
+    square.reserve(config.getChipCount());
+    positionPoints.reserve(config.getPointsCount());
+
 
     for (int i = 0; i < config.getChipCount(); i++) {
         int numberPositionShape = config.getArrStartPoints(i);
@@ -58,7 +77,11 @@ int main()
         Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i]);
         square.push_back(tempSquare);
     }
-	
+
+    for (int i = 1; i <= config.getPointsCount(); i++) {
+        PositionPoints tempPositionPoints(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
+        positionPoints.push_back(tempPositionPoints);
+    }
 	
     while (window.isOpen())
     {
@@ -73,14 +96,59 @@ int main()
         //float time = clock.getElapsedTime().asMicroseconds();
         //clock.restart();
         //time = time / 800;
+        for (int i = 0; i < positionPoints.size(); i++) {
+            positionPoints[i].freePoints = true;
+        }
+
+        for (int i = 0; i < chip.size(); i++) {
+            positionPoints[chip[i].numberPositionShape - 1].freePoints = false;
+        }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             mousePosition = mouse.getPosition(window);
+
+
+            for (int i = 0; i < positionPoints.size(); i++) {
+                IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
+
+                if (areaChip.contains(mousePosition.x, mousePosition.y)) {
+                    activPosition = positionPoints[i].position;
+                    break;
+                }
+            }
+
+            if (positionPoints[activPosition - 1].freePoints) {
+
+                for (int i = 0; i < chip.size(); i++) {
+
+                    if (chip[i].avtivChip) {
+                        chip[i].shape.setPosition(positionPoints[activPosition - 1].coordinateX, positionPoints[activPosition - 1].coordinateY);
+                        chip[i].numberPositionShape = activPosition;
+                    }
+
+                }
+
+            }
+            else {
+
+                for (int i = 0; i < chip.size(); i++) {
+                    chip[i].avtivChip = false;
+                }
+
+                for (int i = 0; i < chip.size(); i++) {
+
+                    if (activPosition == chip[i].numberPositionShape) {
+                        chip[i].avtivChip = true;
+                        break;
+                    }
+
+                }
+
+            }
         }
 
-        window.clear(sf::Color(214,203,174));
-    	
+        window.clear(sf::Color(214,203,174));    	
 
         for (int i = 0; i < config.getConnectCount(); i++) {
             int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
@@ -112,17 +180,14 @@ int main()
             window.draw(connectingPoints);
         }
 
-        for (int i = 0; i < config.getChipCount(); i++)
+        for (int i = 0; i < square.size(); i++)
         {
             window.draw(square[i].point);
         }
     	
-        for (int i = 0; i < chip.size(); i++)
-        {
+        for (int i = 0; i < chip.size(); i++) {          
 
-           IntRect areaChip(chip[i].shape.getPosition().x, chip[i].shape.getPosition().y, chip[i].shape.getRadius() * 2, chip[i].shape.getRadius() * 2);
-
-        	if (areaChip.contains(mousePosition.x, mousePosition.y)) {
+        	if (chip[i].avtivChip) {
                 chip[i].shape.setRadius(radiusChip * 1.1);
                 chip[i].shape.setOutlineThickness(2);
                 chip[i].shape.setOutlineColor(sf::Color::White);
