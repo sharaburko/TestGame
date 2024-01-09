@@ -32,5 +32,8 @@
     <ClInclude Include="config.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="move.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -123,8 +123,21 @@ int main()
                 for (int i = 0; i < chip.size(); i++) {
 
                     if (chip[i].avtivChip) {
-                        chip[i].shape.setPosition(positionPoints[activPosition - 1].coordinateX, positionPoints[activPosition - 1].coordinateY);
-                        chip[i].numberPositionShape = activPosition;
+                        float distance;
+                        float distanceX = chip[i].shape.getPosition().x - positionPoints[activPosition - 1].coordinateX;
+                        float distanceY = chip[i].shape.getPosition().y - positionPoints[activPosition - 1].coordinateY;
+                        distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                        if (distance > 2) {
+                            chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.001* distanceX, chip[i].shape.getPosition().y + 0.001 * distanceY);
+                            std::cout << "I am NOT position\n";
+                        }
+                        else {
+                            chip[i].shape.setPosition(positionPoints[activPosition - 1].coordinateX, positionPoints[activPosition - 1].coordinateY);
+                            chip[i].numberPositionShape = activPosition;
+                            std::cout << "I am position\n";
+                        }
+                        
                     }
 
                 }
