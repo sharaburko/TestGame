@@ -6,6 +6,7 @@
 
 using namespace sf;
 vector <sf::Color> arrColor{Color::Black, sf::Color::White, Color::Red, Color::Green, Color::Blue, Color::Magenta, Color::Cyan, Color::Transparent };    //color points and chip
+
 //Color yellow(sf::Color::Yellow);
 
 struct Chip {
@@ -38,7 +39,6 @@ struct PositionPoints {
     float coordinateX;
     float coordinateY;
     bool freePoints = true;
-    IntRect areaPoints;
     PositionPoints(int position, float x, float y) {
         this->position = position;
         coordinateX = x;
@@ -52,7 +52,8 @@ int main()
     RenderWindow window(VideoMode(640, 480), "Game");
     Config config;
     config.readConfig("config.txt");
-    Mouse mouse;
+    sf::Mouse mouse;
+    sf::Clock clock;
     Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
@@ -93,9 +94,10 @@ int main()
                 window.close();
         }
 
-        //float time = clock.getElapsedTime().asMicroseconds();
-        //clock.restart();
-        //time = time / 800;
+        float time = clock.getElapsedTime().asMicroseconds();
+        clock.restart();
+        time = time / 800;
+
         for (int i = 0; i < positionPoints.size(); i++) {
             positionPoints[i].freePoints = true;
         }
@@ -108,62 +110,39 @@ int main()
         {
             mousePosition = mouse.getPosition(window);
 
-
             for (int i = 0; i < positionPoints.size(); i++) {
                 IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
 
                 if (areaChip.contains(mousePosition.x, mousePosition.y)) {
                     activPosition = positionPoints[i].position;
+
+                    if (!positionPoints[i].freePoints) {
+
+                        for (int i = 0; i < chip.size(); i++) {
+
+                            if (activPosition == chip[i].numberPositionShape) {
+                                chip[i].avtivChip = true;                                
+                            }
+                            else {
+                                chip[i].avtivChip = false;
+                            }
+
+                        }
+
+                    }
+
                     break;
                 }
-            }
-
-            if (positionPoints[activPosition - 1].freePoints) {
-
-                for (int i = 0; i < chip.size(); i++) {
-
-                    if (chip[i].avtivChip) {
-                        float distance;
-                        float distanceX = chip[i].shape.getPosition().x - positionPoints[activPosition - 1].coordinateX;
-                        float distanceY = chip[i].shape.getPosition().y - positionPoints[activPosition - 1].coordinateY;
-                        distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                        if (distance > 2) {
-                            chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.001* distanceX, chip[i].shape.getPosition().y + 0.001 * distanceY);
-                            std::cout << "I am NOT position\n";
-                        }
-                        else {
-                            chip[i].shape.setPosition(positionPoints[activPosition - 1].coordinateX, positionPoints[activPosition - 1].coordinateY);
-                            chip[i].numberPositionShape = activPosition;
-                            std::cout << "I am position\n";
-                        }
-                        
-                    }
-
-                }
 
             }
-            else {
 
-                for (int i = 0; i < chip.size(); i++) {
-                    chip[i].avtivChip = false;
-                }
-
-                for (int i = 0; i < chip.size(); i++) {
-
-                    if (activPosition == chip[i].numberPositionShape) {
-                        chip[i].avtivChip = true;
-                        break;
-                    }
-
-                }
-
-            }
+            
         }
 
         window.clear(sf::Color(214,203,174));    	
 
-        for (int i = 0; i < config.getConnectCount(); i++) {
+        for (int i = 0; i < config.getConnectCount(); i++) 
+        {
             int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
             int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
             float p1X = config.getCoordinatePoints(p1).getCoordinateX();
@@ -172,7 +151,6 @@ int main()
             float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
             float widthConnection = 20;
             sf::RectangleShape connectingPoints;
-
         	
             if (p1X == p2X)
             {
@@ -193,7 +171,7 @@ int main()
             window.draw(connectingPoints);
         }
 
-        for (int i = 0; i < square.size(); i++)
+        for (int i = 0; i < square.size(); i++) 
         {
             window.draw(square[i].point);
         }
@@ -204,11 +182,24 @@ int main()
                 chip[i].shape.setRadius(radiusChip * 1.1);
                 chip[i].shape.setOutlineThickness(2);
                 chip[i].shape.setOutlineColor(sf::Color::White);
+                float distanceX = positionPoints[activPosition - 1].coordinateX - chip[i].shape.getPosition().x;
+                float distanceY = positionPoints[activPosition - 1].coordinateY - chip[i].shape.getPosition().y;
+                float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                if (distance > 3) {
+                    chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
+                }
+                else {
+                    chip[i].shape.setPosition(positionPoints[activPosition - 1].coordinateX, positionPoints[activPosition - 1].coordinateY);
+                    chip[i].numberPositionShape = activPosition;
+                }
+
             }
             else {
                 chip[i].shape.setRadius(radiusChip);
                 chip[i].shape.setOutlineThickness(0);
             }
+
         	
             window.draw(chip[i].shape);                       
         }
