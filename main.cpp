@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include "config.h"
+#include "move.h"
 
 using namespace sf;
 vector <sf::Color> arrColor{Color::Black, sf::Color::White, Color::Red, Color::Green, Color::Blue, Color::Magenta, Color::Cyan, Color::Transparent };    //color points and chip
@@ -14,6 +15,7 @@ struct Chip {
     int numberPositionShape;
     int numberWinPOsitionShape;
     bool avtivChip = false;
+    std::vector <vector <int>> road;
     Chip(int position, int winPosition, sf::Color color, float positionX, float positionY) {
         shape.setRadius(radiusChip);
         numberPositionShape = position;
