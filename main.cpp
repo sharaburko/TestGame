@@ -204,6 +204,7 @@ int main()
         for (size_t i = 0; i < road.size(); i++)
         {
         sf:CircleShape activ;
+            activ.setFillColor(sf::Color(214, 203, 174));
             activ.setRadius(radiusChip * 1.5);
             activ.setOutlineThickness(2);
             activ.setOutlineColor(sf::Color::Red);
@@ -252,9 +253,34 @@ int main()
         for (int i = 0; i < chip.size(); i++) {          
 
         	if (chip[i].avtivChip) {
+                vector <int> roadActivChip;
+                for (size_t i = 0; i < road.size(); i++)
+                {
+                    if (*(road[i].end() - 1) == activPosition)
+                    {
+                        roadActivChip= road[i];
+                    }
+                }
+
                 chip[i].shape.setRadius(radiusChip * 1.1);
                 chip[i].shape.setOutlineThickness(2);
                 chip[i].shape.setOutlineColor(sf::Color::White);
+
+                //for (size_t j = 0; j < roadActivChip.size(); j++)
+                //{
+                //    float distanceX = positionPoints[roadActivChip[j] - 1].coordinateX - chip[i].shape.getPosition().x;
+                //    float distanceY = positionPoints[roadActivChip[j] - 1].coordinateY - chip[i].shape.getPosition().y;
+                //    float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                //    if (distance > 3) {
+                //        chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
+                //    }
+                //    else {
+                //        chip[i].shape.setPosition(positionPoints[roadActivChip[j] - 1].coordinateX, positionPoints[roadActivChip[j] - 1].coordinateY);
+                //        chip[i].numberPositionShape = activPosition;
+                //        activChip = activPosition;
+                //    }
+                //}
                 float distanceX = positionPoints[activPosition - 1].coordinateX - chip[i].shape.getPosition().x;
                 float distanceY = positionPoints[activPosition - 1].coordinateY - chip[i].shape.getPosition().y;
                 float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
