@@ -1,19 +1,19 @@
 #include "move.h"
 
-std::vector <std::vector <int>> movesActivChip(int start, std::vector <std::vector <int>> arr) {
+std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::vector <int>> arr) {
     std::vector <int> temp;
     std::vector <std::vector <int>> cPoints;
 
     for (size_t i = 0; i < arr.size(); i++)
     {
-        if (*arr[i].begin() == start) {
-            temp.push_back(start);
+        if (*arr[i].begin() == activChip) {
+            temp.push_back(activChip);
             temp.push_back(*(arr[i].end() - 1));
             cPoints.push_back(temp);
             temp.clear();
         }
-        else if (*(arr[i].end() - 1) == start) {
-            temp.push_back(start);
+        else if (*(arr[i].end() - 1) == activChip) {
+            temp.push_back(activChip);
             temp.push_back(*arr[i].begin());
             cPoints.push_back(temp);
             temp.clear();
@@ -50,3 +50,4 @@ std::vector <std::vector <int>> movesActivChip(int start, std::vector <std::vect
 
     return cPoints;
 }
+
