@@ -15,7 +15,6 @@ struct Chip {
     int numberPositionShape;
     int numberWinPOsitionShape;
     bool avtivChip = false;
-    //std::vector <vector <int>> road;
     Chip(int position, int winPosition, sf::Color color, float positionX, float positionY) {
         shape.setRadius(radiusChip);
         numberPositionShape = position;
@@ -70,6 +69,7 @@ int main()
     std::vector<std::vector <int>> connectPoints;
     std::vector <int> occupPoints;
     std::vector <int> freePoints;
+    std::vector <int> roadActivChip;
     std::vector <std::vector <int>> road;
     connectPoints.reserve(config.getConnectCount());
 
@@ -82,8 +82,6 @@ int main()
         tempConnect.clear();
     }
 
-
-
     for (int i = 0; i < config.getChipCount(); i++) {
         int numberPositionShape = config.getArrStartPoints(i);
         Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i),arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY());
@@ -95,7 +93,6 @@ int main()
         Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i]);
         square.push_back(tempSquare);
     }
-
 
     for (int i = 1; i <= config.getPointsCount(); i++) {
         PositionPoints tempPositionPoints(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
@@ -124,6 +121,44 @@ int main()
         for (int i = 0; i < chip.size(); i++) {
             positionPoints[chip[i].numberPositionShape - 1].freePoints = false;
             occupPoints.push_back(chip[i].numberPositionShape);
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            mousePosition = mouse.getPosition(window);
+
+            for (int i = 0; i < positionPoints.size(); i++) {
+                IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
+
+                if (areaChip.contains(mousePosition.x, mousePosition.y)) {
+                    activPosition = positionPoints[i].position;
+
+                    if (!positionPoints[i].freePoints) {
+                        activChip = activPosition;
+                    }
+
+                    break;
+                }
+
+                if (i == positionPoints.size() - 1) {
+                    activChip = 0;
+                    activPosition = 0;
+                }
+                             
+            }
+
+        }
+
+        for (int i = 0; i < chip.size(); i++)
+        {
+
+            if (activChip == chip[i].numberPositionShape) {
+                chip[i].avtivChip = true;
+            }
+            else {
+                chip[i].avtivChip = false;
+            }
+
         }
 
         road = movesActivChip(activChip, connectPoints);
@@ -156,48 +191,6 @@ int main()
 
             }
         }
-
-
-        //for (size_t j = 0; j < occupPoints.size(); j++)
-        //{
-        //    std::cout << occupPoints[j] << " ";
-        //}
-        //std::cout << "\n";
-
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            mousePosition = mouse.getPosition(window);
-
-            for (int i = 0; i < positionPoints.size(); i++) {
-                IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
-
-                if (areaChip.contains(mousePosition.x, mousePosition.y)) {
-                    activPosition = positionPoints[i].position;
-
-                    if (!positionPoints[i].freePoints) {
-
-                        for (int i = 0; i < chip.size(); i++) {
-
-                            if (activPosition == chip[i].numberPositionShape) {
-                                chip[i].avtivChip = true;
-                                activChip = chip[i].numberPositionShape;
-                            }                               
-                            else {
-                                chip[i].avtivChip = false;
-                                activChip = -1;
-                            }
-
-                        }
-
-                    }
-
-                    break;
-                }
-
-            }
-
-        }                              
 
         window.clear(sf::Color(214,203,174));  
 
@@ -252,35 +245,21 @@ int main()
     	
         for (int i = 0; i < chip.size(); i++) {          
 
-        	if (chip[i].avtivChip) {
-                vector <int> roadActivChip;
+        	if (chip[i].avtivChip) {                
+
                 for (size_t i = 0; i < road.size(); i++)
                 {
+
                     if (*(road[i].end() - 1) == activPosition)
                     {
                         roadActivChip= road[i];
                     }
+
                 }
 
                 chip[i].shape.setRadius(radiusChip * 1.1);
                 chip[i].shape.setOutlineThickness(2);
                 chip[i].shape.setOutlineColor(sf::Color::White);
-
-                //for (size_t j = 0; j < roadActivChip.size(); j++)
-                //{
-                //    float distanceX = positionPoints[roadActivChip[j] - 1].coordinateX - chip[i].shape.getPosition().x;
-                //    float distanceY = positionPoints[roadActivChip[j] - 1].coordinateY - chip[i].shape.getPosition().y;
-                //    float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                //    if (distance > 3) {
-                //        chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
-                //    }
-                //    else {
-                //        chip[i].shape.setPosition(positionPoints[roadActivChip[j] - 1].coordinateX, positionPoints[roadActivChip[j] - 1].coordinateY);
-                //        chip[i].numberPositionShape = activPosition;
-                //        activChip = activPosition;
-                //    }
-                //}
                 float distanceX = positionPoints[activPosition - 1].coordinateX - chip[i].shape.getPosition().x;
                 float distanceY = positionPoints[activPosition - 1].coordinateY - chip[i].shape.getPosition().y;
                 float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
@@ -299,7 +278,6 @@ int main()
                 chip[i].shape.setRadius(radiusChip);
                 chip[i].shape.setOutlineThickness(0);
             }
-
         	
             window.draw(chip[i].shape);                       
         }
