@@ -26,7 +26,7 @@ std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::
         {
             if (*arr[j].begin() == *(cPoints[i].end() - 1)) {
 
-                if (*(arr[j].end() - 1) != *(cPoints[i].end() - 2)) {
+                if (*(arr[j].end() - 1) != *(cPoints[i].end() - 2) && *(arr[j].end() - 1) != *(cPoints[i].begin())) {
                     temp = cPoints[i];
                     temp.push_back(*(arr[j].end() - 1));
                     cPoints.push_back(temp);
@@ -36,7 +36,7 @@ std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::
             }
             else if (*(arr[j].end() - 1) == *(cPoints[i].end() - 1)) {
 
-                if (*(arr[j].begin()) != *(cPoints[i].end() - 2)) {
+                if (*(arr[j].begin()) != *(cPoints[i].end() - 2) && *(arr[j].begin()) != *(cPoints[i].begin())) {
                     temp = cPoints[i];
                     temp.push_back(*(arr[j].begin()));
                     cPoints.push_back(temp);

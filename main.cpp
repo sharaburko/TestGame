@@ -58,6 +58,7 @@ int main()
     Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
+    int stepActivChip = 0;
 
     vector <Chip> chip;   
     vector <Square> square;
@@ -133,6 +134,7 @@ int main()
                 if (areaChip.contains(mousePosition.x, mousePosition.y)) {
                     activPosition = positionPoints[i].position;
 
+
                     if (!positionPoints[i].freePoints) {
                         activChip = activPosition;
                     }
@@ -149,17 +151,19 @@ int main()
 
         }
 
-        for (int i = 0; i < chip.size(); i++)
-        {
+        //for (int i = 0; i < chip.size(); i++)
+        //{
 
-            if (activChip == chip[i].numberPositionShape) {
-                chip[i].avtivChip = true;
-            }
-            else {
-                chip[i].avtivChip = false;
-            }
+        //    if (activChip == chip[i].numberPositionShape) {
+        //        chip[i].avtivChip = true;
+        //    }
+        //    else {
+        //        chip[i].avtivChip = false;
+        //    }
 
-        }
+        //}
+        //std::cout << "activ Position: " << activPosition << " \n";
+        //std::cout << "activ Chip: " << activChip << " \n";
 
         road = movesActivChip(activChip, connectPoints);
 
@@ -243,16 +247,18 @@ int main()
 
 
     	
-        for (int i = 0; i < chip.size(); i++) {          
+        for (int i = 0; i < chip.size(); i++) {  
 
-        	if (chip[i].avtivChip) {                
+            if (chip[i].numberPositionShape == activChip) {
 
                 for (size_t i = 0; i < road.size(); i++)
                 {
 
                     if (*(road[i].end() - 1) == activPosition)
                     {
-                        roadActivChip= road[i];
+                        roadActivChip = road[i];
+                        stepActivChip = 1;
+                        break;
                     }
 
                 }
@@ -260,24 +266,47 @@ int main()
                 chip[i].shape.setRadius(radiusChip * 1.1);
                 chip[i].shape.setOutlineThickness(2);
                 chip[i].shape.setOutlineColor(sf::Color::White);
-                float distanceX = positionPoints[activPosition - 1].coordinateX - chip[i].shape.getPosition().x;
-                float distanceY = positionPoints[activPosition - 1].coordinateY - chip[i].shape.getPosition().y;
-                float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
-                if (distance > 3) {
-                    chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
-                }
-                else {
-                    chip[i].shape.setPosition(positionPoints[activPosition - 1].coordinateX, positionPoints[activPosition - 1].coordinateY);
-                    chip[i].numberPositionShape = activPosition;
-                    activChip = activPosition;
-                }
+                if (!roadActivChip.empty()) {
 
+                    /*for (size_t i = 0; i < roadActivChip.size(); i++)
+                    {
+                        std::cout << roadActivChip[i] << " ";
+                    }
+                    std::cout << "\n";*/
+
+
+                    float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
+                    float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
+                    float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                    if (distance > 3) {
+                        chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
+                    }
+                    else {
+                        chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
+                        
+                        if (stepActivChip < roadActivChip.size()) {
+                            activChip = roadActivChip[stepActivChip];
+                            chip[i].numberPositionShape = roadActivChip[stepActivChip];
+                            stepActivChip++;
+                            //std::cout << "Step " << step << "\n";
+                        }
+                        if ((stepActivChip == roadActivChip.size())) {
+                            chip[i].numberPositionShape = activPosition;
+                            activChip = activPosition;
+                            roadActivChip.clear();
+                        }
+
+                    }
+                }
+                
             }
             else {
                 chip[i].shape.setRadius(radiusChip);
                 chip[i].shape.setOutlineThickness(0);
             }
+           
         	
             window.draw(chip[i].shape);                       
         }
