@@ -59,6 +59,7 @@ int main()
     int activPosition = 0;
     int activChip = 0;
     int stepActivChip = 0;
+    int countWinPosition = 0;
 
     vector <Chip> chip;   
     vector <Square> square;
@@ -269,13 +270,6 @@ int main()
 
                 if (!roadActivChip.empty()) {
 
-                    /*for (size_t i = 0; i < roadActivChip.size(); i++)
-                    {
-                        std::cout << roadActivChip[i] << " ";
-                    }
-                    std::cout << "\n";*/
-
-
                     float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
                     float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
                     float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
@@ -290,12 +284,14 @@ int main()
                             activChip = roadActivChip[stepActivChip];
                             chip[i].numberPositionShape = roadActivChip[stepActivChip];
                             stepActivChip++;
-                            //std::cout << "Step " << step << "\n";
                         }
                         if ((stepActivChip == roadActivChip.size())) {
                             chip[i].numberPositionShape = activPosition;
                             activChip = activPosition;
                             roadActivChip.clear();
+                            //if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
+                            //    chip[i].shape.setFillColor(sf::Color::White);
+                            //}
                         }
 
                     }
@@ -306,9 +302,23 @@ int main()
                 chip[i].shape.setRadius(radiusChip);
                 chip[i].shape.setOutlineThickness(0);
             }
-           
-        	
+                   	
             window.draw(chip[i].shape);                       
+        }
+
+        for (size_t i = 0; i < chip.size(); i++) {            
+            if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape)
+            {
+                countWinPosition++;
+            }
+        }
+
+        if (countWinPosition == chip.size())
+        {
+            return 0;
+        }
+        else {
+            countWinPosition = 0;
         }
         
         window.display();
