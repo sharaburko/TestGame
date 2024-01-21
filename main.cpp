@@ -55,6 +55,11 @@ int main()
     config.readConfig("config.txt");
     sf::Mouse mouse;
     sf::Clock clock;
+    sf::Font font;
+    font.loadFromFile("arial.ttf");
+    sf::Text text("You WIN!!!", font);
+    text.setCharacterSize(60);
+    //text.setColor(sf::Color::Red);
     Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
@@ -184,141 +189,146 @@ int main()
             }
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-        {
-            for (size_t z = 0; z < road.size(); z++)
-            {
-                for (size_t l = 0; l < road[z].size(); l++)
-                {
-                    std::cout << road[z][l] << " ";
-                }
-                std::cout << "\n";
+        //if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        //{
+        //    for (size_t z = 0; z < road.size(); z++)
+        //    {
+        //        for (size_t l = 0; l < road[z].size(); l++)
+        //        {
+        //            std::cout << road[z][l] << " ";
+        //        }
+        //        std::cout << "\n";
 
-            }
-        }
-
-        window.clear(sf::Color(214,203,174));  
-
-        for (size_t i = 0; i < road.size(); i++)
-        {
-        sf:CircleShape activ;
-            activ.setFillColor(sf::Color(214, 203, 174));
-            activ.setRadius(radiusChip * 1.5);
-            activ.setOutlineThickness(2);
-            activ.setOutlineColor(sf::Color::Red);
-            activ.setPosition(positionPoints[*(road[i].end() - 1) - 1].coordinateX, positionPoints[*(road[i].end() - 1) - 1].coordinateY);
-
-            window.draw(activ);
-        }
-
-        for (int i = 0; i < config.getConnectCount(); i++) 
-        {
-            int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
-            int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
-            float p1X = config.getCoordinatePoints(p1).getCoordinateX();
-            float p1Y = config.getCoordinatePoints(p1).getCoordinateY();
-            float p2X = config.getCoordinatePoints(p2).getCoordinateX();
-            float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
-            float widthConnection = 20;
-            sf::RectangleShape connectingPoints;
-        	
-            if (p1X == p2X)
-            {
-                sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
-                sf::Vector2f position(p1X + ((sizePoints.x - widthConnection)/2), p1Y + ((sizePoints.y - widthConnection) / 2));
-                connectingPoints.setSize(size);
-                connectingPoints.setPosition(position);
-            }
-            else
-            {
-                sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
-                connectingPoints.setSize(size);
-                sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
-                connectingPoints.setPosition(position);
-            }        	
-      	
-            connectingPoints.setFillColor(sf::Color(216, 216, 216));
-            window.draw(connectingPoints);
-        }
-
-        for (int i = 0; i < square.size(); i++) 
-        {
-            window.draw(square[i].point);
-        }
+        //    }
+        //}
 
 
-    	
-        for (int i = 0; i < chip.size(); i++) {  
 
-            if (chip[i].numberPositionShape == activChip) {
-
-                for (size_t i = 0; i < road.size(); i++)
-                {
-
-                    if (*(road[i].end() - 1) == activPosition)
-                    {
-                        roadActivChip = road[i];
-                        stepActivChip = 1;
-                        break;
-                    }
-
-                }
-
-                chip[i].shape.setRadius(radiusChip * 1.1);
-                chip[i].shape.setOutlineThickness(2);
-                chip[i].shape.setOutlineColor(sf::Color::White);
-
-                if (!roadActivChip.empty()) {
-
-                    float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
-                    float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
-                    float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                    if (distance > 3) {
-                        chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
-                    }
-                    else {
-                        chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
-                        
-                        if (stepActivChip < roadActivChip.size()) {
-                            activChip = roadActivChip[stepActivChip];
-                            chip[i].numberPositionShape = roadActivChip[stepActivChip];
-                            stepActivChip++;
-                        }
-                        if ((stepActivChip == roadActivChip.size())) {
-                            chip[i].numberPositionShape = activPosition;
-                            activChip = activPosition;
-                            roadActivChip.clear();
-                            //if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
-                            //    chip[i].shape.setFillColor(sf::Color::White);
-                            //}
-                        }
-
-                    }
-                }
-                
-            }
-            else {
-                chip[i].shape.setRadius(radiusChip);
-                chip[i].shape.setOutlineThickness(0);
-            }
-                   	
-            window.draw(chip[i].shape);                       
-        }
-
-        for (size_t i = 0; i < chip.size(); i++) {            
-            if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape)
-            {
-                countWinPosition++;
-            }
-        }
-
-        if (countWinPosition == chip.size())
-        {
-            return 0;
-        }
-        else {
+        if (countWinPosition != chip.size()){
+            window.clear(sf::Color(214, 203, 174));
             countWinPosition = 0;
+
+            for (size_t i = 0; i < road.size(); i++)
+            {
+            sf:CircleShape activ;
+                activ.setFillColor(sf::Color(214, 203, 174));
+                activ.setRadius(radiusChip * 1.5);
+                activ.setOutlineThickness(2);
+                activ.setOutlineColor(sf::Color::Red);
+                activ.setPosition(positionPoints[*(road[i].end() - 1) - 1].coordinateX, positionPoints[*(road[i].end() - 1) - 1].coordinateY);
+
+                window.draw(activ);
+            }
+
+            for (int i = 0; i < config.getConnectCount(); i++)
+            {
+                int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
+                int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
+                float p1X = config.getCoordinatePoints(p1).getCoordinateX();
+                float p1Y = config.getCoordinatePoints(p1).getCoordinateY();
+                float p2X = config.getCoordinatePoints(p2).getCoordinateX();
+                float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
+                float widthConnection = 20;
+                sf::RectangleShape connectingPoints;
+
+                if (p1X == p2X)
+                {
+                    sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
+                    sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                    connectingPoints.setSize(size);
+                    connectingPoints.setPosition(position);
+                }
+                else
+                {
+                    sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
+                    connectingPoints.setSize(size);
+                    sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                    connectingPoints.setPosition(position);
+                }
+
+                connectingPoints.setFillColor(sf::Color(216, 216, 216));
+                window.draw(connectingPoints);
+            }
+
+            for (int i = 0; i < square.size(); i++)
+            {
+                window.draw(square[i].point);
+            }
+
+            for (int i = 0; i < chip.size(); i++) {
+
+                if (chip[i].numberPositionShape == activChip) {
+
+                    for (size_t i = 0; i < road.size(); i++)
+                    {
+
+                        if (*(road[i].end() - 1) == activPosition)
+                        {
+                            roadActivChip = road[i];
+                            stepActivChip = 1;
+                            break;
+                        }
+
+                    }
+
+                    chip[i].shape.setRadius(radiusChip * 1.1);
+                    chip[i].shape.setPosition(chip[i].shape.getPosition().x + (radiusChip * 0.1 / 2), chip[i].shape.getPosition().y);
+                    chip[i].shape.setOutlineThickness(2);
+                    chip[i].shape.setOutlineColor(sf::Color::White);
+
+                    if (!roadActivChip.empty()) {
+
+                        float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
+                        float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
+                        float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                        if (distance > 3) {
+                            chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
+                        }
+                        else {
+                            chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
+
+                            if (stepActivChip < roadActivChip.size()) {
+                                activChip = roadActivChip[stepActivChip];
+                                chip[i].numberPositionShape = roadActivChip[stepActivChip];
+                                stepActivChip++;
+                            }
+                            if ((stepActivChip == roadActivChip.size())) {
+                                chip[i].numberPositionShape = activPosition;
+                                activChip = activPosition;
+                                roadActivChip.clear();
+
+                            }
+
+                        }
+                    }
+
+                }
+                else {
+                    chip[i].shape.setRadius(radiusChip);
+                    chip[i].shape.setOutlineThickness(0);
+                }
+
+                if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
+                    chip[i].shape.setOutlineThickness(2);
+                    chip[i].shape.setOutlineColor(sf::Color::Yellow);
+                }
+
+                window.draw(chip[i].shape);
+            }
+
+            for (size_t i = 0; i < chip.size(); i++) {
+                if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape)
+                {
+                    countWinPosition++;
+                }
+            }
+        }
+        else
+        {
+            text.setPosition(80, 200);
+            window.clear(sf::Color::Black);
+            window.draw(text);
         }
         
         window.display();
