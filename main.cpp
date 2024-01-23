@@ -23,7 +23,8 @@ struct Chip {
         numberPositionShape = position;
         numberWinPOsitionShape = winPosition;
         shape.setFillColor(color);
-        shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
+        //shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
+        shape.setPosition(positionX , positionY );
     }
 };
 
@@ -33,7 +34,7 @@ struct Square {
     Square(int position, float positionX, float positionY, sf::Color color) {
         numberPositionSquare = position;
         point.setSize(sizePoints);
-        point.setPosition(positionX, positionY);
+        point.setPosition(positionX - (sizePoints.x/2 - radiusChip), positionY - (sizePoints.y / 2 - radiusChip));
         point.setFillColor(color);
     }
 };
@@ -58,10 +59,7 @@ int main()
     config.readConfig("config.txt");
     sf::Mouse mouse;
     sf::Clock clock;
-    sf::SoundBuffer bufferFinish;
-    bufferFinish.loadFromFile("music/finish.ogg");
-    sf::Sound soundWin;
-    soundWin.setBuffer(bufferFinish);
+    sf::Music soundWin;
     sf::Sound soundMoveChip;
     sf::SoundBuffer bufferMove;
     bufferMove.loadFromFile("music/move.ogg");
@@ -183,136 +181,145 @@ int main()
             }
         }
 
-        std::cout << countWinPosition << "\n";
-
-        if (countWinPosition != chip.size()){
-            window.clear(sf::Color(214, 203, 174));
-            countWinPosition = 0;
-
-            for (int i = 0; i < config.getConnectCount(); i++)
-            {
-                int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
-                int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
-                float p1X = config.getCoordinatePoints(p1).getCoordinateX();
-                float p1Y = config.getCoordinatePoints(p1).getCoordinateY();
-                float p2X = config.getCoordinatePoints(p2).getCoordinateX();
-                float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
-                float widthConnection = 20;
-                sf::RectangleShape connectingPoints;
-
-                if (p1X == p2X)
-                {
-                    sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
-                   // sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
-                    sf::Vector2f position(p1X + radiusChip/2 , p1Y);
-                    connectingPoints.setSize(size);
-                    connectingPoints.setPosition(position);
-                }
-                else
-                {
-                    sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
-                    connectingPoints.setSize(size);
-                    //sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
-                    sf::Vector2f position(p1X , p1Y );
-                    connectingPoints.setPosition(position);
-                }
-
-                connectingPoints.setFillColor(sf::Color(216, 216, 216));
-                window.draw(connectingPoints);
-            }
-
-            for (int i = 0; i < square.size(); i++)
-            {
-                window.draw(square[i].point);
-            }
-
-            for (size_t i = 0; i < road.size(); i++)
-            {
-            sf:CircleShape activ;
-                activ.setFillColor(sf::Color::Red);
-                activ.setRadius(radiusChip*0.5);
-                activ.setPosition(positionPoints[*(road[i].end() - 1) - 1].coordinateX, positionPoints[*(road[i].end() - 1) - 1].coordinateY);
-                window.draw(activ);
-            }
-
-            for (int i = 0; i < chip.size(); i++) {
-
-                if (chip[i].numberPositionShape == activChip) {
-
-                    for (size_t i = 0; i < road.size(); i++)
-                    {
-
-                        if (*(road[i].end() - 1) == activPosition)
-                        {
-                            roadActivChip = road[i];
-                            stepActivChip = 1;
-                            break;
-                        }
-
-                    }
-
-                    chip[i].shape.setRadius(radiusChip * 1.1);
-                    //chip[i].shape.setPosition(chip[i].shape.getPosition().x + (radiusChip * 0.1 / 2), chip[i].shape.getPosition().y);
-                    chip[i].shape.setOutlineThickness(-2);
-                    chip[i].shape.setOutlineColor(sf::Color::White);
-
-                    if (!roadActivChip.empty()) {
-
-                        float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
-                        float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
-                        float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                        if (distance > 3) {
-                            chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
-                        }
-                        else {
-                            chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
-                            soundMoveChip.play();
-
-                            if (stepActivChip < roadActivChip.size()) {
-                                activChip = roadActivChip[stepActivChip];
-                                chip[i].numberPositionShape = roadActivChip[stepActivChip];
-                                stepActivChip++;
-                            }
-                            if ((stepActivChip == roadActivChip.size())) {
-                                chip[i].numberPositionShape = activPosition;
-                                activChip = activPosition;
-                                roadActivChip.clear();
-
-                            }
-
-                        }
-                    }
-
-                }
-                else {
-                    chip[i].shape.setRadius(radiusChip);
-                    chip[i].shape.setOutlineThickness(0);
-                }
-
-                if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
-                    chip[i].shape.setOutlineThickness(-2);
-                    chip[i].shape.setOutlineColor(sf::Color::Yellow);
-                }
-
-                window.draw(chip[i].shape);
-            }
-
-            for (size_t i = 0; i < chip.size(); i++) {
-                if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape)
-                {
-                    countWinPosition++;
-                }
-            }
+        if (countWinPosition == chip.size()) {
+            break;
         }
-        else
-        {            
-            text.setPosition(80, 200);
-            window.clear(sf::Color::Black);
-            window.draw(text);
-            soundWin.play();
+
+        window.clear(sf::Color(214, 203, 174));
+        countWinPosition = 0;
+
+        for (int i = 0; i < config.getConnectCount(); i++)
+        {
+            int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
+            int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
+            float p1X = config.getCoordinatePoints(p1).getCoordinateX();
+            float p1Y = config.getCoordinatePoints(p1).getCoordinateY();
+            float p2X = config.getCoordinatePoints(p2).getCoordinateX();
+            float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
+            float widthConnection = 20;
+            sf::RectangleShape connectingPoints;
+
+            if (p1X == p2X)
+            {
+                sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
+                sf::Vector2f position(p1X + (2 * radiusChip - widthConnection) / 2, p1Y + (2 * radiusChip - widthConnection) / 2);
+                connectingPoints.setSize(size);
+                connectingPoints.setPosition(position);
+            }
+            else
+            {
+                sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
+                connectingPoints.setSize(size);
+                sf::Vector2f position(p1X + (2 * radiusChip - widthConnection) / 2, p1Y + (2 * radiusChip - widthConnection) / 2);
+                connectingPoints.setPosition(position);
+            }
+
+            connectingPoints.setFillColor(sf::Color(216, 216, 216));
+            window.draw(connectingPoints);
+        }
+
+        for (int i = 0; i < square.size(); i++)
+        {
+            window.draw(square[i].point);
+        }
+
+        for (size_t i = 0; i < road.size(); i++)
+        {
+            sf:CircleShape activ;
+            int radiusFreePosition = radiusChip * 0.2;
+            activ.setFillColor(sf::Color::Red);
+            activ.setRadius(radiusFreePosition);
+            activ.setPosition(positionPoints[*(road[i].end() - 1) - 1].coordinateX + (2 * radiusChip - 2 * radiusFreePosition) / 2 , positionPoints[*(road[i].end() - 1) - 1].coordinateY + (2 * radiusChip - 2 * radiusFreePosition) / 2);
+            window.draw(activ);
+        }
+
+        for (int i = 0; i < chip.size(); i++) {
+
+            if (chip[i].numberPositionShape == activChip) {
+
+                for (size_t i = 0; i < road.size(); i++)
+                {
+
+                    if (*(road[i].end() - 1) == activPosition)
+                    {
+                        roadActivChip = road[i];
+                        stepActivChip = 1;
+                        break;
+                    }
+
+                }
+
+                chip[i].shape.setRadius(radiusChip * 1.1);
+                chip[i].shape.setOutlineThickness(-2);
+                chip[i].shape.setOutlineColor(sf::Color::White);
+
+                if (!roadActivChip.empty()) {
+
+                    float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
+                    float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
+                    float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                    if (distance > 3) {
+                        chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
+                    }
+                    else {
+                        chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
+                        soundMoveChip.play();
+
+                        if (stepActivChip < roadActivChip.size()) {
+                            activChip = roadActivChip[stepActivChip];
+                            chip[i].numberPositionShape = roadActivChip[stepActivChip];
+                            stepActivChip++;
+                        }
+
+                        if ((stepActivChip == roadActivChip.size())) {
+                            chip[i].numberPositionShape = activPosition;
+                            activChip = activPosition;
+                            roadActivChip.clear();
+
+                        }
+
+                    }
+                }
+
+            }
+            else {
+                chip[i].shape.setRadius(radiusChip);
+                chip[i].shape.setOutlineThickness(0);
+            }
+
+            if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
+                chip[i].shape.setOutlineThickness(-2);
+                chip[i].shape.setOutlineColor(sf::Color::Yellow);
+            }
+
+            window.draw(chip[i].shape);
+        }
+
+        for (size_t i = 0; i < chip.size(); i++) {
+            if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape)
+            {
+                countWinPosition++;
+            }
         }
         
+        window.display();
+    }
+
+    if (!soundWin.openFromFile("music/finish.ogg"))
+    {
+        return 0;
+    }
+
+    if (countWinPosition == chip.size()) {
+        soundWin.play();
+    }
+
+    while (soundWin.getStatus() == 2)
+    {
+        text.setPosition(80, 200);
+        window.clear(sf::Color::Black);
+        window.draw(text);
         window.display();
     }
 
