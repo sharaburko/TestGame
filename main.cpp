@@ -1,12 +1,15 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "config.h"
 #include "move.h"
+#include "Color.h"
 
 using namespace sf;
-vector <sf::Color> arrColor{Color::Black, sf::Color::White, Color::Red, Color::Green, Color::Blue, Color::Magenta, Color::Cyan, Color::Transparent };    //color points and chip
+
+vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
 
 //Color yellow(sf::Color::Yellow);
 
@@ -50,26 +53,31 @@ struct PositionPoints {
 
 int main()
 { 
-    RenderWindow window(VideoMode(640, 480), "Game");
+    RenderWindow window(VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
     Config config;
     config.readConfig("config.txt");
     sf::Mouse mouse;
     sf::Clock clock;
+    sf::SoundBuffer bufferFinish;
+    bufferFinish.loadFromFile("music/finish.ogg");
+    sf::Sound soundWin;
+    soundWin.setBuffer(bufferFinish);
+    sf::Sound soundMoveChip;
+    sf::SoundBuffer bufferMove;
+    bufferMove.loadFromFile("music/move.ogg");
+    soundMoveChip.setBuffer(bufferMove);
     sf::Font font;
     font.loadFromFile("arial.ttf");
     sf::Text text("You WIN!!!", font);
     text.setCharacterSize(60);
-    //text.setColor(sf::Color::Red);
     Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
     int stepActivChip = 0;
     int countWinPosition = 0;
-
     vector <Chip> chip;   
     vector <Square> square;
     vector <PositionPoints> positionPoints;
-
     chip.reserve(config.getChipCount());
     square.reserve(config.getChipCount());
     positionPoints.reserve(config.getPointsCount());
@@ -118,7 +126,7 @@ int main()
 
         float time = clock.getElapsedTime().asMicroseconds();
         clock.restart();
-        time = time / 800;
+        time = time / 900;
 
         for (int i = 0; i < positionPoints.size(); i++) {
             positionPoints[i].freePoints = true;
@@ -133,7 +141,7 @@ int main()
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             mousePosition = mouse.getPosition(window);
-
+ 
             for (int i = 0; i < positionPoints.size(); i++) {
                 IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
 
@@ -157,20 +165,6 @@ int main()
 
         }
 
-        //for (int i = 0; i < chip.size(); i++)
-        //{
-
-        //    if (activChip == chip[i].numberPositionShape) {
-        //        chip[i].avtivChip = true;
-        //    }
-        //    else {
-        //        chip[i].avtivChip = false;
-        //    }
-
-        //}
-        //std::cout << "activ Position: " << activPosition << " \n";
-        //std::cout << "activ Chip: " << activChip << " \n";
-
         road = movesActivChip(activChip, connectPoints);
 
         for (size_t j = 0; j < road.size(); j++)
@@ -189,36 +183,11 @@ int main()
             }
         }
 
-        //if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-        //{
-        //    for (size_t z = 0; z < road.size(); z++)
-        //    {
-        //        for (size_t l = 0; l < road[z].size(); l++)
-        //        {
-        //            std::cout << road[z][l] << " ";
-        //        }
-        //        std::cout << "\n";
-
-        //    }
-        //}
-
-
+        std::cout << countWinPosition << "\n";
 
         if (countWinPosition != chip.size()){
             window.clear(sf::Color(214, 203, 174));
             countWinPosition = 0;
-
-            for (size_t i = 0; i < road.size(); i++)
-            {
-            sf:CircleShape activ;
-                activ.setFillColor(sf::Color(214, 203, 174));
-                activ.setRadius(radiusChip * 1.5);
-                activ.setOutlineThickness(2);
-                activ.setOutlineColor(sf::Color::Red);
-                activ.setPosition(positionPoints[*(road[i].end() - 1) - 1].coordinateX, positionPoints[*(road[i].end() - 1) - 1].coordinateY);
-
-                window.draw(activ);
-            }
 
             for (int i = 0; i < config.getConnectCount(); i++)
             {
@@ -234,7 +203,8 @@ int main()
                 if (p1X == p2X)
                 {
                     sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
-                    sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                   // sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                    sf::Vector2f position(p1X + radiusChip/2 , p1Y);
                     connectingPoints.setSize(size);
                     connectingPoints.setPosition(position);
                 }
@@ -242,7 +212,8 @@ int main()
                 {
                     sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
                     connectingPoints.setSize(size);
-                    sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                    //sf::Vector2f position(p1X + ((sizePoints.x - widthConnection) / 2), p1Y + ((sizePoints.y - widthConnection) / 2));
+                    sf::Vector2f position(p1X , p1Y );
                     connectingPoints.setPosition(position);
                 }
 
@@ -253,6 +224,15 @@ int main()
             for (int i = 0; i < square.size(); i++)
             {
                 window.draw(square[i].point);
+            }
+
+            for (size_t i = 0; i < road.size(); i++)
+            {
+            sf:CircleShape activ;
+                activ.setFillColor(sf::Color::Red);
+                activ.setRadius(radiusChip*0.5);
+                activ.setPosition(positionPoints[*(road[i].end() - 1) - 1].coordinateX, positionPoints[*(road[i].end() - 1) - 1].coordinateY);
+                window.draw(activ);
             }
 
             for (int i = 0; i < chip.size(); i++) {
@@ -272,8 +252,8 @@ int main()
                     }
 
                     chip[i].shape.setRadius(radiusChip * 1.1);
-                    chip[i].shape.setPosition(chip[i].shape.getPosition().x + (radiusChip * 0.1 / 2), chip[i].shape.getPosition().y);
-                    chip[i].shape.setOutlineThickness(2);
+                    //chip[i].shape.setPosition(chip[i].shape.getPosition().x + (radiusChip * 0.1 / 2), chip[i].shape.getPosition().y);
+                    chip[i].shape.setOutlineThickness(-2);
                     chip[i].shape.setOutlineColor(sf::Color::White);
 
                     if (!roadActivChip.empty()) {
@@ -287,6 +267,7 @@ int main()
                         }
                         else {
                             chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
+                            soundMoveChip.play();
 
                             if (stepActivChip < roadActivChip.size()) {
                                 activChip = roadActivChip[stepActivChip];
@@ -310,7 +291,7 @@ int main()
                 }
 
                 if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
-                    chip[i].shape.setOutlineThickness(2);
+                    chip[i].shape.setOutlineThickness(-2);
                     chip[i].shape.setOutlineColor(sf::Color::Yellow);
                 }
 
@@ -325,10 +306,11 @@ int main()
             }
         }
         else
-        {
+        {            
             text.setPosition(80, 200);
             window.clear(sf::Color::Black);
             window.draw(text);
+            soundWin.play();
         }
         
         window.display();
