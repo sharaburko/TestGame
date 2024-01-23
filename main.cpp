@@ -7,14 +7,10 @@
 #include "move.h"
 #include "Color.h"
 
-using namespace sf;
-
 vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
 
-//Color yellow(sf::Color::Yellow);
-
 struct Chip {
-    CircleShape shape;
+    sf::CircleShape shape;
     int numberPositionShape;
     int numberWinPOsitionShape;
     bool avtivChip = false;
@@ -23,14 +19,13 @@ struct Chip {
         numberPositionShape = position;
         numberWinPOsitionShape = winPosition;
         shape.setFillColor(color);
-        //shape.setPosition(positionX + (sizePoints.x - 2 * radiusChip) / 2, positionY + (sizePoints.y - 2 * radiusChip) / 2);
         shape.setPosition(positionX , positionY );
     }
 };
 
 struct Square {
     int numberPositionSquare;
-    RectangleShape point;
+    sf::RectangleShape point;
     Square(int position, float positionX, float positionY, sf::Color color) {
         numberPositionSquare = position;
         point.setSize(sizePoints);
@@ -54,7 +49,7 @@ struct PositionPoints {
 
 int main()
 { 
-    RenderWindow window(VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
     Config config;
     config.readConfig("config.txt");
     sf::Mouse mouse;
@@ -68,7 +63,7 @@ int main()
     font.loadFromFile("arial.ttf");
     sf::Text text("You WIN!!!", font);
     text.setCharacterSize(60);
-    Vector2i mousePosition (0, 0);
+    sf::Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
     int stepActivChip = 0;
@@ -141,7 +136,7 @@ int main()
             mousePosition = mouse.getPosition(window);
  
             for (int i = 0; i < positionPoints.size(); i++) {
-                IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
+                sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
 
                 if (areaChip.contains(mousePosition.x, mousePosition.y)) {
                     activPosition = positionPoints[i].position;
@@ -225,7 +220,7 @@ int main()
 
         for (size_t i = 0; i < road.size(); i++)
         {
-            sf:CircleShape activ;
+            sf::CircleShape activ;
             int radiusFreePosition = radiusChip * 0.2;
             activ.setFillColor(sf::Color::Red);
             activ.setRadius(radiusFreePosition);
