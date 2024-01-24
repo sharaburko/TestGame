@@ -14,23 +14,25 @@ struct Chip {
     int numberPositionShape;
     int numberWinPOsitionShape;
     bool avtivChip = false;
-    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY) {
+    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, sf::Texture *textureChip) {
         shape.setRadius(radiusChip);
         numberPositionShape = position;
         numberWinPOsitionShape = winPosition;
         shape.setFillColor(color);
         shape.setPosition(positionX , positionY );
+        shape.setTexture(textureChip);
     }
 };
 
 struct Square {
     int numberPositionSquare;
     sf::RectangleShape point;
-    Square(int position, float positionX, float positionY, sf::Color color) {
+    Square(int position, float positionX, float positionY, sf::Color color, sf::Texture *textureSquare) {
         numberPositionSquare = position;
         point.setSize(sizePoints);
         point.setPosition(positionX - (sizePoints.x/2 - radiusChip), positionY - (sizePoints.y / 2 - radiusChip));
         point.setFillColor(color);
+        point.setTexture(textureSquare);
     }
 };
 
@@ -46,7 +48,6 @@ struct PositionPoints {
     }
 };
 
-
 int main()
 { 
     sf::RenderWindow window(sf::VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
@@ -54,6 +55,13 @@ int main()
     config.readConfig("config.txt");
     sf::Mouse mouse;
     sf::Clock clock;
+    sf::Texture textureChip;
+    sf::Texture textureSquare;
+    textureChip.loadFromFile("img/chip.png");
+    textureSquare.loadFromFile("img/point.png");
+    sf::Texture textureBackground;
+    textureBackground.loadFromFile("img/background.jpg");
+    sf::Sprite background(textureBackground);
     sf::Music soundWin;
     sf::Sound soundMoveChip;
     sf::SoundBuffer bufferMove;
@@ -80,7 +88,7 @@ int main()
     std::vector <int> roadActivChip;
     std::vector <std::vector <int>> road;
     connectPoints.reserve(config.getConnectCount());
-
+    
     for (int i = 0; i < config.getConnectCount(); i++)
     {
         std::vector <int> tempConnect;
@@ -92,13 +100,13 @@ int main()
 
     for (int i = 0; i < config.getChipCount(); i++) {
         int numberPositionShape = config.getArrStartPoints(i);
-        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i),arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY());
+        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i),arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY(), &textureChip);
         chip.push_back(tempChip);
     }
 
     for (int i = 0; i < config.getChipCount(); i++) {
         int NumberPositionPoint = config.getArrWinnerPoints(i);
-        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i]);
+        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i], &textureSquare);
         square.push_back(tempSquare);
     }
 
@@ -106,7 +114,7 @@ int main()
         PositionPoints tempPositionPoints(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
         positionPoints.push_back(tempPositionPoints);
     }
-	
+    	
     while (window.isOpen())
     {
         sf::Event event;
@@ -141,17 +149,11 @@ int main()
                 if (areaChip.contains(mousePosition.x, mousePosition.y)) {
                     activPosition = positionPoints[i].position;
 
-
                     if (!positionPoints[i].freePoints) {
                         activChip = activPosition;
                     }
 
                     break;
-                }
-
-                if (i == positionPoints.size() - 1) {
-                    activChip = 0;
-                    activPosition = 0;
                 }
                              
             }
@@ -180,7 +182,8 @@ int main()
             break;
         }
 
-        window.clear(sf::Color(214, 203, 174));
+        window.clear(userColor::Gray);
+        window.draw(background);
         countWinPosition = 0;
 
         for (int i = 0; i < config.getConnectCount(); i++)
