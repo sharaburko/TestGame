@@ -4,8 +4,8 @@ std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::
     std::vector <int> temp;
     std::vector <std::vector <int>> cPoints;
 
-    for (size_t i = 0; i < arr.size(); i++)
-    {
+    for (size_t i = 0; i < arr.size(); i++) {
+
         if (*arr[i].begin() == activChip) {
             temp.push_back(activChip);
             temp.push_back(*(arr[i].end() - 1));
@@ -20,10 +20,10 @@ std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::
         }
     }
 
-    for (size_t i = 0; i < cPoints.size(); i++)
-    {
-        for (size_t j = 0; j < arr.size(); j++)
-        {
+    for (size_t i = 0; i < cPoints.size(); i++) {
+
+        for (size_t j = 0; j < arr.size(); j++) {
+
             if (*arr[j].begin() == *(cPoints[i].end() - 1)) {
 
                 if (find(cPoints[i].begin(), cPoints[i].end(), *(arr[j].end() - 1)) == cPoints[i].end()) {

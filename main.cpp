@@ -7,8 +7,9 @@
 #include "move.h"
 #include "Color.h"
 
-vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
-
+std::vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
+float radiusChip = 15;
+sf::Vector2f sizePoints(40, 40);
 struct Chip {
     sf::CircleShape shape;
     int numberPositionShape;
@@ -48,8 +49,7 @@ struct PositionPoints {
     }
 };
 
-int main()
-{ 
+int main() { 
     sf::RenderWindow window(sf::VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
     Config config;
     config.readConfig("config.txt");
@@ -76,9 +76,9 @@ int main()
     int activChip = 0;
     int stepActivChip = 0;
     int countWinPosition = 0;
-    vector <Chip> chip;   
-    vector <Square> square;
-    vector <PositionPoints> positionPoints;
+    std::vector <Chip> chip;   
+    std::vector <Square> square;
+    std::vector <PositionPoints> positionPoints;
     chip.reserve(config.getChipCount());
     square.reserve(config.getChipCount());
     positionPoints.reserve(config.getPointsCount());
@@ -89,8 +89,7 @@ int main()
     std::vector <std::vector <int>> road;
     connectPoints.reserve(config.getConnectCount());
     
-    for (int i = 0; i < config.getConnectCount(); i++)
-    {
+    for (int i = 0; i < config.getConnectCount(); i++) {
         std::vector <int> tempConnect;
         tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
         tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP2());
@@ -115,12 +114,11 @@ int main()
         positionPoints.push_back(tempPositionPoints);
     }
     	
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         sf::Event event;
     	
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
+
             if (event.type == sf::Event::Closed)
                 window.close();
         }
@@ -139,8 +137,7 @@ int main()
             occupPoints.push_back(chip[i].numberPositionShape);
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             mousePosition = mouse.getPosition(window);
  
             for (int i = 0; i < positionPoints.size(); i++) {
@@ -162,14 +159,11 @@ int main()
 
         road = movesActivChip(activChip, connectPoints);
 
-        for (size_t j = 0; j < road.size(); j++)
-        {
+        for (size_t j = 0; j < road.size(); j++) {
 
-            for (size_t k = 0; k < occupPoints.size(); k++)
-            {
+            for (size_t k = 0; k < occupPoints.size(); k++) {
 
-                if (find(road[j].begin() + 1, road[j].end(), occupPoints[k]) != road[j].end())
-                {
+                if (find(road[j].begin() + 1, road[j].end(), occupPoints[k]) != road[j].end()) {
                     road.erase(road.begin() + j);
                     j--;
                     break;
@@ -178,16 +172,15 @@ int main()
             }
         }
 
-        if (countWinPosition == chip.size()) {
+        if (countWinPosition == chip.size()) 
             break;
-        }
+        
 
         window.clear(userColor::Gray);
         window.draw(background);
         countWinPosition = 0;
 
-        for (int i = 0; i < config.getConnectCount(); i++)
-        {
+        for (int i = 0; i < config.getConnectCount(); i++) {
             int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
             int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
             float p1X = config.getCoordinatePoints(p1).getCoordinateX();
@@ -197,15 +190,13 @@ int main()
             float widthConnection = 20;
             sf::RectangleShape connectingPoints;
 
-            if (p1X == p2X)
-            {
+            if (p1X == p2X) {
                 sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - (sizePoints.y - widthConnection));
                 sf::Vector2f position(p1X + (2 * radiusChip - widthConnection) / 2, p1Y + (2 * radiusChip - widthConnection) / 2);
                 connectingPoints.setSize(size);
                 connectingPoints.setPosition(position);
             }
-            else
-            {
+            else {
                 sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x - widthConnection), widthConnection);
                 connectingPoints.setSize(size);
                 sf::Vector2f position(p1X + (2 * radiusChip - widthConnection) / 2, p1Y + (2 * radiusChip - widthConnection) / 2);
@@ -216,13 +207,11 @@ int main()
             window.draw(connectingPoints);
         }
 
-        for (int i = 0; i < square.size(); i++)
-        {
+        for (int i = 0; i < square.size(); i++) {
             window.draw(square[i].point);
         }
 
-        for (size_t i = 0; i < road.size(); i++)
-        {
+        for (size_t i = 0; i < road.size(); i++) {
             sf::CircleShape activ;
             int radiusFreePosition = radiusChip * 0.2;
             activ.setFillColor(sf::Color::Red);
@@ -231,15 +220,13 @@ int main()
             window.draw(activ);
         }
 
-        for (int i = 0; i < chip.size(); i++) {
+        for (size_t i = 0; i < chip.size(); i++) {
 
             if (chip[i].numberPositionShape == activChip) {
 
-                for (size_t i = 0; i < road.size(); i++)
-                {
+                for (size_t i = 0; i < road.size(); i++) {
 
-                    if (*(road[i].end() - 1) == activPosition)
-                    {
+                    if (*(road[i].end() - 1) == activPosition) {
                         roadActivChip = road[i];
                         stepActivChip = 1;
                         break;
@@ -304,8 +291,7 @@ int main()
         window.display();
     }
 
-    if (!soundWin.openFromFile("music/finish.ogg"))
-    {
+    if (!soundWin.openFromFile("music/finish.ogg")) {
         return 0;
     }
 
@@ -313,8 +299,7 @@ int main()
         soundWin.play();
     }
 
-    while (soundWin.getStatus() == 2)
-    {
+    while (soundWin.getStatus() == 2) {
         text.setPosition(80, 200);
         window.clear(sf::Color::Black);
         window.draw(text);
