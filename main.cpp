@@ -81,6 +81,7 @@ int main() {
     int activChip = 0;
     int stepActivChip = 1;
     int countWinPosition = 0;
+    bool moveChip = false;
     std::vector <Chip> chip;   
     std::vector <Square> square;
     std::vector <PositionPoints> positionPoints;
@@ -142,7 +143,7 @@ int main() {
             occupPoints.push_back(chip[i].numberPositionShape);
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !moveChip) {
             mousePosition = mouse.getPosition(window);
             
             if (searchActivPosition(positionPoints, mousePosition)) {
@@ -215,7 +216,8 @@ int main() {
                 chip[i].shape.setOutlineColor(sf::Color::White);
                 roadActivChip = searchRoadActivChip(road, activPosition);
 
-                if (!roadActivChip.empty()) {                    
+                if (!roadActivChip.empty()) {
+                    moveChip = true;
                     float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
                     float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
                     float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
@@ -225,21 +227,23 @@ int main() {
                     else {
                         chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
                         soundMoveChip.play();
-
-                        if (stepActivChip < roadActivChip.size()) {
-                            stepActivChip++;
-                        }
+                        stepActivChip++;
 
                         if ((stepActivChip == roadActivChip.size())) {
                             chip[i].numberPositionShape = activPosition;
                             stepActivChip = 1;
                             activChip = activPosition;
                             roadActivChip.clear();
+                            moveChip = false;
                         }
 
                     }
                 }
 
+            }
+            else if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
+                chip[i].shape.setOutlineThickness(-2);
+                chip[i].shape.setOutlineColor(sf::Color::Yellow);
             }
             else {
                 chip[i].shape.setRadius(radiusChip);
@@ -247,18 +251,10 @@ int main() {
             }
 
             if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape) {
-                chip[i].shape.setOutlineThickness(-2);
-                chip[i].shape.setOutlineColor(sf::Color::Yellow);
+                countWinPosition++;
             }
 
             window.draw(chip[i].shape);
-        }
-
-        for (size_t i = 0; i < chip.size(); i++) {
-            if (chip[i].numberPositionShape == chip[i].numberWinPOsitionShape)
-            {
-                countWinPosition++;
-            }
         }
         
         window.display();
@@ -292,6 +288,7 @@ int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::V
         }
 
     }
+
     return 0;
 }
 
