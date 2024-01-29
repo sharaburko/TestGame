@@ -50,7 +50,8 @@ struct PositionPoints {
     }
 };
 
-int searchActivPosition(std::vector<PositionPoints> positionPoints, sf::Vector2i mousePosition);
+int searchActivPosition(std::vector<PositionPoints> const positionPoints, sf::Vector2i const mousePosition);
+void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
 
 int main() { 
     sf::RenderWindow window(sf::VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
@@ -142,17 +143,21 @@ int main() {
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             mousePosition = mouse.getPosition(window);
-            activPosition = searchActivPosition(positionPoints, mousePosition);
+            
+            //std::cout << "Activ position: " << searchActivPosition(positionPoints, mousePosition) << "\n";
 
-            if (activPosition) {
+            //if (searchActivPosition(positionPoints, mousePosition) != -1) {
+            //    activPosition = searchActivPosition(positionPoints, mousePosition);
 
-                if (!positionPoints[activPosition].freePoints) {
-                    activChip = activPosition;
-                }
+            //    if (!positionPoints[activPosition].freePoints) {
+            //        activChip = activPosition;
+            //    }
 
-            }
+            //}
+
+            //std::cout << "Chip position: " << activChip << "\n";
  
-            /*for (int i = 0; i < positionPoints.size(); i++) {
+            for (int i = 0; i < positionPoints.size(); i++) {
                 sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
 
                 if (areaChip.contains(mousePosition.x, mousePosition.y)) {
@@ -165,24 +170,25 @@ int main() {
                     break;
                 }
                              
-            }*/
+            }
 
         }
 
         road = movesActivChip(activChip, connectPoints);
+        searchFreePointsChip(road, occupPoints);
 
-        for (size_t j = 0; j < road.size(); j++) {
+        //for (size_t j = 0; j < road.size(); j++) {
 
-            for (size_t k = 0; k < occupPoints.size(); k++) {
+        //    for (size_t k = 0; k < occupPoints.size(); k++) {
 
-                if (find(road[j].begin() + 1, road[j].end(), occupPoints[k]) != road[j].end()) {
-                    road.erase(road.begin() + j);
-                    j--;
-                    break;
-                }
+        //        if (find(road[j].begin() + 1, road[j].end(), occupPoints[k]) != road[j].end()) {
+        //            road.erase(road.begin() + j);
+        //            j--;
+        //            break;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         if (countWinPosition == chip.size()) 
             break;
@@ -323,15 +329,28 @@ int main() {
 
 int searchActivPosition(std::vector<PositionPoints> positionPoints, sf::Vector2i mousePosition)
 {
-    int activPosition = 0;
     for (int i = 0; i < positionPoints.size(); i++) {
         sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
 
         if (areaChip.contains(mousePosition.x, mousePosition.y)) {
-            activPosition = positionPoints[i].position;
-            break;
+            return positionPoints[i].position;
         }
 
     }
-    return activPosition;
+    return -1;
+}
+
+void searchFreePointsChip(std::vector <std:: vector <int>>& road, std::vector <int> const &occupiredPoints) {
+    for (size_t j = 0; j < road.size(); j++) {
+
+        for (size_t k = 0; k < occupiredPoints.size(); k++) {
+
+            if (find(road[j].begin() + 1, road[j].end(), occupiredPoints[k]) != road[j].end()) {
+                road.erase(road.begin() + j);
+                j--;
+                break;
+            }
+
+        }
+    }
 }
