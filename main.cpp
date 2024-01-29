@@ -50,6 +50,7 @@ struct PositionPoints {
     }
 };
 
+//void initializationConnectPoint(Config const& config, std::vector <std::vector <int>>& connectPoints);
 int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition);
 void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
 std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition);
@@ -95,6 +96,8 @@ int main() {
     std::vector <std::vector <int>> road;
     connectPoints.reserve(config.getConnectCount());
     
+    /*initializationConnectPoint(config, connectPoints);*/
+
     for (int i = 0; i < config.getConnectCount(); i++) {
         std::vector <int> tempConnect;
         tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
@@ -319,3 +322,15 @@ std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> cons
     }
     return tempRoadActivChip;
 }
+
+//void initializationConnectPoint(Config const &config, std::vector <std::vector <int>>& connectPoints) {
+//
+//    for (int i = 0; i < config.getConnectCount(); i++) {
+//        std::vector <int> tempConnect;
+//        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
+//        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP2());
+//        connectPoints.push_back(tempConnect);
+//        tempConnect.clear();
+//    }
+//
+//}
