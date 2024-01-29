@@ -52,6 +52,7 @@ struct PositionPoints {
 
 int searchActivPosition(std::vector<PositionPoints> const positionPoints, sf::Vector2i const mousePosition);
 void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
+std::vector <int> searchRoadActivChip(std::vector <std::vector <int>>& road, int const& activPosition);
 
 int main() { 
     sf::RenderWindow window(sf::VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
@@ -177,19 +178,6 @@ int main() {
         road = movesActivChip(activChip, connectPoints);
         searchFreePointsChip(road, occupPoints);
 
-        //for (size_t j = 0; j < road.size(); j++) {
-
-        //    for (size_t k = 0; k < occupPoints.size(); k++) {
-
-        //        if (find(road[j].begin() + 1, road[j].end(), occupPoints[k]) != road[j].end()) {
-        //            road.erase(road.begin() + j);
-        //            j--;
-        //            break;
-        //        }
-
-        //    }
-        //}
-
         if (countWinPosition == chip.size()) 
             break;
         
@@ -241,23 +229,24 @@ int main() {
         for (size_t i = 0; i < chip.size(); i++) {
 
             if (chip[i].numberPositionShape == activChip) {
-
-                for (size_t i = 0; i < road.size(); i++) {
-
-                    if (*(road[i].end() - 1) == activPosition) {
-                        roadActivChip = road[i];
-                        stepActivChip = 1;
-                        break;
-                    }
-
-                }
-
                 chip[i].shape.setRadius(radiusChip * 1.1);
                 chip[i].shape.setOutlineThickness(-2);
                 chip[i].shape.setOutlineColor(sf::Color::White);
 
-                if (!roadActivChip.empty()) {
+                roadActivChip = searchRoadActivChip(road, activPosition);
 
+                //for (size_t i = 0; i < road.size(); i++) {
+
+                //    if (*(road[i].end() - 1) == activPosition) {
+                //        roadActivChip = road[i];
+                //        stepActivChip = 1;
+                //        break;
+                //    }
+
+                //}
+
+                if (!roadActivChip.empty()) {
+                    stepActivChip = 1;
                     float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
                     float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
                     float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
@@ -353,4 +342,17 @@ void searchFreePointsChip(std::vector <std:: vector <int>>& road, std::vector <i
 
         }
     }
+}
+
+std::vector <int> searchRoadActivChip(std::vector <std::vector <int>>& road, int const& activPosition) {
+    std::vector <int> tempRoadActivChip;
+    for (size_t i = 0; i < road.size(); i++) {
+
+        if (*(road[i].end() - 1) == activPosition) {
+            tempRoadActivChip = road[i];
+            return tempRoadActivChip;
+        }
+
+    }
+    return tempRoadActivChip;
 }
