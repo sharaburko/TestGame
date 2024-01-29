@@ -50,7 +50,7 @@ struct PositionPoints {
     }
 };
 
-int searchActivPosition(std::vector<PositionPoints> const positionPoints, sf::Vector2i const mousePosition);
+int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition);
 void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
 std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition);
 
@@ -145,32 +145,13 @@ int main() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             mousePosition = mouse.getPosition(window);
             
-            //std::cout << "Activ position: " << searchActivPosition(positionPoints, mousePosition) << "\n";
+            if (searchActivPosition(positionPoints, mousePosition)) {
+                activPosition = searchActivPosition(positionPoints, mousePosition);
 
-            //if (searchActivPosition(positionPoints, mousePosition) != -1) {
-            //    activPosition = searchActivPosition(positionPoints, mousePosition);
-
-            //    if (!positionPoints[activPosition].freePoints) {
-            //        activChip = activPosition;
-            //    }
-
-            //}
-
-            //std::cout << "Chip position: " << activChip << "\n";
- 
-            for (int i = 0; i < positionPoints.size(); i++) {
-                sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
-
-                if (areaChip.contains(mousePosition.x, mousePosition.y)) {
-                    activPosition = positionPoints[i].position;
-
-                    if (!positionPoints[i].freePoints) {
-                        activChip = activPosition;
-                    }
-
-                    break;
+                if (!positionPoints[activPosition - 1].freePoints) {
+                    activChip = activPosition;
                 }
-                             
+
             }
 
         }
@@ -238,8 +219,7 @@ int main() {
                     float distanceX = positionPoints[roadActivChip[stepActivChip] - 1].coordinateX - chip[i].shape.getPosition().x;
                     float distanceY = positionPoints[roadActivChip[stepActivChip] - 1].coordinateY - chip[i].shape.getPosition().y;
                     float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-
-                    if (distance > 3) {
+                    if (distance > 3) {                        
                         chip[i].shape.setPosition(chip[i].shape.getPosition().x + 0.01 * time * distanceX, chip[i].shape.getPosition().y + 0.01 * time * distanceY);
                     }
                     else {
@@ -255,7 +235,6 @@ int main() {
                             stepActivChip = 1;
                             activChip = activPosition;
                             roadActivChip.clear();
-
                         }
 
                     }
@@ -303,7 +282,7 @@ int main() {
     return 0;
 }
 
-int searchActivPosition(std::vector<PositionPoints> positionPoints, sf::Vector2i mousePosition)
+int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition)
 {
     for (int i = 0; i < positionPoints.size(); i++) {
         sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
@@ -313,7 +292,7 @@ int searchActivPosition(std::vector<PositionPoints> positionPoints, sf::Vector2i
         }
 
     }
-    return -1;
+    return 0;
 }
 
 void searchFreePointsChip(std::vector <std:: vector <int>>& road, std::vector <int> const &occupiredPoints) {
