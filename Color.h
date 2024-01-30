@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 namespace userColor {
 	sf::Color Fuchsia(255, 0, 255);
@@ -11,3 +12,5 @@ namespace userColor {
 	sf::Color Aqua(0, 255, 255);
 	sf::Color Olive(128, 128, 0);
 }
+
+std::vector <sf::Color> arrColor{ sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal };    //color points and chip

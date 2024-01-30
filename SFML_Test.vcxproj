@@ -143,14 +143,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="Chip.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="move.cpp" />
+    <ClCompile Include="PositionPoints.cpp" />
+    <ClCompile Include="Square.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManager.hpp" />
+    <ClInclude Include="Chip.hpp" />
     <ClInclude Include="config.h" />
-    <ClInclude Include="Color.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="move.h" />
+    <ClInclude Include="PositionPoints.hpp" />
+    <ClInclude Include="Square.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
