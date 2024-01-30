@@ -11,30 +11,58 @@
 std::vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
 float radiusChip = 15;
 sf::Vector2f sizePoints(40, 40);
+
+struct AssetManager {
+    sf::Texture textureChip;
+    sf::Texture textureSquare;
+    sf::Music soundWin;
+    sf::Sound soundMoveChip;
+    sf::Sprite background;
+    sf::Text text;
+    sf::Texture textureBackground;
+    sf::Font font;
+    sf::SoundBuffer bufferMove;
+    AssetManager() {
+        font.loadFromFile("arial.ttf");
+        textureChip.loadFromFile("img/chip.png");
+        textureSquare.loadFromFile("img/point.png");
+        textureBackground.loadFromFile("img/background.jpg");
+        background.setTexture(textureBackground);
+        bufferMove.loadFromFile("music/move.ogg");
+        soundMoveChip.setBuffer(bufferMove);
+        soundWin.openFromFile("music/finish.ogg");
+        text.setFont(font);
+        text.setPosition(80, 200);
+        text.setCharacterSize(60);
+    }
+
+};
+
 struct Chip {
-    sf::CircleShape shape;
+    sf::CircleShape shape;    
     int numberPositionShape;
     int numberWinPOsitionShape;
     bool avtivChip = false;
-    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, sf::Texture *textureChip) {
+    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, AssetManager const &assetManager) {
         shape.setRadius(radiusChip);
         numberPositionShape = position;
         numberWinPOsitionShape = winPosition;
         shape.setFillColor(color);
         shape.setPosition(positionX , positionY );
-        shape.setTexture(textureChip);
+        shape.setTexture(&assetManager.textureChip);
     }
 };
 
 struct Square {
     int numberPositionSquare;
     sf::RectangleShape point;
-    Square(int position, float positionX, float positionY, sf::Color color, sf::Texture *textureSquare) {
+    sf::Texture textureSquare;
+    Square(int position, float positionX, float positionY, sf::Color color, AssetManager const &assetManager) {
         numberPositionSquare = position;
         point.setSize(sizePoints);
         point.setPosition(positionX - (sizePoints.x/2 - radiusChip), positionY - (sizePoints.y / 2 - radiusChip));
         point.setFillColor(color);
-        point.setTexture(textureSquare);
+        point.setTexture(&assetManager.textureSquare);
     }
 };
 
@@ -50,7 +78,7 @@ struct PositionPoints {
     }
 };
 
-//void initializationConnectPoint(Config const& config, std::vector <std::vector <int>>& connectPoints);
+void initialization(Config& config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip>& chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, AssetManager& assetManager);
 int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition);
 void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
 std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition);
@@ -61,22 +89,7 @@ int main() {
     config.readConfig("config.txt");
     sf::Mouse mouse;
     sf::Clock clock;
-    sf::Texture textureChip;
-    sf::Texture textureSquare;
-    textureChip.loadFromFile("img/chip.png");
-    textureSquare.loadFromFile("img/point.png");
-    sf::Texture textureBackground;
-    textureBackground.loadFromFile("img/background.jpg");
-    sf::Sprite background(textureBackground);
-    sf::Music soundWin;
-    sf::Sound soundMoveChip;
-    sf::SoundBuffer bufferMove;
-    bufferMove.loadFromFile("music/move.ogg");
-    soundMoveChip.setBuffer(bufferMove);
-    sf::Font font;
-    font.loadFromFile("arial.ttf");
-    sf::Text text("You WIN!!!", font);
-    text.setCharacterSize(60);
+    AssetManager assetManager;
     sf::Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
@@ -94,35 +107,10 @@ int main() {
     std::vector <int> freePoints;
     std::vector <int> roadActivChip;
     std::vector <std::vector <int>> road;
-    connectPoints.reserve(config.getConnectCount());
-    
-    /*initializationConnectPoint(config, connectPoints);*/
+    connectPoints.reserve(config.getConnectCount());    
+    initialization(config, connectPoints, chip, square, positionPoints, assetManager);
+    void fillingBusyPoints(std::vector <PositionPoints> &positionPoints, std::vector <int> &occupPoints, std::vector <Chip> const& chip);
 
-    for (int i = 0; i < config.getConnectCount(); i++) {
-        std::vector <int> tempConnect;
-        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
-        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP2());
-        connectPoints.push_back(tempConnect);
-        tempConnect.clear();
-    }
-
-    for (int i = 0; i < config.getChipCount(); i++) {
-        int numberPositionShape = config.getArrStartPoints(i);
-        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i),arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY(), &textureChip);
-        chip.push_back(tempChip);
-    }
-
-    for (int i = 0; i < config.getChipCount(); i++) {
-        int NumberPositionPoint = config.getArrWinnerPoints(i);
-        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i], &textureSquare);
-        square.push_back(tempSquare);
-    }
-
-    for (int i = 1; i <= config.getPointsCount(); i++) {
-        PositionPoints tempPositionPoints(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
-        positionPoints.push_back(tempPositionPoints);
-    }
-    	
     while (window.isOpen()) {
         sf::Event event;
     	
@@ -136,17 +124,10 @@ int main() {
         clock.restart();
         time = time / 900;
 
-        for (int i = 0; i < positionPoints.size(); i++) {
-            positionPoints[i].freePoints = true;
-            occupPoints.clear();
-        }
-
-        for (int i = 0; i < chip.size(); i++) {
-            positionPoints[chip[i].numberPositionShape - 1].freePoints = false;
-            occupPoints.push_back(chip[i].numberPositionShape);
-        }
+        fillingBusyPoints(positionPoints, occupPoints, chip);
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !moveChip) {
+
             mousePosition = mouse.getPosition(window);
             
             if (searchActivPosition(positionPoints, mousePosition)) {
@@ -164,11 +145,10 @@ int main() {
         searchFreePointsChip(road, occupPoints);
 
         if (countWinPosition == chip.size()) 
-            break;
-        
+            break;        
 
         window.clear(userColor::Gray);
-        window.draw(background);
+        window.draw(assetManager.background);
         countWinPosition = 0;
 
         for (int i = 0; i < config.getConnectCount(); i++) {
@@ -229,7 +209,7 @@ int main() {
                     }
                     else {
                         chip[i].shape.setPosition(positionPoints[roadActivChip[stepActivChip] - 1].coordinateX, positionPoints[roadActivChip[stepActivChip] - 1].coordinateY);
-                        soundMoveChip.play();
+                        assetManager.soundMoveChip.play();
                         stepActivChip++;
 
                         if ((stepActivChip == roadActivChip.size())) {
@@ -263,18 +243,13 @@ int main() {
         window.display();
     }
 
-    if (!soundWin.openFromFile("music/finish.ogg")) {
-        return 0;
-    }
-
     if (countWinPosition == chip.size()) {
-        soundWin.play();
+        assetManager.soundWin.play();
     }
 
-    while (soundWin.getStatus() == 2) {
-        text.setPosition(80, 200);
+    while (assetManager.soundWin.getStatus() == 2) {        
         window.clear(sf::Color::Black);
-        window.draw(text);
+        window.draw(assetManager.text);
         window.display();
     }
 
@@ -323,14 +298,44 @@ std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> cons
     return tempRoadActivChip;
 }
 
-//void initializationConnectPoint(Config const &config, std::vector <std::vector <int>>& connectPoints) {
-//
-//    for (int i = 0; i < config.getConnectCount(); i++) {
-//        std::vector <int> tempConnect;
-//        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
-//        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP2());
-//        connectPoints.push_back(tempConnect);
-//        tempConnect.clear();
-//    }
-//
-//}
+void initialization(Config &config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip> &chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, AssetManager &assetManager){
+
+    for (int i = 0; i < config.getConnectCount(); i++) {
+        config.getConnectionsBetweenPoints(i);
+        std::vector <int> tempConnect;
+        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
+        tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP2());
+        connectPoints.push_back(tempConnect);
+        tempConnect.clear();
+    }
+
+    for (int i = 0; i < config.getChipCount(); i++) {
+        int numberPositionShape = config.getArrStartPoints(i);
+        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i), arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY(), assetManager);
+        chip.push_back(tempChip);
+    }
+
+    for (int i = 0; i < config.getChipCount(); i++) {
+        int NumberPositionPoint = config.getArrWinnerPoints(i);
+        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i], assetManager);
+        square.push_back(tempSquare);
+    }
+
+    for (int i = 1; i <= config.getPointsCount(); i++) {
+        PositionPoints tempPositionPoints(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
+        positionPoints.push_back(tempPositionPoints);
+    }
+
+}
+
+void fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> const& chip) {
+    for (int i = 0; i < positionPoints.size(); i++) {
+        positionPoints[i].freePoints = true;
+        occupPoints.clear();
+    }
+
+    for (int i = 0; i < chip.size(); i++) {
+        positionPoints[chip[i].numberPositionShape - 1].freePoints = false;
+        occupPoints.push_back(chip[i].numberPositionShape);
+    }
+};
