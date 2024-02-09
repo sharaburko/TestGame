@@ -22,6 +22,12 @@ struct AssetManager {
     sf::Texture textureBackground;
     sf::Font font;
     sf::SoundBuffer bufferMove;
+
+    static AssetManager& instance() {
+        static AssetManager staticAssetManager;
+        return staticAssetManager;
+    }
+private:
     AssetManager() {
         font.loadFromFile("arial.ttf");
         textureChip.loadFromFile("img/chip.png");
@@ -35,6 +41,8 @@ struct AssetManager {
         text.setPosition(80, 200);
         text.setCharacterSize(60);
     }
+    AssetManager(AssetManager const&);
+    AssetManager& operator=(AssetManager const&);
 
 };
 
@@ -89,7 +97,7 @@ int main() {
     config.readConfig("config.txt");
     sf::Mouse mouse;
     sf::Clock clock;
-    AssetManager assetManager;
+    AssetManager& assetManager = AssetManager::instance();
     sf::Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
