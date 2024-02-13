@@ -6,10 +6,11 @@
 #include "config.h"
 #include "move.h"
 #include "Color.h"
+#include "Chip.h"
 
 
 std::vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userColor::Gray, userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
-float radiusChip = 15;
+
 sf::Vector2f sizePoints(40, 40);
 
 struct AssetManager {
@@ -46,26 +47,13 @@ private:
 
 };
 
-struct Chip {
-    sf::CircleShape shape;    
-    int numberPositionShape;
-    int numberWinPOsitionShape;
-    bool avtivChip = false;
-    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, AssetManager const &assetManager) {
-        shape.setRadius(radiusChip);
-        numberPositionShape = position;
-        numberWinPOsitionShape = winPosition;
-        shape.setFillColor(color);
-        shape.setPosition(positionX , positionY );
-        shape.setTexture(&assetManager.textureChip);
-    }
-};
+
 
 struct Square {
     int numberPositionSquare;
     sf::RectangleShape point;
     sf::Texture textureSquare;
-    Square(int position, float positionX, float positionY, sf::Color color, AssetManager const &assetManager) {
+    Square(int position, float positionX, float positionY, sf::Color color, AssetManager const &assetManager, int const &radiusChip) {
         numberPositionSquare = position;
         point.setSize(sizePoints);
         point.setPosition(positionX - (sizePoints.x/2 - radiusChip), positionY - (sizePoints.y / 2 - radiusChip));
@@ -86,7 +74,7 @@ struct PositionPoints {
     }
 };
 
-void initialization(Config& config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip>& chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, AssetManager& assetManager);
+void initialization(Config& config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip>& chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, AssetManager& assetManager, float const& radiusChip);
 int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition);
 void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
 std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition);
@@ -98,6 +86,7 @@ int main() {
     sf::Mouse mouse;
     sf::Clock clock;
     AssetManager& assetManager = AssetManager::instance();
+    float radiusChip = 15;
     sf::Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
@@ -116,7 +105,7 @@ int main() {
     std::vector <int> roadActivChip;
     std::vector <std::vector <int>> road;
     connectPoints.reserve(config.getConnectCount());    
-    initialization(config, connectPoints, chip, square, positionPoints, assetManager);
+    initialization(config, connectPoints, chip, square, positionPoints, assetManager, radiusChip);
     void fillingBusyPoints(std::vector <PositionPoints> &positionPoints, std::vector <int> &occupPoints, std::vector <Chip> const& chip);
 
     while (window.isOpen()) {
@@ -306,7 +295,7 @@ std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> cons
     return tempRoadActivChip;
 }
 
-void initialization(Config &config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip> &chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, AssetManager &assetManager){
+void initialization(Config &config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip> &chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, AssetManager &assetManager, float const& radiusChip){
 
     for (int i = 0; i < config.getConnectCount(); i++) {
         config.getConnectionsBetweenPoints(i);
@@ -319,13 +308,13 @@ void initialization(Config &config, std::vector <std::vector <int>>& connectPoin
 
     for (int i = 0; i < config.getChipCount(); i++) {
         int numberPositionShape = config.getArrStartPoints(i);
-        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i), arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY(), assetManager);
+        Chip tempChip(config.getArrStartPoints(i), config.getArrWinnerPoints(i), arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY(), assetManager, radiusChip);
         chip.push_back(tempChip);
     }
 
     for (int i = 0; i < config.getChipCount(); i++) {
         int NumberPositionPoint = config.getArrWinnerPoints(i);
-        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i], assetManager);
+        Square tempSquare(NumberPositionPoint, config.getCoordinatePoints(NumberPositionPoint).getCoordinateX(), config.getCoordinatePoints(NumberPositionPoint).getCoordinateY(), arrColor[i], assetManager, radiusChip);
         square.push_back(tempSquare);
     }
 

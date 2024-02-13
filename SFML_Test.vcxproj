@@ -143,11 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Chip.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="move.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Chip.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="move.h" />
