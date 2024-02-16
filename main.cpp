@@ -129,7 +129,7 @@ int main() {
                 sf::Vector2f size(widthConnection, p2Y + sizePoints.y - p1Y - 
                     (sizePoints.y - widthConnection));
                 sf::Vector2f position(p1X + (2 * radiusChip - widthConnection) / 2, 
-                    p1Y + (2 * radiusChip - widthConnection) / 2);
+                                      p1Y + (2 * radiusChip - widthConnection) / 2);
                 connectingPoints.setSize(size);
                 connectingPoints.setPosition(position);
             }

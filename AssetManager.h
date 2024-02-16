@@ -11,30 +11,26 @@ public:
         return staticAssetManager;
     }
     const sf::Texture* getTexture(const std::string& path);
-    void addTexture(const std::string& path);
+
     const sf::Sprite & getBackground();
     sf::Sound & getSoundMoveChip();
     sf::Music & getSoundWin();
     sf::Text& getText();
-public:
-    //sf::Text text;
-    sf::Font font;
-
-    //sf::Music soundWin;
-    sf::Sound soundMoveChip;
-    sf::SoundBuffer bufferMove;
 
 private:
-    std::unordered_map<std::string, sf::Texture> texture;    
+    std::unordered_map<std::string, sf::Texture> textures;    
 
     sf::Sprite background;
 
     sf::Text text;
-    //sf::Font font;
+    sf::Font font;
 
     sf::Music soundWin;
-    //sf::Sound soundMoveChip;
-    //sf::SoundBuffer bufferMove;
+    sf::Sound soundMoveChip;
+    sf::SoundBuffer bufferMove;
+
+    void addTexture(const std::string& path);
+    void setFont(const std::string& pathFont);
 
     AssetManager();
     AssetManager(AssetManager const&);
