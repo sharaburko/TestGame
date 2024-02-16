@@ -147,6 +147,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Chip.cpp" />
     <ClCompile Include="config.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="move.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="Chip.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="move.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
