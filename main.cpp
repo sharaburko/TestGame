@@ -8,7 +8,7 @@
 #include "Color.h"
 #include "Chip.h"
 #include "AssetManager.h"
-//#include "GameEngine.h"
+#include "GameEngine.h"
 
 
 std::vector <sf::Color> arrColor{sf::Color::Black, sf::Color::White, sf::Color::Green, 
@@ -16,67 +16,33 @@ sf::Color::Blue, sf::Color::Magenta, userColor::Purple, userColor::Olive, userCo
 userColor::Navy, userColor::Fuchsia, userColor::Teal};    //color points and chip
 sf::Vector2f sizePoints(40, 40);
 
-struct Square {
-    int numberPositionSquare;
-    sf::RectangleShape point;
-    sf::Texture textureSquare;
-    Square(int position, float positionX, float positionY, sf::Color color, 
-        int const &radiusChip) {
-        numberPositionSquare = position;
-        point.setSize(sizePoints);
-        point.setPosition(positionX - (sizePoints.x/2 - radiusChip), 
-            positionY - (sizePoints.y / 2 - radiusChip));
-        point.setFillColor(color);
-        point.setTexture(AssetManager::instance().getTexture("img/point.png"));
-    }
-};
 
-struct PositionPoints {
-    int position;
-    float coordinateX;
-    float coordinateY;
-    bool freePoints = true;
-    PositionPoints(int position, float x, float y) {
-        this->position = position;
-        coordinateX = x;
-        coordinateY = y;
-    }
-};
 
-void initialization(Config& config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip>& chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, float const& radiusChip);
-int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition);
-void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
-std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition);
+
+//int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition);
+//void searchFreePointsChip(std::vector <std::vector <int>> &road, std::vector <int> const &occupiredPoints);
+//std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition);
 
 int main() { 
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Game_Sharaburko", sf::Style::Close);
+    GameEngine gameEngin;
     Config config;
     config.readConfig("config.txt");
-    sf::Mouse mouse;
-    sf::Clock clock;
+    //sf::Mouse mouse;
+    //sf::Clock clock;
     float radiusChip = 15;
     sf::Vector2i mousePosition (0, 0);
     int activPosition = 0;
     int activChip = 0;
     int stepActivChip = 1;
     int countWinPosition = 0;
-    bool moveChip = false;
-    std::vector <Chip> chip;   
-    std::vector <Square> square;
-    std::vector <PositionPoints> positionPoints;
-    chip.reserve(config.getChipCount());
-    square.reserve(config.getChipCount());
-    positionPoints.reserve(config.getPointsCount());
-    std::vector<std::vector <int>> connectPoints;
-    std::vector <int> occupPoints;
-    std::vector <int> freePoints;
-    std::vector <int> roadActivChip;
-    std::vector <std::vector <int>> road;
-    connectPoints.reserve(config.getConnectCount());    
+    //bool moveChip = false;
+     
+
     initialization(config, connectPoints, chip, square, positionPoints, radiusChip);
     void fillingBusyPoints(std::vector <PositionPoints> &positionPoints, std::vector <int> &occupPoints, std::vector <Chip> const& chip);
 
-    while (window.isOpen()) {
+    gameEngin.run();
+    /*while (gameEngin.getWindow().isOpen()) {
         sf::Event event;
     	
         while (window.pollEvent(event)) {
@@ -210,14 +176,14 @@ int main() {
         }
         
         window.display();
-    }
+    }*/
 
     if (countWinPosition == chip.size()) {
         AssetManager::instance().getSoundWin().play();
     }
 
     while (AssetManager::instance().getSoundWin().getStatus() == 2) {
-        window.clear(sf::Color::Black);
+        gameEngine.getWindow().clear(sf::Color::Black);
         window.draw(AssetManager::instance().getText());
         window.display();
     }
@@ -225,48 +191,48 @@ int main() {
     return 0;
 }
 
-int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition)
-{
-    for (int i = 0; i < positionPoints.size(); i++) {
-        sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
-
-        if (areaChip.contains(mousePosition.x, mousePosition.y)) {
-            return positionPoints[i].position;
-        }
-
-    }
-
-    return 0;
-}
-
-void searchFreePointsChip(std::vector <std:: vector <int>>& road, std::vector <int> const &occupiredPoints) {
-    for (size_t j = 0; j < road.size(); j++) {
-
-        for (size_t k = 0; k < occupiredPoints.size(); k++) {
-
-            if (find(road[j].begin() + 1, road[j].end(), occupiredPoints[k]) != road[j].end()) {
-                road.erase(road.begin() + j);
-                j--;
-                break;
-            }
-
-        }
-    }
-}
-
-std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition) {
-    std::vector <int> tempRoadActivChip;
-    for (size_t i = 0; i < road.size(); i++) {
-
-        if (*(road[i].end() - 1) == activPosition) {
-            tempRoadActivChip = road[i];
-            return tempRoadActivChip;
-        }
-
-    }
-    return tempRoadActivChip;
-}
-
+//int searchActivPosition(std::vector<PositionPoints> const &positionPoints, sf::Vector2i const &mousePosition)
+//{
+//    for (int i = 0; i < positionPoints.size(); i++) {
+//        sf::IntRect areaChip(positionPoints[i].coordinateX, positionPoints[i].coordinateY, sizePoints.x, sizePoints.y);
+//
+//        if (areaChip.contains(mousePosition.x, mousePosition.y)) {
+//            return positionPoints[i].position;
+//        }
+//
+//    }
+//
+//    return 0;
+//}
+//
+//void searchFreePointsChip(std::vector <std:: vector <int>>& road, std::vector <int> const &occupiredPoints) {
+//    for (size_t j = 0; j < road.size(); j++) {
+//
+//        for (size_t k = 0; k < occupiredPoints.size(); k++) {
+//
+//            if (find(road[j].begin() + 1, road[j].end(), occupiredPoints[k]) != road[j].end()) {
+//                road.erase(road.begin() + j);
+//                j--;
+//                break;
+//            }
+//
+//        }
+//    }
+//}
+//
+//std::vector <int> const searchRoadActivChip(std::vector <std::vector <int>> const &road, int const& activPosition) {
+//    std::vector <int> tempRoadActivChip;
+//    for (size_t i = 0; i < road.size(); i++) {
+//
+//        if (*(road[i].end() - 1) == activPosition) {
+//            tempRoadActivChip = road[i];
+//            return tempRoadActivChip;
+//        }
+//
+//    }
+//    return tempRoadActivChip;
+//}
+//
 void initialization(Config &config, std::vector <std::vector <int>>& connectPoints, std::vector <Chip> &chip, std::vector <Square>& square, std::vector <PositionPoints>& positionPoints, float const& radiusChip){
 
     for (int i = 0; i < config.getConnectCount(); i++) {
@@ -295,14 +261,14 @@ void initialization(Config &config, std::vector <std::vector <int>>& connectPoin
 
 }
 
-void fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> const& chip) {
-    for (int i = 0; i < positionPoints.size(); i++) {
-        positionPoints[i].freePoints = true;
-        occupPoints.clear();
-    }
-
-    for (int i = 0; i < chip.size(); i++) {
-        positionPoints[chip[i].numberPositionShape - 1].freePoints = false;
-        occupPoints.push_back(chip[i].numberPositionShape);
-    }
-};
+//void fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> const& chip) {
+//    for (int i = 0; i < positionPoints.size(); i++) {
+//        positionPoints[i].freePoints = true;
+//        occupPoints.clear();
+//    }
+//
+//    for (int i = 0; i < chip.size(); i++) {
+//        positionPoints[chip[i].numberPositionShape - 1].freePoints = false;
+//        occupPoints.push_back(chip[i].numberPositionShape);
+//    }
+//};
