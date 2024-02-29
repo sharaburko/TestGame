@@ -12,7 +12,6 @@ public:
 	GameEngine();
 	void run();
 
-
     void setInit(Config& config);
 private:
     Init init;
@@ -22,6 +21,7 @@ private:
     sf::Mouse mouse;
     sf::Clock clock;
 
+    sf::Event event;
 
     sf::Vector2i mousePosition{ 0, 0 };
     int activPosition = 0;

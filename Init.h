@@ -31,9 +31,9 @@ public:
     const std::vector <Chip>& getChip() { return chip; }
     std::vector <PositionPoints>& getPositionPoints() { return positionPoints; }
 
-   const float & getRadiusChip();
-   const float getSizePointsX() { return sizePoints.x; }
-   const float getSizePointsY() { return sizePoints.y; }
+   const float& getRadiusChip() { return radiusChip; }
+   const float& getSizePointsX() { return sizePoints.x; }
+   const float& getSizePointsY() { return sizePoints.y; }
    const std::vector<std::vector <int>> & getConnectPoints() { return connectPoints; }
 };
 

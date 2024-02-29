@@ -43,9 +43,4 @@ void Init::setConnectPoints(Config & config)
     }
 }
 
-const float & Init::getRadiusChip()
-{
-    return radiusChip;
-}
-
 

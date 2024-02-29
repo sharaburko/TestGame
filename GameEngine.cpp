@@ -8,6 +8,16 @@ void GameEngine::setInit(Config& config) {
     init.setConnectPoints(config);
 }
 
+GameEngine::GameEngine(const std::string& Title, unsigned modeWidth,
+    unsigned modeHeight)
+{
+    window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
+}
+
+GameEngine::GameEngine() {
+    window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
+}
+
 void GameEngine::inpute()
 {
     //if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !moveChip) {
@@ -17,18 +27,13 @@ void GameEngine::inpute()
     //        chip.move(position);
     //    }
     //}
-
-    sf::Event event;
+    
 
     while (window.pollEvent(event)) {
 
         if (event.type == sf::Event::Closed)
             window.close();
     }
-
-    float time = clock.getElapsedTime().asMicroseconds();
-    clock.restart();
-    time = time / 900;
 
     fillingBusyPoints(init.getPositionPoints(), occupPoints, init.getChip());
 
@@ -178,15 +183,6 @@ void GameEngine::draw()
 
 }
 
-GameEngine::GameEngine(const std::string& Title, unsigned modeWidth, 
-                       unsigned modeHeight)
-{
-    window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
-}
-
-GameEngine::GameEngine() {
-    window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
-}
 
 void GameEngine::run()
 {
