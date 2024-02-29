@@ -6,5 +6,5 @@ Square::Square(int position, float positionX, float positionY, sf::Color color,
     point.setPosition(positionX - (sizePoints.x / 2 - radiusChip),
         positionY - (sizePoints.y / 2 - radiusChip));
     point.setFillColor(color);
-    point.setTexture(AssetManager::instance().getTexture("img/point.png"));
+    point.setTexture(AssetManager::getTexture("img/point.png"));
 }

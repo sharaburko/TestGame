@@ -9,7 +9,7 @@ void GameEngine::setInit(Config& config) {
 }
 
 GameEngine::GameEngine(const std::string& Title, unsigned modeWidth,
-    unsigned modeHeight)
+                       unsigned modeHeight)
 {
     window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
 }
@@ -59,42 +59,35 @@ void GameEngine::inpute()
     //    break;
 
     window.clear(userColor::Gray);
-    window.draw(AssetManager::instance().getBackground());
+    window.draw(AssetManager::getBackground());
     countWinPosition = 0;
 
     for (int i = 0; i < init.getConnectPoints().size(); i++) {
-        //int p1 = config.getConnectionsBetweenPoints(i).getConnectionP1();
-        //int p2 = config.getConnectionsBetweenPoints(i).getConnectionP2();
-        //float p1X = config.getCoordinatePoints(p1).getCoordinateX();
-        //float p1Y = config.getCoordinatePoints(p1).getCoordinateY();
-        //float p2X = config.getCoordinatePoints(p2).getCoordinateX();
-        //float p2Y = config.getCoordinatePoints(p2).getCoordinateY();
-        //float widthConnection = 20;
-        //sf::RectangleShape connectingPoints;
 
-        int p1 = init.getConnectPoints()[i][0];
-        int p2 = init.getConnectPoints()[i][1];;
+        int p1 = init.getConnectPoints()[i][0] - 1;
+        int p2 = init.getConnectPoints()[i][1] - 1;
         float p1X = init.getPositionPoints()[p1].getCoordinateX();
         float p1Y = init.getPositionPoints()[p1].getCoordinateY();
         float p2X = init.getPositionPoints()[p2].getCoordinateX();
         float p2Y = init.getPositionPoints()[p2].getCoordinateY();
+
         float widthConnection = 20;
         sf::RectangleShape connectingPoints;
 
         if (p1X == p2X) {
             sf::Vector2f size(widthConnection, p2Y + init.getSizePointsY() - p1Y -
-                (init.getSizePointsY() - widthConnection));
+                             (init.getSizePointsY() - widthConnection));
             sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
-                p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
+                                  p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
             connectingPoints.setSize(size);
             connectingPoints.setPosition(position);
         }
         else {
-            sf::Vector2f size(p2X + init.getSizePointsX() - p1X - (init.getSizePointsX() - widthConnection),
-                widthConnection);
+            sf::Vector2f size(p2X + init.getSizePointsX() - p1X - (init.getSizePointsX() -
+                              widthConnection), widthConnection);
             connectingPoints.setSize(size);
             sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
-                p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
+                                  p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
             connectingPoints.setPosition(position);
         }
 
@@ -133,7 +126,7 @@ void GameEngine::inpute()
                 }
                 else {
                     init.setVectorChip()[i].shape.setPosition(init.getPositionPoints()[roadActivChip[stepActivChip] - 1].getCoordinateX(), init.getPositionPoints()[roadActivChip[stepActivChip] - 1].getCoordinateY());
-                    AssetManager::instance().getSoundMoveChip().play();
+                    AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
 
                     if ((stepActivChip == roadActivChip.size())) {
@@ -167,14 +160,18 @@ void GameEngine::inpute()
     window.display();
 
     if (countWinPosition == init.getChip().size()) {
-        AssetManager::instance().getSoundWin().play();
+        AssetManager::getSoundWin().play();
     }
 
-    while (AssetManager::instance().getSoundWin().getStatus() == 2) {
+    while (AssetManager::getSoundWin().getStatus() == 2) {
         window.clear(sf::Color::Black);
-        window.draw(AssetManager::instance().getText());
+        window.draw(AssetManager::getText());
         window.display();
     }
+}
+
+void GameEngine::update()
+{
 }
 
 void GameEngine::draw()
@@ -188,7 +185,7 @@ void GameEngine::run()
 {
     while (window.isOpen()) {
 
-        float time = clock.getElapsedTime().asMicroseconds();
+        time = clock.getElapsedTime().asMicroseconds();
         clock.restart();
         time = time / 900;
 

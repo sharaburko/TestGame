@@ -29,6 +29,7 @@ private:
     int stepActivChip = 1;
     int countWinPosition = 0;
     bool moveChip = false;
+    float time;
 
 
     std::vector <int> occupPoints;

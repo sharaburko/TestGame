@@ -7,35 +7,43 @@ void AssetManager::addTexture(const std::string& path)
     texture.loadFromFile(path);
 }
 
-const sf::Texture* AssetManager::getTexture(const std::string &path)
+sf::Texture* AssetManager::getTexture(const std::string &path)
 {
-    if (auto pair_found = textures.find(path); pair_found != textures.end())
-        return &pair_found->second;
+    auto& manager = AssetManager::instance();
+    auto textures = AssetManager::instance().textures;
 
-    addTexture(path);
+    //if (auto pair_found = textures.find(path); pair_found != textures.end())
+    //    return &pair_found->second;
 
-    return &textures[path];
+    manager.addTexture(path);
+
+    return &manager.textures[path];
 }
 
 const sf::Sprite& AssetManager::getBackground()
 {
-    background.setTexture(*instance().getTexture("img/background.jpg"));
-    return background;
+    auto& manager = AssetManager::instance();
+
+    auto texture =* manager.getTexture("img/background.jpg");
+    manager.background.setTexture(texture);
+    return manager.background;
 }
 
 sf::Sound& AssetManager::getSoundMoveChip()
 {
-    bufferMove.loadFromFile("music/move.ogg");
-    soundMoveChip.setBuffer(bufferMove);
+    auto &manager = AssetManager::instance();
+    manager.bufferMove.loadFromFile("music/move.ogg");
+    manager.soundMoveChip.setBuffer(manager.bufferMove);
 
-    return soundMoveChip;
+    return manager.soundMoveChip;
 }
 
 sf::Music& AssetManager::getSoundWin()
 {
-    soundWin.openFromFile("music/finish.ogg");
+    auto &manager = AssetManager::instance();
+    manager.soundWin.openFromFile("music/finish.ogg");
 
-    return soundWin;
+    return manager.soundWin;
 }
 
 void AssetManager::setFont(const std::string& pathFont) {
@@ -46,10 +54,11 @@ void AssetManager::setFont(const std::string& pathFont) {
 
 sf::Text& AssetManager::getText()
 {
-    setFont("arial.ttf");
+    auto &manager = AssetManager::instance();
+    manager.setFont("arial.ttf");
 
-    text.setPosition(80, 200);
-    text.setCharacterSize(60);
+    manager.text.setPosition(80, 200);
+    manager.text.setCharacterSize(60);
 
-    return text;
+    return manager.text;
 }
