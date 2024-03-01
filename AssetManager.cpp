@@ -12,20 +12,25 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
     auto& manager = AssetManager::instance();
     auto textures = AssetManager::instance().textures;
 
-    //if (auto pair_found = textures.find(path); pair_found != textures.end())
-    //    return &pair_found->second;
+    if (auto pair_found = manager.textures.find(path); pair_found != manager.textures.end())
+        return &pair_found->second;
 
     manager.addTexture(path);
 
     return &manager.textures[path];
 }
 
-const sf::Sprite& AssetManager::getBackground()
+ sf::Sprite& AssetManager::getBackground()
 {
     auto& manager = AssetManager::instance();
 
-    auto texture =* manager.getTexture("img/background.jpg");
-    manager.background.setTexture(texture);
+    //auto texture = *manager.getTexture("img/background.jpg");
+    ////manager.background.setTexture(texture);
+    //manager.background.setTextureRect(sf::IntRect(0,0,640,480));
+    //manager.background.setColor(sf::Color::Color::Black);
+
+    //return manager.background;
+    manager.background.setColor(sf::Color::Color::Black);
     return manager.background;
 }
 

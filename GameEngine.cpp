@@ -59,7 +59,8 @@ void GameEngine::inpute()
     //    break;
 
     window.clear(userColor::Gray);
-    window.draw(AssetManager::getBackground());
+    //window.draw(AssetManager::getBackground());
+    window.draw(AssetManager::instance().background);
     countWinPosition = 0;
 
     for (int i = 0; i < init.getConnectPoints().size(); i++) {

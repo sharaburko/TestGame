@@ -12,10 +12,11 @@ public:
     }
 
     static sf::Texture* getTexture(const std::string& path);
-    static const sf::Sprite & getBackground();
+    static sf::Sprite & getBackground();
     static sf::Sound & getSoundMoveChip();
     static sf::Music & getSoundWin();
     static sf::Text& getText();
+    sf::Sprite background;
 
 
 private:
@@ -24,7 +25,7 @@ private:
 
     std::unordered_map<std::string, sf::Texture> textures;    
 
-    sf::Sprite background;
+
 
     sf::Text text;
     sf::Font font;
