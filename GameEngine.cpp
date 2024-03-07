@@ -58,54 +58,37 @@ void GameEngine::inpute()
     //if (countWinPosition == init.getChip().size())
     //    break;
 
-    window.clear(userColor::Gray);
-    window.draw(AssetManager::getBackground());
     countWinPosition = 0;
 
-    for (int i = 0; i < init.getConnectPoints().size(); i++) {
-
-        int p1 = init.getConnectPoints()[i][0] - 1;
-        int p2 = init.getConnectPoints()[i][1] - 1;
-        float p1X = init.getPositionPoints()[p1].getCoordinateX();
-        float p1Y = init.getPositionPoints()[p1].getCoordinateY();
-        float p2X = init.getPositionPoints()[p2].getCoordinateX();
-        float p2Y = init.getPositionPoints()[p2].getCoordinateY();
-
-        float widthConnection = 20;
-        sf::RectangleShape connectingPoints;
-
-        if (p1X == p2X) {
-            sf::Vector2f size(widthConnection, p2Y + init.getSizePointsY() - p1Y -
-                             (init.getSizePointsY() - widthConnection));
-            sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
-                                  p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
-            connectingPoints.setSize(size);
-            connectingPoints.setPosition(position);
-        }
-        else {
-            sf::Vector2f size(p2X + init.getSizePointsX() - p1X - (init.getSizePointsX() -
-                              widthConnection), widthConnection);
-            connectingPoints.setSize(size);
-            sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
-                                  p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
-            connectingPoints.setPosition(position);
-        }
-
-        connectingPoints.setFillColor(sf::Color(216, 216, 216));
-        window.draw(connectingPoints);
+    if (!movingPlaces.empty()) {
+        movingPlaces.clear();
     }
 
-    for (int i = 0; i < init.getSquare().size(); i++) {
-        window.draw(init.getSquare()[i].getPoint());
+    for (auto i = movingPlaces.begin(); i != movingPlaces.end(); i++) {
+
+        movingPlaces.emplace_back();
     }
 
-    for (size_t i = 0; i < road.size(); i++) {
-        sf::CircleShape activ;
-        int radiusFreePosition = init.getRadiusChip() * 0.2;
-        activ.setFillColor(sf::Color::Red);
-        activ.setRadius(radiusFreePosition);
-        activ.setPosition(init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateX() + (2 * init.getRadiusChip() - 2 * radiusFreePosition) / 2, init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateY() + (2 * init.getRadiusChip() - 2 * radiusFreePosition) / 2);
-        window.draw(activ);
+    if (countWinPosition == init.getChip().size()) {
+        AssetManager::getSoundWin().play();
+    }
+
+    while (AssetManager::getSoundWin().getStatus() == 2) {
+        window.clear(sf::Color::Black);
+        window.draw(AssetManager::getText());
+        window.display();
+    }
+}
+
+void GameEngine::update()
+{
+
+    for (size_t i = 0; i < movingPlaces.size(); i++) {
+
+        movingPlaces[i].setPositionMovingPlace(init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateX() +
+            (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2,
+            init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateY() +
+            (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2);
     }
 
     for (size_t i = 0; i < init.getChip().size(); i++) {
@@ -153,30 +136,60 @@ void GameEngine::inpute()
         if (init.getChip()[i].numberPositionShape == init.getChip()[i].numberWinPOsitionShape) {
             countWinPosition++;
         }
-
-        window.draw(init.getChip()[i].shape);
     }
-
-    window.display();
-
-    if (countWinPosition == init.getChip().size()) {
-        AssetManager::getSoundWin().play();
-    }
-
-    while (AssetManager::getSoundWin().getStatus() == 2) {
-        window.clear(sf::Color::Black);
-        window.draw(AssetManager::getText());
-        window.display();
-    }
-}
-
-void GameEngine::update()
-{
 }
 
 void GameEngine::draw()
 {
     //roads.draw();
+
+    window.clear(userColor::Gray);
+    window.draw(AssetManager::getBackground());
+
+    for (int i = 0; i < init.getConnectPoints().size(); i++) {
+
+        int p1 = init.getConnectPoints()[i][0] - 1;
+        int p2 = init.getConnectPoints()[i][1] - 1;
+        float p1X = init.getPositionPoints()[p1].getCoordinateX();
+        float p1Y = init.getPositionPoints()[p1].getCoordinateY();
+        float p2X = init.getPositionPoints()[p2].getCoordinateX();
+        float p2Y = init.getPositionPoints()[p2].getCoordinateY();
+
+        float widthConnection = 20;
+        sf::RectangleShape connectingPoints;
+
+        if (p1X == p2X) {
+            sf::Vector2f size(widthConnection, p2Y + init.getSizePointsY() - p1Y -
+                (init.getSizePointsY() - widthConnection));
+            sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
+                p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
+            connectingPoints.setSize(size);
+            connectingPoints.setPosition(position);
+        }
+        else {
+            sf::Vector2f size(p2X + init.getSizePointsX() - p1X - (init.getSizePointsX() -
+                widthConnection), widthConnection);
+            connectingPoints.setSize(size);
+            sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
+                p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
+            connectingPoints.setPosition(position);
+        }
+
+        connectingPoints.setFillColor(sf::Color(216, 216, 216));
+        window.draw(connectingPoints);
+    }
+
+    for (int i = 0; i < init.getSquare().size(); i++) {
+        window.draw(init.getSquare()[i].getPoint());
+    }
+
+    for (size_t i = 0; i < movingPlaces.size(); i++) {
+        window.draw(movingPlaces[i].getMovingPlace());
+    }
+
+    for (int i = 0; i < init.getSquare().size(); i++) {
+        window.draw(init.getChip()[i].shape);
+    }
 
 }
 
@@ -192,6 +205,8 @@ void GameEngine::run()
         inpute();
         update();
         draw();
+
+        window.display();
     }
 }
 

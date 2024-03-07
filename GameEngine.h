@@ -5,6 +5,28 @@
 #include "move.h"
 #include "Color.h"
 
+class MovingPlace {
+private:
+    sf::CircleShape place;
+    int radiusMovingPlace = 4;
+    sf::Color colorPlace = sf::Color::Red;
+
+public:
+    MovingPlace(){
+        place.setFillColor(colorPlace);
+        place.setRadius(radiusMovingPlace);
+    }
+
+    void setPositionMovingPlace(float coordinateX, float coordinateY) {
+        place.setPosition(coordinateX, coordinateY);
+    };
+
+    const sf::CircleShape& getMovingPlace()  {
+        return place;
+    };
+    const int& getRadiusMovingPlace() { return radiusMovingPlace; }
+};
+
 class GameEngine
 {
 public:
@@ -36,6 +58,7 @@ private:
     std::vector <int> freePoints;
     std::vector <int> roadActivChip;
     std::vector <std::vector <int>> road;
+    std::vector <MovingPlace> movingPlaces;
 
     int searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition);
     void searchFreePointsChip(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints);
