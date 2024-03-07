@@ -6,12 +6,30 @@
 #include "config.h"
 #include "Color.h"
 
+class Road {
+private:
+    Road() {
+        road.setFillColor(colorRoad);
+    }
+    sf::RectangleShape road;
+    float widthRoad = 20;
+    sf::Color colorRoad = sf::Color((216, 216, 216));
+public:
+    const sf::RectangleShape& getRoad() { return road; }
+    sf::RectangleShape& setRoad() { return road; }
+    void setPositionRoad(float coordinateX, float coordinateY) {
+        road.setPosition(coordinateX, coordinateY);
+    }
+    const float& getWidthRoad() { return widthRoad; }
+};
+
 class Init
 {
 private:
     sf::Vector2f sizePoints{ 40, 40 };
     float radiusChip = 15;
 
+    std::vector <Road> roads;
     std::vector <Chip> chip;
     std::vector <Square> square;
     std::vector <PositionPoints> positionPoints;
@@ -25,6 +43,9 @@ public:
     void setSquare(Config& config);
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
+    void setRoads();
+    std::vector <Road>& getRoads() { return roads; }
+
     std::vector <Chip>& setVectorChip() { return chip; }
 
     std:: vector <Square>& getSquare() { return square; }

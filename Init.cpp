@@ -43,4 +43,35 @@ void Init::setConnectPoints(Config & config)
     }
 }
 
+void Init::setRoads()
+{
+    for (int i = 0; i < getConnectPoints().size(); i++) {
+
+        int p1 = getConnectPoints()[i][0] - 1;
+        int p2 = getConnectPoints()[i][1] - 1;
+        float p1X = getPositionPoints()[p1].getCoordinateX();
+        float p1Y = getPositionPoints()[p1].getCoordinateY();
+        float p2X = getPositionPoints()[p2].getCoordinateX();
+        float p2Y = getPositionPoints()[p2].getCoordinateY();
+
+
+        if (p1X == p2X) {
+            sf::Vector2f size(roads[i].getWidthRoad(), p2Y + getSizePointsY() - p1Y -
+                (getSizePointsY() - roads[i].getWidthRoad()));
+            sf::Vector2f position(p1X + (2 * getRadiusChip() - roads[i].getWidthRoad()) / 2,
+                p1Y + (2 * getRadiusChip() - roads[i].getWidthRoad()) / 2);
+            roads[i].setRoad().setSize(size);
+            roads[i].setRoad().setPosition(position);
+        }
+        else {
+            sf::Vector2f size(p2X + getSizePointsX() - p1X - (getSizePointsX() -
+                roads[i].getWidthRoad()), roads[i].getWidthRoad());
+            roads[i].setRoad().setSize(size);
+            sf::Vector2f position(p1X + (2 * getRadiusChip() - roads[i].getWidthRoad()) / 2,
+                p1Y + (2 * getRadiusChip() - roads[i].getWidthRoad()) / 2);
+            roads[i].setRoad().setPosition(position);
+        }
+    }
+}
+
 

@@ -5,6 +5,8 @@
 #include "move.h"
 #include "Color.h"
 
+
+
 class MovingPlace {
 private:
     sf::CircleShape place;
@@ -59,6 +61,7 @@ private:
     std::vector <int> roadActivChip;
     std::vector <std::vector <int>> road;
     std::vector <MovingPlace> movingPlaces;
+
 
     int searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition);
     void searchFreePointsChip(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints);

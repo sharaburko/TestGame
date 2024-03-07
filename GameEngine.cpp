@@ -146,37 +146,9 @@ void GameEngine::draw()
     window.clear(userColor::Gray);
     window.draw(AssetManager::getBackground());
 
-    for (int i = 0; i < init.getConnectPoints().size(); i++) {
+    for (int i = 0; i < init.getRoads().size(); i++) {
 
-        int p1 = init.getConnectPoints()[i][0] - 1;
-        int p2 = init.getConnectPoints()[i][1] - 1;
-        float p1X = init.getPositionPoints()[p1].getCoordinateX();
-        float p1Y = init.getPositionPoints()[p1].getCoordinateY();
-        float p2X = init.getPositionPoints()[p2].getCoordinateX();
-        float p2Y = init.getPositionPoints()[p2].getCoordinateY();
-
-        float widthConnection = 20;
-        sf::RectangleShape connectingPoints;
-
-        if (p1X == p2X) {
-            sf::Vector2f size(widthConnection, p2Y + init.getSizePointsY() - p1Y -
-                (init.getSizePointsY() - widthConnection));
-            sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
-                p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
-            connectingPoints.setSize(size);
-            connectingPoints.setPosition(position);
-        }
-        else {
-            sf::Vector2f size(p2X + init.getSizePointsX() - p1X - (init.getSizePointsX() -
-                widthConnection), widthConnection);
-            connectingPoints.setSize(size);
-            sf::Vector2f position(p1X + (2 * init.getRadiusChip() - widthConnection) / 2,
-                p1Y + (2 * init.getRadiusChip() - widthConnection) / 2);
-            connectingPoints.setPosition(position);
-        }
-
-        connectingPoints.setFillColor(sf::Color(216, 216, 216));
-        window.draw(connectingPoints);
+        window.draw(init.getRoads()[i].getRoad());
     }
 
     for (int i = 0; i < init.getSquare().size(); i++) {
