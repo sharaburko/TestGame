@@ -3,6 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 #include <string>
+#include "Color.h"
 
 class AssetManager {
 public:
@@ -15,9 +16,7 @@ public:
     static sf::Sprite & getBackground();
     static sf::Sound & getSoundMoveChip();
     static sf::Music & getSoundWin();
-    static sf::Text& getText();
-    sf::Sprite background;
-
+    static sf::Text& getText();   
 
 private:
     void addTexture(const std::string& path);
@@ -25,7 +24,7 @@ private:
 
     std::unordered_map<std::string, sf::Texture> textures;    
 
-
+    sf::Sprite background;
 
     sf::Text text;
     sf::Font font;

@@ -23,14 +23,10 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
  sf::Sprite& AssetManager::getBackground()
 {
     auto& manager = AssetManager::instance();
+    auto texture = *manager.getTexture("img/background.jpg");
 
-    //auto texture = *manager.getTexture("img/background.jpg");
-    ////manager.background.setTexture(texture);
-    //manager.background.setTextureRect(sf::IntRect(0,0,640,480));
-    //manager.background.setColor(sf::Color::Color::Black);
-
-    //return manager.background;
-    manager.background.setColor(sf::Color::Color::Black);
+    manager.background.setColor(userColor::Aqua);
+    manager.background.setTexture(texture);
     return manager.background;
 }
 
