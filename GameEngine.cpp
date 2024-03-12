@@ -65,7 +65,7 @@ void GameEngine::inpute()
         movingPlaces.clear();
     }
 
-    for (auto i = movingPlaces.begin(); i != movingPlaces.end(); i++) {
+    for (auto i = road.begin(); i != road.end(); i++) {
 
         movingPlaces.emplace_back();
     }
@@ -87,9 +87,9 @@ void GameEngine::update()
     for (size_t i = 0; i < movingPlaces.size(); i++) {
 
         movingPlaces[i].setPositionMovingPlace(init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateX() +
-            (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2,
-            init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateY() +
-            (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2);
+                                              (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2,
+                                               init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateY() +
+                                             (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2);
     }
 
     for (size_t i = 0; i < init.getChip().size(); i++) {

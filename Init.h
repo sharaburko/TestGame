@@ -8,20 +8,22 @@
 
 class Road {
 private:
+    sf::RectangleShape road;
+    static float widthRoad;
+    sf::Color colorRoad = sf::Color(216, 216, 216);
+public:
     Road() {
         road.setFillColor(colorRoad);
     }
-    sf::RectangleShape road;
-    float widthRoad = 20;
-    sf::Color colorRoad = sf::Color((216, 216, 216));
-public:
     const sf::RectangleShape& getRoad() { return road; }
     sf::RectangleShape& setRoad() { return road; }
     void setPositionRoad(float coordinateX, float coordinateY) {
         road.setPosition(coordinateX, coordinateY);
     }
-    const float& getWidthRoad() { return widthRoad; }
+    static const float& getWidthRoad() { return widthRoad; }
 };
+
+inline float Road::widthRoad = 20;
 
 class Init
 {
