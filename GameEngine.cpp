@@ -6,6 +6,7 @@ void GameEngine::setInit(Config& config) {
     init.setSquare(config);
     init.setPositionPoints(config);
     init.setConnectPoints(config);
+    init.setRoads();
 }
 
 GameEngine::GameEngine(const std::string& Title, unsigned modeWidth,

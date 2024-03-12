@@ -45,10 +45,17 @@ void Init::setConnectPoints(Config & config)
 
 void Init::setRoads()
 {
-    for (int i = 0; i < getConnectPoints().size(); i++) {
+    for (int i = 0; i < connectPoints.size(); i++) {
 
-        int p1 = getConnectPoints()[i][0] - 1;
-        int p2 = getConnectPoints()[i][1] - 1;
+        //int p1 = getConnectPoints()[i][0] - 1;
+        //int p2 = getConnectPoints()[i][1] - 1;
+        //float p1X = getPositionPoints()[p1].getCoordinateX();
+        //float p1Y = getPositionPoints()[p1].getCoordinateY();
+        //float p2X = getPositionPoints()[p2].getCoordinateX();
+        //float p2Y = getPositionPoints()[p2].getCoordinateY();
+
+        int p1 = *connectPoints[i].begin();
+        int p2 = connectPoints[i].back();
         float p1X = getPositionPoints()[p1].getCoordinateX();
         float p1Y = getPositionPoints()[p1].getCoordinateY();
         float p2X = getPositionPoints()[p2].getCoordinateX();
