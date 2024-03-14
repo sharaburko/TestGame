@@ -51,7 +51,7 @@ public:
     std::vector <Chip>& setVectorChip() { return chip; }
 
     std:: vector <Square>& getSquare() { return square; }
-    const std::vector <Chip>& getChip() { return chip; }
+    std::vector <Chip>& getChip() { return chip; } //нельзя const
     std::vector <PositionPoints>& getPositionPoints() { return positionPoints; }
 
    const float& getRadiusChip() { return radiusChip; }

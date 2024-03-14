@@ -2,10 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include "AssetManager.h"
 
-struct Chip {
+class Chip {
+public:
     sf::CircleShape shape;
     int numberPositionShape;
     int numberWinPOsitionShape;
-   // bool avtivChip = false;
-    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, float const& radiusChip);  
+    // bool avtivChip = false;
+
+public:
+    Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, float const& radiusChip);
+    const int& getNumberPositionShape() { return numberPositionShape; }
+    const int& getNumberWinPOsitionShape() { return numberWinPOsitionShape; }
 };

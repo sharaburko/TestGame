@@ -29,6 +29,9 @@ void GameEngine::inpute()
     //    }
     //}
     
+    time = clock.getElapsedTime().asMicroseconds();
+    clock.restart();
+    time = time / 900;
 
     while (window.pollEvent(event)) {
 
@@ -56,9 +59,6 @@ void GameEngine::inpute()
     road = movesActivChip(activChip, init.getConnectPoints());
     searchFreePointsChip(road, occupPoints);
 
-    //if (countWinPosition == init.getChip().size())
-    //    break;
-
     countWinPosition = 0;
 
     if (!movingPlaces.empty()) {
@@ -70,15 +70,7 @@ void GameEngine::inpute()
         movingPlaces.emplace_back();
     }
 
-    if (countWinPosition == init.getChip().size()) {
-        AssetManager::getSoundWin().play();
-    }
 
-    while (AssetManager::getSoundWin().getStatus() == 2) {
-        window.clear(sf::Color::Black);
-        window.draw(AssetManager::getText());
-        window.display();
-    }
 }
 
 void GameEngine::update()
@@ -140,47 +132,52 @@ void GameEngine::update()
     }
 }
 
-void GameEngine::draw()
-{
-    //roads.draw();
+void GameEngine::draw() {
 
-    window.clear(userColor::Gray);
-    window.draw(AssetManager::getBackground());
+    if (countWinPosition != init.getChip().size()) {
 
-    for (int i = 0; i < init.getRoads().size(); i++) {
+        window.clear(userColor::Gray);
+        window.draw(AssetManager::getBackground());
 
-        window.draw(init.getRoads()[i].getRoad());
+        for (auto i = init.getRoads().begin(); i != init.getRoads().end(); i++) {
+            window.draw(i->getRoad());
+        }
+
+        for (auto i = init.getSquare().begin(); i != init.getSquare().end(); i++) {
+            window.draw(i->getPoint());
+        }
+
+        for (auto i = movingPlaces.begin(); i != movingPlaces.end(); i++) {
+            window.draw(i->getMovingPlace());
+        }
+
+        for (auto i = init.getChip().begin(); i != init.getChip().end(); i++) {
+            window.draw(i->shape);
+        }
+
+        window.display();
     }
+    else {
+        AssetManager::getSoundWin().play();        
 
-    for (int i = 0; i < init.getSquare().size(); i++) {
-        window.draw(init.getSquare()[i].getPoint());
-    }
-
-    for (size_t i = 0; i < movingPlaces.size(); i++) {
-        window.draw(movingPlaces[i].getMovingPlace());
-    }
-
-    for (int i = 0; i < init.getSquare().size(); i++) {
-        window.draw(init.getChip()[i].shape);
+        while (AssetManager::getSoundWin().getStatus() == 2) {
+            window.clear(sf::Color::Black);
+            window.draw(AssetManager::getText());
+            window.display();
+        }
     }
 
 }
 
 
-void GameEngine::run()
-{
+void GameEngine::run() {
+
     while (window.isOpen()) {
-
-        time = clock.getElapsedTime().asMicroseconds();
-        clock.restart();
-        time = time / 900;
-
         inpute();
         update();
-        draw();
-
-        window.display();
+        draw();        
     }
+
 }
 
 
@@ -226,14 +223,23 @@ std::vector <int> const GameEngine::searchRoadActivChip(std::vector <std::vector
     return tempRoadActivChip;
 }
 
-void GameEngine::fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> const& chip) {
-    for (int i = 0; i < positionPoints.size(); i++) {
-        positionPoints[i].setFreePoints() = true;
-        occupPoints.clear();
+void GameEngine::fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> & chip) { //при chip const ERROR
+    for (auto i = positionPoints.begin(); i != positionPoints.end(); i++) {
+        i->setFreePoints() = true;        
     }
 
-    for (int i = 0; i < chip.size(); i++) {
-        positionPoints[chip[i].numberPositionShape - 1].setFreePoints() = false;
-        occupPoints.push_back(chip[i].numberPositionShape);
+    occupPoints.clear();
+
+    for (auto i = chip.begin(); i != chip.end(); i++) { 
+        
+        for (auto j = positionPoints.begin(); j != positionPoints.end(); j++) {
+
+            if (j -> getPosition() == i -> getNumberPositionShape()) {
+                j -> setFreePoints() = false;
+                occupPoints.push_back(i -> getNumberPositionShape());
+            }
+        }
+
     }
+
 };
