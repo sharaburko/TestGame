@@ -19,19 +19,12 @@ GameEngine::GameEngine() {
     window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
 }
 
-void GameEngine::inpute()
-{
-    //if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !moveChip) {
-    //    chip = checkChipPosition();
-
-    //    if (chip != nullptr) {
-    //        chip.move(position);
-    //    }
-    //}
-    
+void GameEngine::inpute() {    
     time = clock.getElapsedTime().asMicroseconds();
     clock.restart();
     time = time / 900;
+
+    countWinPosition = 0;
 
     while (window.pollEvent(event)) {
 
@@ -44,32 +37,38 @@ void GameEngine::inpute()
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !moveChip) {
 
         mousePosition = mouse.getPosition(window);
+        activPosition = searchActivPosition(init.getPositionPoints(), mousePosition);
 
-        if (searchActivPosition(init.getPositionPoints(), mousePosition)) {
-            activPosition = searchActivPosition(init.getPositionPoints(), mousePosition);
+        if (activPosition) {
 
-            if (!init.getPositionPoints()[activPosition - 1].getFreePoints()) {
-                activChip = activPosition;
+            for (auto it = init.getPositionPoints().begin(); it != init.getPositionPoints().end(); it++) {
+
+                if (it->getPosition() == activPosition && !it->getFreePoints()) {
+                    activChip = activPosition;
+                    break;
+                }
+
             }
-
         }
 
     }
+    //activChip = activPosition = 2; //test value
 
     road = movesActivChip(activChip, init.getConnectPoints());
-    deleteOccupPointsFromMovesActivChip(road, occupPoints);
-
-    countWinPosition = 0;
+    deleteOccupPointsFromRoad(road, occupPoints);    
 
     if (!movingPlaces.empty()) {
         movingPlaces.clear();
     }
 
     for (auto i = road.begin(); i != road.end(); i++) {
-
         movingPlaces.emplace_back();
     }
 
+    for (auto it = init.getChip().begin(); it != init.getChip().end(); it++) {
+        it->shape.setRadius(init.getRadiusChip());
+        it->shape.setOutlineThickness(0);
+    }
 
 }
 
@@ -84,51 +83,49 @@ void GameEngine::update()
                                              (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2);
     }
 
-    for (size_t i = 0; i < init.getChip().size(); i++) {
+    for (auto it = init.getChip().begin(); it != init.getChip().end(); it++) {
 
-        if (init.getChip()[i].numberPositionShape == activChip) {
-            init.setVectorChip()[i].shape.setRadius(init.getRadiusChip() * 1.1);
-            init.setVectorChip()[i].shape.setOutlineThickness(-2);
-            init.setVectorChip()[i].shape.setOutlineColor(sf::Color::White);
-            roadActivChip = searchRoadActivChip(road, activPosition);
+        if (it->numberPositionShape == activChip) {
+            it->selectChip();
 
-            if (!roadActivChip.empty()) {
+            searchRoadActivPosition(road, activPosition);
+
+            if (!road.empty()) {
                 moveChip = true;
-                float distanceX = init.getPositionPoints()[roadActivChip[stepActivChip] - 1].getCoordinateX() - init.getChip()[i].shape.getPosition().x;
-                float distanceY = init.getPositionPoints()[roadActivChip[stepActivChip] - 1].getCoordinateY() - init.getChip()[i].shape.getPosition().y;
+                float distanceX = init.getPositionPoint((*road.begin())[stepActivChip]).x - it->shape.getPosition().x;
+                float distanceY = init.getPositionPoint((*road.begin())[stepActivChip]).y - it->shape.getPosition().y;
                 float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
+
                 if (distance > 3) {
-                    init.setVectorChip()[i].shape.setPosition(init.getChip()[i].shape.getPosition().x + 0.01 * time * distanceX, init.getChip()[i].shape.getPosition().y + 0.01 * time * distanceY);
+                    it->shape.setPosition(it->shape.getPosition().x + 0.01 * time * distanceX,
+                                          it->shape.getPosition().y + 0.01 * time * distanceY);
                 }
                 else {
-                    init.setVectorChip()[i].shape.setPosition(init.getPositionPoints()[roadActivChip[stepActivChip] - 1].getCoordinateX(), init.getPositionPoints()[roadActivChip[stepActivChip] - 1].getCoordinateY());
+                    it->shape.setPosition(init.getPositionPoint((*road.begin())[stepActivChip]).x, init.getPositionPoint((*road.begin())[stepActivChip]).y);
                     AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
 
-                    if ((stepActivChip == roadActivChip.size())) {
-                        init.setVectorChip()[i].numberPositionShape = activPosition;
+                    if ((stepActivChip == (*road.begin()).size())) {
+                        it->setNumberPositionShape() = activPosition;
                         stepActivChip = 1;
                         activChip = activPosition;
-                        roadActivChip.clear();
                         moveChip = false;
+
+                        if (activChip == it->getNumberWinPOsitionShape()) {
+                            countWinPosition++;
+                        }
+
                     }
 
                 }
             }
 
         }
-        else if (init.getChip()[i].numberPositionShape == init.getChip()[i].numberWinPOsitionShape) {
-            init.setVectorChip()[i].shape.setOutlineThickness(-2);
-            init.setVectorChip()[i].shape.setOutlineColor(sf::Color::Yellow);
-        }
-        else {
-            init.setVectorChip()[i].shape.setRadius(init.getRadiusChip());
-            init.setVectorChip()[i].shape.setOutlineThickness(0);
+        else if (it->getNumberPositionShape() == it->getNumberWinPOsitionShape()) {
+            it->selectWinPositionChip();
+
         }
 
-        if (init.getChip()[i].numberPositionShape == init.getChip()[i].numberWinPOsitionShape) {
-            countWinPosition++;
-        }
     }
 }
 
@@ -169,7 +166,6 @@ void GameEngine::draw() {
 
 }
 
-
 void GameEngine::run() {
 
     while (window.isOpen()) {
@@ -180,14 +176,13 @@ void GameEngine::run() {
 
 }
 
-
-int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition)
-{
-    for (int i = 0; i < positionPoints.size(); i++) {
-        sf::IntRect areaChip(positionPoints[i].getCoordinateX(), positionPoints[i].getCoordinateY(), init.getSizePointsX(), init.getSizePointsY());
+int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition) {
+    
+    for (auto it = positionPoints.begin(); it != positionPoints.end(); it++) {
+        sf::IntRect areaChip(it->getCoordinateX(), it->getCoordinateY(), init.getSizePointsX(), init.getSizePointsY());
 
         if (areaChip.contains(mousePosition.x, mousePosition.y)) {
-            return positionPoints[i].getPosition();
+            return it->getPosition();
         }
 
     }
@@ -195,32 +190,37 @@ int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints
     return 0;
 }
 
-void GameEngine::deleteOccupPointsFromMovesActivChip(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints) {
+void GameEngine::deleteOccupPointsFromRoad(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints) {
    
-    for (auto j = road.begin(); j != road.end(); ++j) {
+    for (auto j = road.begin(); j != road.end();) {
 
         for (auto k = occupiredPoints.begin(); k != occupiredPoints.end(); k++) {
 
             if (find((*j).begin() + 1, (*j).end(), *k) != (*j).end()) {
-                j = road.erase(j) - 1;
+                j = road.erase(j);
                 break;
             }
 
+            if (k == occupiredPoints.end() - 1)
+                j++;
         }
     }
 }
 
-std::vector <int> const GameEngine::searchRoadActivChip(std::vector <std::vector <int>> const& road, int const& activPosition) {
-    std::vector <int> tempRoadActivChip;
-    for (size_t i = 0; i < road.size(); i++) {
+void GameEngine::searchRoadActivPosition(std::vector <std::vector <int>> & road, int const& activPosition) {
 
-        if (*(road[i].end() - 1) == activPosition) {
-            tempRoadActivChip = road[i];
-            return tempRoadActivChip;
+    for (auto it = road.begin(); it != road.end(); ) {
+
+        if (*(it->end() - 1) != activPosition) {
+            it = road.erase(it);
         }
+        else {
+            ++it;
+        }
+            
 
     }
-    return tempRoadActivChip;
+
 }
 
 void GameEngine::fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> & chip) { //при chip const ERROR

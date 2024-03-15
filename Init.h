@@ -53,7 +53,7 @@ public:
     std:: vector <Square>& getSquare() { return square; }
     std::vector <Chip>& getChip() { return chip; } //нельзя const
     std::vector <PositionPoints>& getPositionPoints() { return positionPoints; }
-
+    const sf::Vector2f& getPositionPoint(int numberPosition);
    const float& getRadiusChip() { return radiusChip; }
    const float& getSizePointsX() { return sizePoints.x; }
    const float& getSizePointsY() { return sizePoints.y; }

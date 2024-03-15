@@ -80,4 +80,14 @@ void Init::setRoads()
     }
 }
 
+const sf::Vector2f& Init::getPositionPoint(int numberPosition)
+{
+    for (auto it = positionPoints.begin(); it != positionPoints.end(); it++)     {
+        
+        if (it->getPosition() == numberPosition) {
+            return it->getCoordinate();
+        }
+    }
+}
+
 
