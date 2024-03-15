@@ -57,7 +57,7 @@ void GameEngine::inpute()
     }
 
     road = movesActivChip(activChip, init.getConnectPoints());
-    searchFreePointsChip(road, occupPoints);
+    deleteOccupPointsFromMovesActivChip(road, occupPoints);
 
     countWinPosition = 0;
 
@@ -195,14 +195,14 @@ int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints
     return 0;
 }
 
-void GameEngine::searchFreePointsChip(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints) {
-    for (size_t j = 0; j < road.size(); j++) {
+void GameEngine::deleteOccupPointsFromMovesActivChip(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints) {
+   
+    for (auto j = road.begin(); j != road.end(); ++j) {
 
-        for (size_t k = 0; k < occupiredPoints.size(); k++) {
+        for (auto k = occupiredPoints.begin(); k != occupiredPoints.end(); k++) {
 
-            if (find(road[j].begin() + 1, road[j].end(), occupiredPoints[k]) != road[j].end()) {
-                road.erase(road.begin() + j);
-                j--;
+            if (find((*j).begin() + 1, (*j).end(), *k) != (*j).end()) {
+                j = road.erase(j) - 1;
                 break;
             }
 
@@ -224,6 +224,7 @@ std::vector <int> const GameEngine::searchRoadActivChip(std::vector <std::vector
 }
 
 void GameEngine::fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> & chip) { //при chip const ERROR
+   
     for (auto i = positionPoints.begin(); i != positionPoints.end(); i++) {
         i->setFreePoints() = true;        
     }
