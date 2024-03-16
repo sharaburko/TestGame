@@ -3,7 +3,7 @@
 #include "AssetManager.h"
 
 class Chip {
-public:
+private:
     sf::CircleShape shape;
     int numberPositionShape;
     int numberWinPOsitionShape;
@@ -16,4 +16,7 @@ public:
     int& setNumberPositionShape() { return numberPositionShape; }
     void selectChip();
     void selectWinPositionChip();
+    const sf::CircleShape& getShape() { return shape; }
+    sf::CircleShape& setShape() { return shape; }
+
 };

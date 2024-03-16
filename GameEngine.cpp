@@ -9,9 +9,7 @@ void GameEngine::setInit(Config& config) {
     init.setRoads();
 }
 
-GameEngine::GameEngine(const std::string& Title, unsigned modeWidth,
-                       unsigned modeHeight)
-{
+GameEngine::GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight) {
     window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
 }
 
@@ -66,17 +64,15 @@ void GameEngine::inpute() {
     }
 
     for (auto it = init.getChip().begin(); it != init.getChip().end(); it++) {
-        it->shape.setRadius(init.getRadiusChip());
-        it->shape.setOutlineThickness(0);
+        it->setShape().setRadius(init.getRadiusChip());
+        it->setShape().setOutlineThickness(0);
     }
 
 }
 
-void GameEngine::update()
-{
+void GameEngine::update() {
 
     for (size_t i = 0; i < movingPlaces.size(); i++) {
-
         movingPlaces[i].setPositionMovingPlace(init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateX() +
                                               (2 * init.getRadiusChip() - 2 * movingPlaces[i].getRadiusMovingPlace()) / 2,
                                                init.getPositionPoints()[*(road[i].end() - 1) - 1].getCoordinateY() +
@@ -85,23 +81,23 @@ void GameEngine::update()
 
     for (auto it = init.getChip().begin(); it != init.getChip().end(); it++) {
 
-        if (it->numberPositionShape == activChip) {
+        if (it->getNumberPositionShape() == activChip) {
             it->selectChip();
 
             searchRoadActivPosition(road, activPosition);
 
             if (!road.empty()) {
                 moveChip = true;
-                float distanceX = init.getPositionPoint((*road.begin())[stepActivChip]).x - it->shape.getPosition().x;
-                float distanceY = init.getPositionPoint((*road.begin())[stepActivChip]).y - it->shape.getPosition().y;
+                float distanceX = init.getPositionPoint((*road.begin())[stepActivChip]).x - it->getShape().getPosition().x;
+                float distanceY = init.getPositionPoint((*road.begin())[stepActivChip]).y - it->getShape().getPosition().y;
                 float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
                 if (distance > 3) {
-                    it->shape.setPosition(it->shape.getPosition().x + 0.01 * time * distanceX,
-                                          it->shape.getPosition().y + 0.01 * time * distanceY);
+                    it->setShape().setPosition(it->getShape().getPosition().x + 0.01 * time * distanceX,
+                                          it->getShape().getPosition().y + 0.01 * time * distanceY);
                 }
                 else {
-                    it->shape.setPosition(init.getPositionPoint((*road.begin())[stepActivChip]).x, init.getPositionPoint((*road.begin())[stepActivChip]).y);
+                    it->setShape().setPosition(init.getPositionPoint((*road.begin())[stepActivChip]).x, init.getPositionPoint((*road.begin())[stepActivChip]).y);
                     AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
 
@@ -132,7 +128,6 @@ void GameEngine::update()
 void GameEngine::draw() {
 
     if (countWinPosition != init.getChip().size()) {
-
         window.clear(userColor::Gray);
         window.draw(AssetManager::getBackground());
 
@@ -149,7 +144,7 @@ void GameEngine::draw() {
         }
 
         for (auto i = init.getChip().begin(); i != init.getChip().end(); i++) {
-            window.draw(i->shape);
+            window.draw(i->getShape());
         }
 
         window.display();
