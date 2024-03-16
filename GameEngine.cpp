@@ -50,7 +50,6 @@ void GameEngine::inpute() {
         }
 
     }
-    //activChip = activPosition = 2; //test value
 
     road = movesActivChip(activChip, init.getConnectPoints());
     deleteOccupPointsFromRoad(road, occupPoints);    
@@ -107,59 +106,52 @@ void GameEngine::update() {
                         stepActivChip = 1;
                         activChip = activPosition;
                         moveChip = false;
-
-                        if (activChip == it->getNumberWinPOsitionShape()) {
-                            countWinPosition++;
-                        }
-
                     }
 
                 }
             }
 
         }
-        else if (it->getNumberPositionShape() == it->getNumberWinPOsitionShape()) {
-            it->selectWinPositionChip();
 
+         if (it->getNumberPositionShape() == it->getNumberWinPOsitionShape()) {
+            it->selectWinPositionChip();
+            countWinPosition++;
         }
 
     }
 }
 
 void GameEngine::draw() {
+    window.clear(userColor::Gray);
+    window.draw(AssetManager::getBackground());
 
-    if (countWinPosition != init.getChip().size()) {
-        window.clear(userColor::Gray);
-        window.draw(AssetManager::getBackground());
+    for (auto i = init.getRoads().begin(); i != init.getRoads().end(); i++) {
+        window.draw(i->getRoad());
+    }
 
-        for (auto i = init.getRoads().begin(); i != init.getRoads().end(); i++) {
-            window.draw(i->getRoad());
-        }
+    for (auto i = init.getSquare().begin(); i != init.getSquare().end(); i++) {
+        window.draw(i->getPoint());
+    }
 
-        for (auto i = init.getSquare().begin(); i != init.getSquare().end(); i++) {
-            window.draw(i->getPoint());
-        }
+    for (auto i = movingPlaces.begin(); i != movingPlaces.end(); i++) {
+        window.draw(i->getMovingPlace());
+    }
 
-        for (auto i = movingPlaces.begin(); i != movingPlaces.end(); i++) {
-            window.draw(i->getMovingPlace());
-        }
+    for (auto i = init.getChip().begin(); i != init.getChip().end(); i++) {
+        window.draw(i->getShape());
+    }
 
-        for (auto i = init.getChip().begin(); i != init.getChip().end(); i++) {
-            window.draw(i->getShape());
-        }
+    window.display();
+}
 
+void GameEngine::end() {
+    AssetManager::getSoundWin().play();
+
+    while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        window.clear(sf::Color::Black);
+        window.draw(AssetManager::getText());
         window.display();
     }
-    else {
-        AssetManager::getSoundWin().play();        
-
-        while (AssetManager::getSoundWin().getStatus() == 2) {
-            window.clear(sf::Color::Black);
-            window.draw(AssetManager::getText());
-            window.display();
-        }
-    }
-
 }
 
 void GameEngine::run() {
@@ -167,7 +159,12 @@ void GameEngine::run() {
     while (window.isOpen()) {
         inpute();
         update();
-        draw();        
+        draw();
+
+        if (countWinPosition == init.getChip().size()) {
+            end();
+            break;
+        }
     }
 
 }

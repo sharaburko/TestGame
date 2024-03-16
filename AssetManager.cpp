@@ -60,6 +60,7 @@ sf::Text& AssetManager::getText()
 
     manager.text.setPosition(80, 200);
     manager.text.setCharacterSize(60);
+    manager.text.setString("YOU WIN!!!");
 
     return manager.text;
 }

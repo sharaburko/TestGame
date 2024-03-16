@@ -5,8 +5,6 @@
 #include "move.h"
 #include "Color.h"
 
-
-
 class MovingPlace {
 private:
     sf::CircleShape place;
@@ -56,7 +54,6 @@ private:
     bool moveChip = false;
     float time = 0;
 
-
     std::vector <int> occupPoints;
     std::vector <int> freePoints;
     std::vector <int> roadActivChip;
@@ -72,6 +69,6 @@ private:
 	void inpute();
 	void update();
 	void draw();
-
+    void end();
 };
 
