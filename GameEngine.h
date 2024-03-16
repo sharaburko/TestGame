@@ -12,20 +12,21 @@ private:
     sf::CircleShape place;
     int radiusMovingPlace = 4;
     sf::Color colorPlace = sf::Color::Red;
+    int position;
 
 public:
-    MovingPlace(){
+    MovingPlace(int numberPosition){
         place.setFillColor(colorPlace);
         place.setRadius(radiusMovingPlace);
+        position = numberPosition;
     }
 
-    void setPositionMovingPlace(float coordinateX, float coordinateY) {
+    void setCoordinatePointMovingPlace(float coordinateX, float coordinateY) {
         place.setPosition(coordinateX, coordinateY);
     };
 
-    const sf::CircleShape& getMovingPlace()  {
-        return place;
-    };
+    const int& getPositin() { return position; }
+    const sf::CircleShape& getMovingPlace()  { return place;};
     const int& getRadiusMovingPlace() { return radiusMovingPlace; }
 };
 
