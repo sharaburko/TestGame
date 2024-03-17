@@ -10,7 +10,6 @@ void AssetManager::addTexture(const std::string& path)
 sf::Texture* AssetManager::getTexture(const std::string &path)
 {
     auto& manager = AssetManager::instance();
-    auto textures = AssetManager::instance().textures;
 
     if (auto pair_found = manager.textures.find(path); pair_found != manager.textures.end())
         return &pair_found->second;
@@ -23,11 +22,13 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
  sf::Sprite& AssetManager::getBackground()
 {
     auto& manager = AssetManager::instance();
-    auto texture = *manager.getTexture("img/background.jpg");
+    auto& sprite = AssetManager::instance().background;
+    auto& texture = *manager.getTexture("img/background.jpg");
 
     manager.background.setColor(userColor::Aqua);
-    manager.background.setTexture(texture);
-    return manager.background;
+    sprite.setTexture(texture);
+
+    return sprite;
 }
 
 sf::Sound& AssetManager::getSoundMoveChip()

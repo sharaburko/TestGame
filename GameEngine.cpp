@@ -123,7 +123,7 @@ void GameEngine::update() {
 
 void GameEngine::draw() {
     window.clear(userColor::Gray);
-    window.draw(AssetManager::getBackground());
+    window.draw(AssetManager::instance().getBackground());
 
     for (auto i = init.getRoads().begin(); i != init.getRoads().end(); i++) {
         window.draw(i->getRoad());
