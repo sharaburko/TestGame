@@ -68,8 +68,7 @@ void GameEngine::inpute() {
 void GameEngine::update() {
 
     for (auto it = road.begin(); it != road.end(); it++) {
-
-        movingPlaces.emplace_back(*(it->end() - 1));
+        movingPlaces.emplace_back(it->back());
     }
 
     for (auto it = movingPlaces.begin(); it != movingPlaces.end(); it++) {
@@ -102,7 +101,7 @@ void GameEngine::update() {
                     stepActivChip++;
 
                     if ((stepActivChip == (*road.begin()).size())) {
-                        it->setNumberPositionShape() = activPosition;
+                        it->setNumberPositionShape(activPosition);
                         stepActivChip = 1;
                         activChip = activPosition;
                         moveChip = false;
@@ -125,8 +124,8 @@ void GameEngine::draw() {
     window.clear(userColor::Gray);
     window.draw(AssetManager::instance().getBackground());
 
-    for (auto i = init.getRoads().begin(); i != init.getRoads().end(); i++) {
-        window.draw(i->getRoad());
+    for (auto& road : init.getRoads()) {
+        window.draw(road.getRoad());
     }
 
     for (auto i = init.getSquare().begin(); i != init.getSquare().end(); i++) {
