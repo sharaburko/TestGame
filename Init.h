@@ -8,22 +8,23 @@
 
 class Road {
 private:
-    sf::RectangleShape road;
-    static float widthRoad;
-    sf::Color colorRoad = sf::Color(216, 216, 216);
+    sf::RectangleShape shape;
+    static float widthShape;
+    sf::Color colorShape = sf::Color(216, 216, 216);
 public:
     Road() {
-        road.setFillColor(colorRoad);
+        shape.setFillColor(colorShape);
     }
-    const sf::RectangleShape& getRoad() { return road; }
-    sf::RectangleShape& setRoad() { return road; }
-    void setPositionRoad(float coordinateX, float coordinateY) {
-        road.setPosition(coordinateX, coordinateY);
+    const sf::RectangleShape& getRoad() { return shape; }
+    sf::RectangleShape& setRoad() { return shape; }
+    void setPositionShape(float coordinateX, float coordinateY) {
+        shape.setPosition(coordinateX, coordinateY);
     }
-    static const float& getWidthRoad() { return widthRoad; }
+    void setColorShape(sf::Color color) { colorShape = color; }
+    static const float& getWidthShape() { return widthShape; }
 };
 
-inline float Road::widthRoad = 20;
+inline float Road::widthShape = 20;
 
 class Init
 {
@@ -48,7 +49,7 @@ public:
     void setRoads();
     std::vector <Road>& getRoads() { return roads; }
 
-    std::vector <Chip>& setVectorChip() { return chips; }//исправить
+    //std::vector <Chip>& setVectorChip() { return chips; }//исправить
 
     std:: vector <Square>& getSquare() { return square; }
     std::vector <Chip>& getChips() { return chips; } //нельзя const

@@ -182,14 +182,14 @@ int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints
     return 0;
 }
 
-void GameEngine::deleteOccupPointsFromRoad(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints) {
+void GameEngine::deleteOccupPointsFromRoad(std::vector <std::vector <int>>& roads, std::vector <int> const& occupiredPoints) {
    
-    for (auto it = road.begin(); it != road.end();) {
+    for (auto it = roads.begin(); it != roads.end();) {
 
         for (auto &occupiredPoint : occupiredPoints) {
 
             if (find((*it).begin() + 1, (*it).end(), occupiredPoint) != (*it).end()) {
-                it = road.erase(it);
+                it = roads.erase(it);
                 break;
             }
 

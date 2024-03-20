@@ -51,7 +51,7 @@ void Init::setRoads()
 
         Road tempRoad;
 
-        int p1 = *connectPoints[i].begin() - 1;
+        int p1 = connectPoints[i].front() - 1;
         int p2 = connectPoints[i].back() - 1;
         float p1X = getPositionPoints()[p1].getCoordinateX();
         float p1Y = getPositionPoints()[p1].getCoordinateY();
@@ -60,19 +60,19 @@ void Init::setRoads()
 
 
         if (p1X == p2X) {
-            sf::Vector2f size(Road::getWidthRoad(), p2Y + getSizePointsY() - p1Y -
-                (getSizePointsY() - Road::getWidthRoad()));
-            sf::Vector2f position(p1X + (2 * getRadiusChip() - Road::getWidthRoad()) / 2,
-                p1Y + (2 * getRadiusChip() - Road::getWidthRoad()) / 2);
+            sf::Vector2f size(Road::getWidthShape(), p2Y + getSizePointsY() - p1Y -
+                (getSizePointsY() - Road::getWidthShape()));
+            sf::Vector2f position(p1X + (2 * getRadiusChip() - Road::getWidthShape()) / 2,
+                p1Y + (2 * getRadiusChip() - Road::getWidthShape()) / 2);
             tempRoad.setRoad().setSize(size);
             tempRoad.setRoad().setPosition(position);
         }
         else {
             sf::Vector2f size(p2X + getSizePointsX() - p1X - (getSizePointsX() -
-                Road::getWidthRoad()), Road::getWidthRoad());
+                Road::getWidthShape()), Road::getWidthShape());
             tempRoad.setRoad().setSize(size);
-            sf::Vector2f position(p1X + (2 * getRadiusChip() - Road::getWidthRoad()) / 2,
-                p1Y + (2 * getRadiusChip() - Road::getWidthRoad()) / 2);
+            sf::Vector2f position(p1X + (2 * getRadiusChip() - Road::getWidthShape()) / 2,
+                p1Y + (2 * getRadiusChip() - Road::getWidthShape()) / 2);
             tempRoad.setRoad().setPosition(position);
         }
     	

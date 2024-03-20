@@ -62,9 +62,9 @@ private:
 
 
     int searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition);
-    void deleteOccupPointsFromRoad(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints);
-    void searchRoadActivPosition(std::vector <std::vector <int>> & road, int const& activPosition);
-    void fillingBusyPoints(std::vector<PositionPoints>& positionPoints, std::vector<int>& occupPoints, std::vector<Chip> & chip);
+    void deleteOccupPointsFromRoad(std::vector <std::vector <int>>& roads, std::vector <int> const& occupiredPoints);
+    void searchRoadActivPosition(std::vector <std::vector <int>> & roads, int const& activPosition);
+    void fillingBusyPoints(std::vector<PositionPoints>& positionPoints, std::vector<int>& occupPoints, std::vector<Chip> & chips);
 
 	void inpute();
 	void update();
