@@ -39,9 +39,9 @@ void GameEngine::inpute() {
 
         if (activPosition) {
 
-            for (auto it = init.getPositionPoints().begin(); it != init.getPositionPoints().end(); it++) {
+            for (auto &it : init.getPositionPoints()) {
 
-                if (it->getPosition() == activPosition && !it->getFreePoints()) {
+                if (it.getPosition() == activPosition && !it.getFreePoints()) {
                     activChip = activPosition;
                     break;
                 }
@@ -58,50 +58,50 @@ void GameEngine::inpute() {
         movingPlaces.clear();
     }
 
-    for (auto it = init.getChip().begin(); it != init.getChip().end(); it++) {
-        it->setShape().setRadius(init.getRadiusChip());
-        it->setShape().setOutlineThickness(0);
+    for (auto &chip : init.getChip()) {
+        chip.getShape().setRadius(init.getRadiusChip());
+        chip.getShape().setOutlineThickness(0);
     }
 
 }
 
 void GameEngine::update() {
 
-    for (auto it = road.begin(); it != road.end(); it++) {
-        movingPlaces.emplace_back(it->back());
+    for (auto road : road) {
+        movingPlaces.emplace_back(road.back());
     }
 
-    for (auto it = movingPlaces.begin(); it != movingPlaces.end(); it++) {
-        it->setCoordinatePointMovingPlace(init.getPositionPoint(it->getPositin()).x +
-                                          (2 * init.getRadiusChip() - 2 * it->getRadiusMovingPlace()) / 2,
-                                          init.getPositionPoint(it->getPositin()).y +
-                                          (2 * init.getRadiusChip() - 2 * it->getRadiusMovingPlace()) / 2);
+    for (auto & movingPlace : movingPlaces) {
+        movingPlace.setCoordinatePointMovingPlace(init.getPositionPoint(movingPlace.getPositin()).x +
+                                          (2 * init.getRadiusChip() - 2 * movingPlace.getRadiusMovingPlace()) / 2,
+                                          init.getPositionPoint(movingPlace.getPositin()).y +
+                                          (2 * init.getRadiusChip() - 2 * movingPlace.getRadiusMovingPlace()) / 2);
     }
 
-    for (auto it = init.getChip().begin(); it != init.getChip().end(); it++) {
+    for (auto &chip : init.getChip()) {
 
-        if (it->getNumberPositionShape() == activChip) {
-            it->selectChip();
+        if (chip.getNumberPositionShape() == activChip) {
+            chip.selectChip();
 
             searchRoadActivPosition(road, activPosition);
 
             if (!road.empty()) {
                 moveChip = true;
-                float distanceX = init.getPositionPoint((*road.begin())[stepActivChip]).x - it->getShape().getPosition().x;
-                float distanceY = init.getPositionPoint((*road.begin())[stepActivChip]).y - it->getShape().getPosition().y;
+                float distanceX = init.getPositionPoint((road.front())[stepActivChip]).x - chip.getShape().getPosition().x;
+                float distanceY = init.getPositionPoint((road.front())[stepActivChip]).y - chip.getShape().getPosition().y;
                 float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
                 if (distance > 3) {
-                    it->setShape().setPosition(it->getShape().getPosition().x + 0.01 * time * distanceX,
-                                          it->getShape().getPosition().y + 0.01 * time * distanceY);
+                    chip.getShape().setPosition(chip.getShape().getPosition().x + 0.01 * time * distanceX,
+                                          chip.getShape().getPosition().y + 0.01 * time * distanceY);
                 }
                 else {
-                    it->setShape().setPosition(init.getPositionPoint((*road.begin())[stepActivChip]).x, init.getPositionPoint((*road.begin())[stepActivChip]).y);
+                    chip.getShape().setPosition(init.getPositionPoint((road.front())[stepActivChip]).x, init.getPositionPoint((road.front())[stepActivChip]).y);
                     AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
 
-                    if ((stepActivChip == (*road.begin()).size())) {
-                        it->setNumberPositionShape(activPosition);
+                    if ((stepActivChip == (road.front()).size())) {
+                        chip.setNumberPositionShape(activPosition);
                         stepActivChip = 1;
                         activChip = activPosition;
                         moveChip = false;
@@ -112,8 +112,8 @@ void GameEngine::update() {
 
         }
 
-         if (it->getNumberPositionShape() == it->getNumberWinPOsitionShape()) {
-            it->selectWinPositionChip();
+         if (chip.getNumberPositionShape() == chip.getNumberWinPOsitionShape()) {
+             chip.selectWinPositionChip();
             countWinPosition++;
         }
 
@@ -128,16 +128,16 @@ void GameEngine::draw() {
         window.draw(road.getRoad());
     }
 
-    for (auto i = init.getSquare().begin(); i != init.getSquare().end(); i++) {
-        window.draw(i->getPoint());
+    for (auto& square : init.getSquare()) {
+        window.draw(square.getPoint());
     }
 
-    for (auto i = movingPlaces.begin(); i != movingPlaces.end(); i++) {
-        window.draw(i->getMovingPlace());
+    for (auto& movingPlace : movingPlaces) {
+        window.draw(movingPlace.getMovingPlace());
     }
 
-    for (auto i = init.getChip().begin(); i != init.getChip().end(); i++) {
-        window.draw(i->getShape());
+    for (auto& chip : init.getChip()) {
+        window.draw(chip.getShape());
     }
 
     window.display();
@@ -170,11 +170,11 @@ void GameEngine::run() {
 
 int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition) {
     
-    for (auto it = positionPoints.begin(); it != positionPoints.end(); it++) {
-        sf::IntRect areaChip(it->getCoordinateX(), it->getCoordinateY(), init.getSizePointsX(), init.getSizePointsY());
+    for (auto &positionPoint : positionPoints) {
+        sf::IntRect areaChip(positionPoint.getCoordinateX(), positionPoint.getCoordinateY(), init.getSizePointsX(), init.getSizePointsY());
 
         if (areaChip.contains(mousePosition.x, mousePosition.y)) {
-            return it->getPosition();
+            return positionPoint.getPosition();
         }
 
     }
@@ -184,17 +184,17 @@ int GameEngine::searchActivPosition(std::vector<PositionPoints> & positionPoints
 
 void GameEngine::deleteOccupPointsFromRoad(std::vector <std::vector <int>>& road, std::vector <int> const& occupiredPoints) {
    
-    for (auto j = road.begin(); j != road.end();) {
+    for (auto it = road.begin(); it != road.end();) {
 
-        for (auto k = occupiredPoints.begin(); k != occupiredPoints.end(); k++) {
+        for (auto &occupiredPoint : occupiredPoints) {
 
-            if (find((*j).begin() + 1, (*j).end(), *k) != (*j).end()) {
-                j = road.erase(j);
+            if (find((*it).begin() + 1, (*it).end(), occupiredPoint) != (*it).end()) {
+                it = road.erase(it);
                 break;
             }
 
-            if (k == occupiredPoints.end() - 1)
-                j++;
+            if (occupiredPoint == occupiredPoints.back())
+                it++;
         }
     }
 }
@@ -203,7 +203,7 @@ void GameEngine::searchRoadActivPosition(std::vector <std::vector <int>> & road,
 
     for (auto it = road.begin(); it != road.end(); ) {
 
-        if (*(it->end() - 1) != activPosition) {
+        if (it->back() != activPosition) {
             it = road.erase(it);
         }
         else {
@@ -217,19 +217,19 @@ void GameEngine::searchRoadActivPosition(std::vector <std::vector <int>> & road,
 
 void GameEngine::fillingBusyPoints(std::vector <PositionPoints>& positionPoints, std::vector <int>& occupPoints, std::vector <Chip> & chip) { //при chip const ERROR
    
-    for (auto i = positionPoints.begin(); i != positionPoints.end(); i++) {
-        i->setFreePoints() = true;        
+    for (auto &positionPoint : positionPoints) {
+        positionPoint.setFreePoints() = true;
     }
 
     occupPoints.clear();
 
-    for (auto i = chip.begin(); i != chip.end(); i++) { 
+    for (auto &chip : chip) { 
         
-        for (auto j = positionPoints.begin(); j != positionPoints.end(); j++) {
+        for (auto &positionPoint : positionPoints) {
 
-            if (j -> getPosition() == i -> getNumberPositionShape()) {
-                j -> setFreePoints() = false;
-                occupPoints.push_back(i -> getNumberPositionShape());
+            if (positionPoint.getPosition() == chip.getNumberPositionShape()) {
+                positionPoint.setFreePoints() = false;
+                occupPoints.push_back(chip.getNumberPositionShape());
             }
         }
 

@@ -7,7 +7,6 @@ private:
     sf::CircleShape shape;
     int numberPositionShape;
     int numberWinPOsitionShape;
-    // bool avtivChip = false;
 
 public:
     Chip(int position, int winPosition, sf::Color color, float positionX, float positionY, float const& radiusChip);
@@ -16,7 +15,6 @@ public:
     void setNumberPositionShape(int position) { numberPositionShape = position; }
     void selectChip();
     void selectWinPositionChip();
-    const sf::CircleShape& getShape() { return shape; }
-    sf::CircleShape& setShape() { return shape; }
+    sf::CircleShape& getShape() { return shape; }
 
 };
