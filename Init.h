@@ -32,7 +32,7 @@ private:
     float radiusChip = 15;
 
     std::vector <Road> roads;
-    std::vector <Chip> chip;
+    std::vector <Chip> chips;
     std::vector <Square> square;
     std::vector <PositionPoints> positionPoints;
     std::vector<std::vector <int>> connectPoints;
@@ -48,10 +48,10 @@ public:
     void setRoads();
     std::vector <Road>& getRoads() { return roads; }
 
-    std::vector <Chip>& setVectorChip() { return chip; }
+    std::vector <Chip>& setVectorChip() { return chips; }//исправить
 
     std:: vector <Square>& getSquare() { return square; }
-    std::vector <Chip>& getChip() { return chip; } //нельзя const
+    std::vector <Chip>& getChips() { return chips; } //нельзя const
     std::vector <PositionPoints>& getPositionPoints() { return positionPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);
    const float& getRadiusChip() { return radiusChip; }
