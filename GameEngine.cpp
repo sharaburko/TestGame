@@ -64,7 +64,7 @@ void GameEngine::update() {
     }
 
     for (auto & movingPlace : movingPlaces) {
-        movingPlace.setCoordinatePointMovingPlace(getPositionPoint(movingPlace.getPositin()).x +
+        movingPlace.setCoordinatePlace(getPositionPoint(movingPlace.getPositin()).x +
                                           (2 * radiusChip - 2 * movingPlace.getRadiusMovingPlace()) / 2,
                                           getPositionPoint(movingPlace.getPositin()).y +
                                           (2 * radiusChip - 2 * movingPlace.getRadiusMovingPlace()) / 2);
@@ -145,7 +145,8 @@ void GameEngine::end() {
     }
 }
 
-void GameEngine::run() {  
+void GameEngine::run(Config& config) {
+    initialization(config);
 
     while (window.isOpen()) {
         inpute();
@@ -245,8 +246,7 @@ void GameEngine::setChip(Config& config) {
     }
 }
 
-void GameEngine::setSquare(Config& config)
-{
+void GameEngine::setSquare(Config& config) {
     square.reserve(config.getChipCount());
 
     for (int i = 0; i < config.getChipCount(); i++) {
@@ -255,8 +255,7 @@ void GameEngine::setSquare(Config& config)
     }
 }
 
-void GameEngine::setPositionPoints(Config& config)
-{
+void GameEngine::setPositionPoints(Config& config) {
     positionPoints.reserve(config.getPointsCount());
 
     for (int i = 1; i <= config.getPointsCount(); i++) {
@@ -265,8 +264,7 @@ void GameEngine::setPositionPoints(Config& config)
     }
 }
 
-void GameEngine::setConnectPoints(Config& config)
-{
+void GameEngine::setConnectPoints(Config& config) {
     connectPoints.reserve(config.getConnectCount());
     for (int i = 0; i < config.getConnectCount(); i++) {
         config.getConnectionsBetweenPoints(i);
@@ -278,8 +276,7 @@ void GameEngine::setConnectPoints(Config& config)
     }
 }
 
-void GameEngine::setRoadsBackground()
-{
+void GameEngine::setRoadsBackground() {
     roadsBackground.reserve(connectPoints.size());
 
     for (int i = 0; i < connectPoints.size(); i++) {
@@ -299,16 +296,16 @@ void GameEngine::setRoadsBackground()
                 (sizePoints.y - RoadBackground::getWidthShape()));
             sf::Vector2f position(p1X + (2 * radiusChip - RoadBackground::getWidthShape()) / 2,
                 p1Y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2);
-            tempRoad.setRoad().setSize(size);
-            tempRoad.setRoad().setPosition(position);
+            tempRoad.setSizeShape(size);
+            tempRoad.setPositionShape(position);
         }
         else {
             sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x -
                 RoadBackground::getWidthShape()), RoadBackground::getWidthShape());
-            tempRoad.setRoad().setSize(size);
+            tempRoad.setSizeShape(size);
             sf::Vector2f position(p1X + (2 * radiusChip - RoadBackground::getWidthShape()) / 2,
                 p1Y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2);
-            tempRoad.setRoad().setPosition(position);
+            tempRoad.setPositionShape(position);
         }
 
         roadsBackground.push_back(tempRoad);
@@ -323,4 +320,22 @@ const sf::Vector2f& GameEngine::getPositionPoint(int numberPosition) {
             return it->getCoordinate();
         }
     }
+}
+
+MovingPlace::MovingPlace(int numberPosition) {
+    place.setFillColor(colorPlace);
+    place.setRadius(radiusMovingPlace);
+    position = numberPosition;
+}
+
+void MovingPlace::setCoordinatePlace(float coordinateX, float coordinateY) {
+    place.setPosition(coordinateX, coordinateY);
+}
+
+RoadBackground::RoadBackground() {
+    shape.setFillColor(colorShape);
+}
+
+void RoadBackground::setPositionShape(float coordinateX, float coordinateY) {
+    shape.setPosition(coordinateX, coordinateY);
 }

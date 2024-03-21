@@ -16,15 +16,8 @@ private:
     int position;
 
 public:
-    MovingPlace(int numberPosition){
-        place.setFillColor(colorPlace);
-        place.setRadius(radiusMovingPlace);
-        position = numberPosition;
-    }
-
-    void setCoordinatePointMovingPlace(float coordinateX, float coordinateY) {
-        place.setPosition(coordinateX, coordinateY);
-    };
+    MovingPlace(int numberPosition);
+    void setCoordinatePlace(float coordinateX, float coordinateY);
 
     const int& getPositin() { return position; }
     const sf::CircleShape& getMovingPlace()  { return place;};
@@ -37,27 +30,23 @@ private:
     static float widthShape;
     sf::Color colorShape = sf::Color(216, 216, 216);
 public:
-    RoadBackground() {
-        shape.setFillColor(colorShape);
-    }
+    RoadBackground();
     const sf::RectangleShape& getRoad() { return shape; }
-    sf::RectangleShape& setRoad() { return shape; }
-    void setPositionShape(float coordinateX, float coordinateY) {
-        shape.setPosition(coordinateX, coordinateY);
-    }
+    void setSizeShape(sf::Vector2f &size) { shape.setSize(size); }
+    void setPositionShape(sf::Vector2f& position) { shape.setPosition(position); }
+    void setPositionShape(float coordinateX, float coordinateY);
     void setColorShape(sf::Color color) { colorShape = color; }
     static const float& getWidthShape() { return widthShape; }
 };
 
 inline float RoadBackground::widthShape = 20;
 
-class GameEngine
-{
+class GameEngine {
 public:
 	GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
 	GameEngine();
-	void run();
-    void initialization(Config& config);
+	void run(Config& config);
+
 private:
     sf::RenderWindow window;
 
@@ -94,6 +83,7 @@ private:
     void searchRoadActivPosition();
     void fillingBusyPoints();
 
+    void initialization(Config& config);
     void setChip(Config& config);
     void setSquare(Config& config);
     void setPositionPoints(Config& config);
