@@ -1,6 +1,6 @@
 #include "move.h"
 
-std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::vector <int>> arr) {
+std::vector <std::vector <int>> movesActivChip(int &activChip, std::vector <std::vector <int>> & arr) {
     std::vector <int> temp;
     std::vector <std::vector <int>> cPoints;
 

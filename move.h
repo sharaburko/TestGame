@@ -3,7 +3,7 @@
 #include <vector>
 
 
-std::vector <std::vector <int>> movesActivChip(int activChip, std::vector <std::vector <int>> arr);
+std::vector <std::vector <int>> movesActivChip(int &activChip, std::vector <std::vector <int>> &arr);
 
 
 

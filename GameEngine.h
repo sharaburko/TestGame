@@ -65,8 +65,7 @@ private:
     sf::Clock clock;
 
     sf::Event event;
-
-    sf::Vector2i mousePosition{ 0, 0 };
+    
     int activPosition = 0;
     int activChip = 0;
     int stepActivChip = 1;
@@ -74,8 +73,8 @@ private:
     bool moveChip = false;
     float time = 0;
     float radiusChip = 15;
+    sf::Vector2i mousePosition{ 0, 0 };
     sf::Vector2f sizePoints{ 40, 40 };
-
     std::vector <sf::Color> arrColor{ sf::Color::Black, sf::Color::White, sf::Color::Green,
                                      sf::Color::Blue, sf::Color::Magenta, userColor::Purple,
                                      userColor::Olive, userColor::Gray, userColor::Navy,
@@ -90,11 +89,10 @@ private:
     std::vector <std::vector <int>> roads;
     std::vector <MovingPlace> movingPlaces;
 
-
-    int searchActivPosition(std::vector<PositionPoints> & positionPoints, sf::Vector2i const& mousePosition);
-    void deleteOccupPointsFromRoad(std::vector <std::vector <int>>& roads, std::vector <int> const& occupiredPoints);
-    void searchRoadActivPosition(std::vector <std::vector <int>> & roads, int const& activPosition);
-    void fillingBusyPoints(std::vector<PositionPoints>& positionPoints, std::vector<int>& occupPoints, std::vector<Chip> & chips);
+    int searchActivPosition();
+    void deleteOccupPointsFromRoad();
+    void searchRoadActivPosition();
+    void fillingBusyPoints();
 
     void setChip(Config& config);
     void setSquare(Config& config);
