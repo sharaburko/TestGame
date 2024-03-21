@@ -43,8 +43,8 @@ void GameEngine::inpute() {
 
     }
 
-    road = movesActivChip(activChip, connectPoints);
-    deleteOccupPointsFromRoad(road, occupPoints);    
+    roads = movesActivChip(activChip, connectPoints);
+    deleteOccupPointsFromRoad(roads, occupPoints);    
 
     if (!movingPlaces.empty()) {
         movingPlaces.clear();
@@ -59,7 +59,7 @@ void GameEngine::inpute() {
 
 void GameEngine::update() {
 
-    for (auto road : road) {
+    for (auto road : roads) {
         movingPlaces.emplace_back(road.back());
     }
 
@@ -75,12 +75,12 @@ void GameEngine::update() {
         if (chip.getNumberPositionShape() == activChip) {
             chip.selectChip();
 
-            searchRoadActivPosition(road, activPosition);
+            searchRoadActivPosition(roads, activPosition);
 
-            if (!road.empty()) {
+            if (!roads.empty()) {
                 moveChip = true;
-                float distanceX = getPositionPoint((road.front())[stepActivChip]).x - chip.getShape().getPosition().x;
-                float distanceY = getPositionPoint((road.front())[stepActivChip]).y - chip.getShape().getPosition().y;
+                float distanceX = getPositionPoint((roads.front())[stepActivChip]).x - chip.getShape().getPosition().x;
+                float distanceY = getPositionPoint((roads.front())[stepActivChip]).y - chip.getShape().getPosition().y;
                 float distance = sqrt(distanceX * distanceX + distanceY * distanceY);
 
                 if (distance > 3) {
@@ -88,11 +88,11 @@ void GameEngine::update() {
                                           chip.getShape().getPosition().y + 0.01 * time * distanceY);
                 }
                 else {
-                    chip.getShape().setPosition(getPositionPoint((road.front())[stepActivChip]).x, getPositionPoint((road.front())[stepActivChip]).y);
+                    chip.getShape().setPosition(getPositionPoint((roads.front())[stepActivChip]).x, getPositionPoint((roads.front())[stepActivChip]).y);
                     AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
 
-                    if ((stepActivChip == (road.front()).size())) {
+                    if ((stepActivChip == (roads.front()).size())) {
                         chip.setNumberPositionShape(activPosition);
                         stepActivChip = 1;
                         activChip = activPosition;

@@ -57,12 +57,8 @@ public:
 	GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
 	GameEngine();
 	void run();
-
     void initialization(Config& config);
-    void setInit(Config& config);
 private:
-    //Init init;
-
     sf::RenderWindow window;
 
     sf::Mouse mouse;
@@ -91,9 +87,7 @@ private:
     std::vector<std::vector <int>> connectPoints;
     std::vector <Chip> chips;
     std::vector <int> occupPoints;
-    std::vector <int> freePoints;
-    std::vector <int> roadActivChip;
-    std::vector <std::vector <int>> road;
+    std::vector <std::vector <int>> roads;
     std::vector <MovingPlace> movingPlaces;
 
 
@@ -107,6 +101,7 @@ private:
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
     void setRoadsBackground();
+
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);
 
@@ -114,8 +109,5 @@ private:
 	void update();
 	void draw();
     void end();
-
-
-
 };
 
