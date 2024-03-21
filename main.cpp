@@ -8,8 +8,7 @@ int main() {
     Config config;
     config.readConfig("config.txt");
 
-    gameEngine.setInit(config);
-
+    gameEngine.initialization(config);
     gameEngine.run();   
 
     return 0;

@@ -1,9 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Init.h"
 #include <vector>
 #include "move.h"
 #include "Color.h"
+#include "Chip.h"
+#include "PositionPoints.h"
+#include "Square.h"
+#include "config.h"
 
 class MovingPlace {
 private:
@@ -28,6 +31,26 @@ public:
     const int& getRadiusMovingPlace() { return radiusMovingPlace; }
 };
 
+class Road {
+private:
+    sf::RectangleShape shape;
+    static float widthShape;
+    sf::Color colorShape = sf::Color(216, 216, 216);
+public:
+    Road() {
+        shape.setFillColor(colorShape);
+    }
+    const sf::RectangleShape& getRoad() { return shape; }
+    sf::RectangleShape& setRoad() { return shape; }
+    void setPositionShape(float coordinateX, float coordinateY) {
+        shape.setPosition(coordinateX, coordinateY);
+    }
+    void setColorShape(sf::Color color) { colorShape = color; }
+    static const float& getWidthShape() { return widthShape; }
+};
+
+inline float Road::widthShape = 20;
+
 class GameEngine
 {
 public:
@@ -35,9 +58,10 @@ public:
 	GameEngine();
 	void run();
 
+    void initialization(Config& config);
     void setInit(Config& config);
 private:
-    Init init;
+    //Init init;
 
     sf::RenderWindow window;
 
@@ -53,7 +77,19 @@ private:
     int countWinPosition = 0;
     bool moveChip = false;
     float time = 0;
+    float radiusChip = 15;
+    sf::Vector2f sizePoints{ 40, 40 };
 
+    std::vector <sf::Color> arrColor{ sf::Color::Black, sf::Color::White, sf::Color::Green,
+                                     sf::Color::Blue, sf::Color::Magenta, userColor::Purple,
+                                     userColor::Olive, userColor::Gray, userColor::Navy,
+                                     userColor::Fuchsia, userColor::Teal };
+
+    std::vector <Road> roads;
+    std::vector <Square> square;
+    std::vector <PositionPoints> positionPoints;
+    std::vector<std::vector <int>> connectPoints;
+    std::vector <Chip> chips;
     std::vector <int> occupPoints;
     std::vector <int> freePoints;
     std::vector <int> roadActivChip;
@@ -66,9 +102,20 @@ private:
     void searchRoadActivPosition(std::vector <std::vector <int>> & roads, int const& activPosition);
     void fillingBusyPoints(std::vector<PositionPoints>& positionPoints, std::vector<int>& occupPoints, std::vector<Chip> & chips);
 
+    void setChip(Config& config);
+    void setSquare(Config& config);
+    void setPositionPoints(Config& config);
+    void setConnectPoints(Config& config);
+    void setRoads();
+    const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
+    const sf::Vector2f& getPositionPoint(int numberPosition);
+
 	void inpute();
 	void update();
 	void draw();
     void end();
+
+
+
 };
 
