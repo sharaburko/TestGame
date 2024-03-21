@@ -31,9 +31,9 @@ void GameEngine::inpute() {
 
         if (activPosition) {
 
-            for (auto &it : positionPoints) {
+            for (auto &positionPoint : positionPoints) {
 
-                if (it.getPosition() == activPosition && !it.getFreePoints()) {
+                if (positionPoint.getPosition() == activPosition && !positionPoint.getFreePoints()) {
                     activChip = activPosition;
                     break;
                 }
@@ -259,15 +259,14 @@ void GameEngine::setPositionPoints(Config& config) {
     positionPoints.reserve(config.getPointsCount());
 
     for (int i = 1; i <= config.getPointsCount(); i++) {
-        PositionPoints tempPositionPoints(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
-        positionPoints.push_back(tempPositionPoints);
+        positionPoints.emplace_back(i, config.getCoordinatePoints(i).getCoordinateX(), config.getCoordinatePoints(i).getCoordinateY());
     }
 }
 
 void GameEngine::setConnectPoints(Config& config) {
     connectPoints.reserve(config.getConnectCount());
+
     for (int i = 0; i < config.getConnectCount(); i++) {
-        config.getConnectionsBetweenPoints(i);
         std::vector <int> tempConnect;
         tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP1());
         tempConnect.push_back(config.getConnectionsBetweenPoints(i).getConnectionP2());
@@ -279,36 +278,28 @@ void GameEngine::setConnectPoints(Config& config) {
 void GameEngine::setRoadsBackground() {
     roadsBackground.reserve(connectPoints.size());
 
-    for (int i = 0; i < connectPoints.size(); i++) {
+    for (auto connectPoint : connectPoints) {
+        sf::Vector2f positionP1 = getPositionPoint(connectPoint.front());
+        sf::Vector2f positionP2 = getPositionPoint(connectPoint.back());
+        sf::Vector2f sizeShape;
+        sf::Vector2f positionShape;
 
-        RoadBackground tempRoad;
+        if (positionP1.x == positionP2.x) {
+            sizeShape.x = RoadBackground::getWidthShape();
+            sizeShape.y = positionP2.y + sizePoints.y - positionP1.y - (sizePoints.y - RoadBackground::getWidthShape());
 
-        int p1 = connectPoints[i].front() - 1; //исправить алгоритм
-        int p2 = connectPoints[i].back() - 1;
-        float p1X = positionPoints[p1].getCoordinateX();
-        float p1Y = positionPoints[p1].getCoordinateY();
-        float p2X = positionPoints[p2].getCoordinateX();
-        float p2Y = positionPoints[p2].getCoordinateY();
-
-
-        if (p1X == p2X) {
-            sf::Vector2f size(RoadBackground::getWidthShape(), p2Y + sizePoints.y - p1Y -
-                (sizePoints.y - RoadBackground::getWidthShape()));
-            sf::Vector2f position(p1X + (2 * radiusChip - RoadBackground::getWidthShape()) / 2,
-                p1Y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2);
-            tempRoad.setSizeShape(size);
-            tempRoad.setPositionShape(position);
+            positionShape.x = positionP1.x + (2 * radiusChip - RoadBackground::getWidthShape()) / 2;
+            positionShape.y = positionP1.y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2;
         }
         else {
-            sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x -
-                RoadBackground::getWidthShape()), RoadBackground::getWidthShape());
-            tempRoad.setSizeShape(size);
-            sf::Vector2f position(p1X + (2 * radiusChip - RoadBackground::getWidthShape()) / 2,
-                p1Y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2);
-            tempRoad.setPositionShape(position);
+            sizeShape.x = positionP2.x + sizePoints.x - positionP1.x - (sizePoints.x - RoadBackground::getWidthShape());
+            sizeShape.y = RoadBackground::getWidthShape();
+
+            positionShape.x = positionP1.x + (2 * radiusChip - RoadBackground::getWidthShape()) / 2;
+            positionShape.y = positionP1.y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2;
         }
 
-        roadsBackground.push_back(tempRoad);
+        roadsBackground.emplace_back(sizeShape, positionShape);
     }
 }
 
@@ -334,6 +325,12 @@ void MovingPlace::setCoordinatePlace(float coordinateX, float coordinateY) {
 
 RoadBackground::RoadBackground() {
     shape.setFillColor(colorShape);
+}
+
+RoadBackground::RoadBackground(sf::Vector2f& size, sf::Vector2f& position) {
+    shape.setFillColor(colorShape);
+    shape.setSize(size);
+    shape.setPosition(position);
 }
 
 void RoadBackground::setPositionShape(float coordinateX, float coordinateY) {
