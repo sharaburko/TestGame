@@ -31,13 +31,13 @@ public:
     const int& getRadiusMovingPlace() { return radiusMovingPlace; }
 };
 
-class Road {
+class RoadBackground {
 private:
     sf::RectangleShape shape;
     static float widthShape;
     sf::Color colorShape = sf::Color(216, 216, 216);
 public:
-    Road() {
+    RoadBackground() {
         shape.setFillColor(colorShape);
     }
     const sf::RectangleShape& getRoad() { return shape; }
@@ -49,7 +49,7 @@ public:
     static const float& getWidthShape() { return widthShape; }
 };
 
-inline float Road::widthShape = 20;
+inline float RoadBackground::widthShape = 20;
 
 class GameEngine
 {
@@ -85,7 +85,7 @@ private:
                                      userColor::Olive, userColor::Gray, userColor::Navy,
                                      userColor::Fuchsia, userColor::Teal };
 
-    std::vector <Road> roads;
+    std::vector <RoadBackground> roadsBackground;
     std::vector <Square> square;
     std::vector <PositionPoints> positionPoints;
     std::vector<std::vector <int>> connectPoints;
@@ -106,7 +106,7 @@ private:
     void setSquare(Config& config);
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
-    void setRoads();
+    void setRoadsBackground();
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);
 

@@ -116,7 +116,7 @@ void GameEngine::draw() {
     window.clear(userColor::Gray);
     window.draw(AssetManager::instance().getBackground());
 
-    for (auto& road : roads) {
+    for (auto& road : roadsBackground) {
         window.draw(road.getRoad());
     }
 
@@ -164,7 +164,7 @@ void GameEngine::initialization(Config& config) {
     setSquare(config);
     setPositionPoints(config);
     setConnectPoints(config);
-    setRoads();
+    setRoadsBackground();
     setChip(config);
 }
 
@@ -278,13 +278,13 @@ void GameEngine::setConnectPoints(Config& config)
     }
 }
 
-void GameEngine::setRoads()
+void GameEngine::setRoadsBackground()
 {
-    roads.reserve(connectPoints.size());
+    roadsBackground.reserve(connectPoints.size());
 
     for (int i = 0; i < connectPoints.size(); i++) {
 
-        Road tempRoad;
+        RoadBackground tempRoad;
 
         int p1 = connectPoints[i].front() - 1; //исправить алгоритм
         int p2 = connectPoints[i].back() - 1;
@@ -295,23 +295,23 @@ void GameEngine::setRoads()
 
 
         if (p1X == p2X) {
-            sf::Vector2f size(Road::getWidthShape(), p2Y + sizePoints.y - p1Y -
-                (sizePoints.y - Road::getWidthShape()));
-            sf::Vector2f position(p1X + (2 * radiusChip - Road::getWidthShape()) / 2,
-                p1Y + (2 * radiusChip - Road::getWidthShape()) / 2);
+            sf::Vector2f size(RoadBackground::getWidthShape(), p2Y + sizePoints.y - p1Y -
+                (sizePoints.y - RoadBackground::getWidthShape()));
+            sf::Vector2f position(p1X + (2 * radiusChip - RoadBackground::getWidthShape()) / 2,
+                p1Y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2);
             tempRoad.setRoad().setSize(size);
             tempRoad.setRoad().setPosition(position);
         }
         else {
             sf::Vector2f size(p2X + sizePoints.x - p1X - (sizePoints.x -
-                Road::getWidthShape()), Road::getWidthShape());
+                RoadBackground::getWidthShape()), RoadBackground::getWidthShape());
             tempRoad.setRoad().setSize(size);
-            sf::Vector2f position(p1X + (2 * radiusChip - Road::getWidthShape()) / 2,
-                p1Y + (2 * radiusChip - Road::getWidthShape()) / 2);
+            sf::Vector2f position(p1X + (2 * radiusChip - RoadBackground::getWidthShape()) / 2,
+                p1Y + (2 * radiusChip - RoadBackground::getWidthShape()) / 2);
             tempRoad.setRoad().setPosition(position);
         }
 
-        roads.push_back(tempRoad);
+        roadsBackground.push_back(tempRoad);
     }
 }
 
