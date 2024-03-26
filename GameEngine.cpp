@@ -114,7 +114,7 @@ void GameEngine::update() {
 
 void GameEngine::draw() {
     window.clear(userColor::Gray);
-    window.draw(AssetManager::instance().getBackground());
+    window.draw(AssetManager::instance().getBackground("img/background.jpg"));
 
     for (auto& road : roadsBackground) {
         window.draw(road.getRoad());

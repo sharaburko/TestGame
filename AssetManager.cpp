@@ -19,11 +19,11 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
     return &manager.textures[path];
 }
 
- sf::Sprite& AssetManager::getBackground()
+ sf::Sprite& AssetManager::getBackground(const std::string& path)
 {
     auto& manager = AssetManager::instance();
     auto& sprite = AssetManager::instance().background;
-    auto& texture = *manager.getTexture("img/background.jpg");
+    auto& texture = *manager.getTexture(path);
 
     manager.background.setColor(userColor::Aqua);
     sprite.setTexture(texture);
@@ -50,7 +50,7 @@ sf::Music& AssetManager::getSoundWin()
 
 void AssetManager::setFont(const std::string& pathFont) {
     font.loadFromFile(pathFont);
-    text.setFont(font);
+    
 }
 
 
@@ -59,9 +59,16 @@ sf::Text& AssetManager::getText()
     auto &manager = AssetManager::instance();
     manager.setFont("arial.ttf");
 
+    manager.text.setFont(manager.font);
     manager.text.setPosition(80, 200);
     manager.text.setCharacterSize(60);
     manager.text.setString("YOU WIN!!!");
 
     return manager.text;
+}
+
+sf::Font& AssetManager::getFont()
+{
+    auto& manager = AssetManager::instance();
+    return manager.font;
 }
