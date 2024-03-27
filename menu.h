@@ -1,8 +1,6 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "AssetManager.h"
 #include <vector>
-#include <iostream>
 
 class Menu {
 private:
@@ -19,10 +17,11 @@ private:
 	void insert();
 	void update();
 	void draw();
+	float positionTextX(sf::Vector2f sizeText);
 	
 public:
 	Menu(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
 	Menu();
-	void run();
+	int run();
 
 };

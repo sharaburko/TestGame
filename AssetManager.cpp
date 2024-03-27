@@ -25,7 +25,7 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
     auto& sprite = AssetManager::instance().background;
     auto& texture = *manager.getTexture(path);
 
-    manager.background.setColor(userColor::Aqua);
+    //manager.background.setColor(userColor::Aqua);
     sprite.setTexture(texture);
 
     return sprite;
@@ -34,10 +34,19 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
 sf::Sound& AssetManager::getSoundMoveChip()
 {
     auto &manager = AssetManager::instance();
-    manager.bufferMove.loadFromFile("music/move.ogg");
-    manager.soundMoveChip.setBuffer(manager.bufferMove);
+    manager.buffer.loadFromFile("music/move.ogg");
+    manager.soundMoveChip.setBuffer(manager.buffer);
 
     return manager.soundMoveChip;
+}
+
+sf::Sound& AssetManager::getSoundSelectItemMenu()
+{
+    auto& manager = AssetManager::instance();
+    manager.buffer.loadFromFile("music/click.mp3");
+    manager.soundSelectItemMenu.setBuffer(manager.buffer);
+
+    return manager.soundSelectItemMenu;
 }
 
 sf::Music& AssetManager::getSoundWin()
@@ -46,6 +55,15 @@ sf::Music& AssetManager::getSoundWin()
     manager.soundWin.openFromFile("music/finish.ogg");
 
     return manager.soundWin;
+}
+
+sf::Music& AssetManager::getBackgroundMusic()
+{
+    auto& manager = AssetManager::instance();
+    manager.backgroundMusic.openFromFile("music/music.mp3");
+    manager.backgroundMusic.setLoop(true);
+
+    return manager.backgroundMusic;
 }
 
 void AssetManager::setFont(const std::string& pathFont) {

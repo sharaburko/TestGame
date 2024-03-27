@@ -20,6 +20,9 @@ void GameEngine::inpute() {
 
         if (event.type == sf::Event::Closed)
             window.close();
+
+        if (event.type == sf::Keyboard::Escape)
+            window.close();    
     }
 
     fillingBusyPoints();

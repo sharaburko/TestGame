@@ -8,37 +8,39 @@ Menu::Menu() {
 	window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
 }
 
-void Menu::run() {
-	 setMenuItem();
+int Menu::run() {
 
 	 while (window.isOpen()) {
 		 insert();
 		 update();
 		 draw();
 
-		 if (mouse.isButtonPressed(sf::Mouse::Left)) {
-			 switch (activItem) {
-			 case 3: window.close();
-			 }
-
+		 if (mouse.isButtonPressed(sf::Mouse::Left) && activItem > 0) {
+			 window.close();
+			 return activItem;
 		 }
+
 	 }
 }
 
 void Menu::setMenuItem(){
-	menuItem.reserve(countMenuItem);
 	AssetManager::instance().setFont("font/conthrax-sb.ttf");
+
+	menuItem.reserve(countMenuItem);
 
 	menuItem.emplace_back("Level 1", AssetManager::instance().getFont());
 	menuItem.emplace_back("Level 2", AssetManager::instance().getFont());
 	menuItem.emplace_back("EXIT", AssetManager::instance().getFont());
 
-	float positionX = 250;
+	//float positionX = 250;
 	float positionY = 50;
 
 	for (auto &item : menuItem) {
-		item.setPosition(positionX, positionY);
 		item.setCharacterSize(50);
+
+		float positionX = positionTextX(item.getGlobalBounds().getSize());
+
+		item.setPosition(positionX, positionY);
 		item.setFillColor(sf::Color::Black);
 		item.setOutlineThickness(2);
 		item.setOutlineColor(sf::Color::White);
@@ -52,10 +54,12 @@ void Menu::insert() {
 
 		if (event.type == sf::Event::Closed)
 			window.close();
-
-		if (event.type == sf::Keyboard::Escape)
-			window.close();
 	}
+	activItem = 0;
+
+	menuItem.clear();
+
+	setMenuItem();
 
 	mousePosition = mouse.getPosition(window);
 }
@@ -66,17 +70,14 @@ void Menu::update() {
 		position++;
 
 		if (sf::IntRect(item.getGlobalBounds()).contains(mousePosition)) {
+			AssetManager::getSoundSelectItemMenu().play();
 			item.setFillColor(sf::Color::Red);
 			activItem = position;
-		}
-		else {
-			item.setFillColor(sf::Color::Black);
-			activItem = 0;
+			item.move(3, 3);
 		}
 
 	}
 
-	std::cout << activItem << "\n";
 }
 
 void Menu::draw() {
@@ -89,4 +90,6 @@ void Menu::draw() {
 
 	window.display();
 }
-
+float Menu::positionTextX(sf::Vector2f sizeText) {
+	return ( window.getSize().x / 2  - sizeText.x / 2);
+}

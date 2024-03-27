@@ -15,7 +15,10 @@ public:
     static sf::Texture* getTexture(const std::string& path);
     static sf::Sprite & getBackground(const std::string& path);
     static sf::Sound & getSoundMoveChip();
+    static sf::Sound& getSoundSelectItemMenu();
     static sf::Music & getSoundWin();
+    static sf::Music& getBackgroundMusic();
+
     static sf::Text& getText();
     static sf::Font& getFont();
     void setFont(const std::string& pathFont);
@@ -31,9 +34,12 @@ private:
     sf::Text text;
     sf::Font font;
 
+
+    sf::Music backgroundMusic;
     sf::Music soundWin;
     sf::Sound soundMoveChip;
-    sf::SoundBuffer bufferMove;
+    sf::Sound soundSelectItemMenu;
+    sf::SoundBuffer buffer;
 
     AssetManager() {}
     AssetManager(AssetManager const&) = delete;
