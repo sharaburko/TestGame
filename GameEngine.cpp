@@ -98,6 +98,8 @@ void GameEngine::update() {
                     chip.getShape().setPosition(getPositionPoint((roads.front())[stepActivChip]).x, getPositionPoint((roads.front())[stepActivChip]).y);
                     AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
+                    numberOfMoves++;
+                    std::cout << numberOfMoves << std::endl;
 
                     if ((stepActivChip == (roads.front()).size())) {
                         chip.setNumberPositionShape(activPosition);

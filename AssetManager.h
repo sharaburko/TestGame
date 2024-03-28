@@ -26,14 +26,12 @@ public:
 private:
     void addTexture(const std::string& path);
 
-
     std::unordered_map<std::string, sf::Texture> textures;    
 
     sf::Sprite background;
 
     sf::Text text;
     sf::Font font;
-
 
     sf::Music backgroundMusic;
     sf::Music soundWin;

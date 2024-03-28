@@ -49,6 +49,13 @@ public:
 	GameEngine();
 	void run(Config& config);
 
+    class ResultsTable {
+    private:
+        sf::RectangleShape rectangl;
+        sf::Text result;
+        sf::Text record;
+    };
+
 private:
     sf::RenderWindow window;
 
@@ -56,7 +63,10 @@ private:
     sf::Clock clock;
 
     sf::Event event;
+
+
     
+    int numberOfMoves = 0;
     int activPosition = 0;
     int activChip = 0;
     int stepActivChip = 1;
