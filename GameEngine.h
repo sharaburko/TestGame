@@ -42,20 +42,26 @@ public:
 
 inline float RoadBackground::widthShape = 20;
 
+class ResultsTable {
+private:
+    sf::RectangleShape rectangle;
+    sf::Text result;
+    sf::Text record;
+public:
+    ResultsTable();
+    void setFormatText(const sf::Color &color, const sf::Font &font, int size);
+    void setFormatRectangle(const sf::Color& OutlineColor);
+    void setResult(int result);
+    sf::Text & getResult();
+    sf::RectangleShape & getRectangle();
+};
+
 class GameEngine {
 public:
 	GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
     GameEngine(const std::string& Title);
 	GameEngine();
 	void run(Config& config);
-
-    class ResultsTable {
-    private:
-        sf::RectangleShape rectangl;
-        sf::Text result;
-        sf::Text record;
-    };
-
 private:
     sf::RenderWindow window;
 
@@ -64,7 +70,7 @@ private:
 
     sf::Event event;
 
-
+    ResultsTable resultsTable;
     
     int numberOfMoves = 0;
     int activPosition = 0;
@@ -101,6 +107,8 @@ private:
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
     void setRoadsBackground();
+    void setPositionResultsTable(sf::RenderWindow& window);
+    void setNumberOfMoves(int& result);
 
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);

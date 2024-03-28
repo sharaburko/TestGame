@@ -20,6 +20,8 @@ void GameEngine::inpute() {
 
     countWinPosition = 0;
 
+    setPositionResultsTable(window);
+
     while (window.pollEvent(event)) {
 
         if (event.type == sf::Event::Closed)
@@ -99,7 +101,7 @@ void GameEngine::update() {
                     AssetManager::getSoundMoveChip().play();
                     stepActivChip++;
                     numberOfMoves++;
-                    std::cout << numberOfMoves << std::endl;
+                    setNumberOfMoves(numberOfMoves);
 
                     if ((stepActivChip == (roads.front()).size())) {
                         chip.setNumberPositionShape(activPosition);
@@ -128,6 +130,9 @@ void GameEngine::draw() {
     for (auto& road : roadsBackground) {
         window.draw(road.getRoad());
     }
+
+    window.draw(resultsTable.getRectangle());
+    window.draw(resultsTable.getResult());
 
     for (auto& square : square) {
         window.draw(square.getPoint());
@@ -346,4 +351,47 @@ RoadBackground::RoadBackground(sf::Vector2f& size, sf::Vector2f& position) {
 
 void RoadBackground::setPositionShape(float coordinateX, float coordinateY) {
     shape.setPosition(coordinateX, coordinateY);
+}
+
+void GameEngine::setPositionResultsTable (sf::RenderWindow& window) {
+    resultsTable.getRectangle().setPosition(0, 0);
+    int width = window.getSize().x;
+    int height = resultsTable.getResult().getCharacterSize() + 10;
+    resultsTable.getRectangle().setSize(sf::Vector2f (width, height));
+    resultsTable.getResult().setPosition(5, 0);
+}
+
+void GameEngine::setNumberOfMoves(int& result) {
+    resultsTable.setResult(result);
+}
+
+ResultsTable::ResultsTable() {
+    AssetManager::instance().setFont("font/conthrax-sb.ttf");
+    setFormatText(sf::Color (49, 49, 49), AssetManager::getFont(), 25);
+    setFormatRectangle(sf::Color(49, 49, 49));
+    setResult(0);
+}
+
+void ResultsTable::setFormatText(const sf::Color &color, const sf::Font &font, int size) {
+    result.setFillColor(color);
+    result.setFont(font);
+    result.setCharacterSize(size);
+}
+
+void ResultsTable::setFormatRectangle(const sf::Color& OutlineColor) {
+    rectangle.setFillColor(sf::Color::Transparent);
+    rectangle.setOutlineColor(OutlineColor);
+    rectangle.setOutlineThickness(2);
+}
+
+void ResultsTable::setResult(int result) {
+    this->result.setString("step: " + std::to_string(result));
+}
+
+sf::RectangleShape & ResultsTable::getRectangle() {
+    return rectangle;
+}
+
+sf::Text & ResultsTable::getResult() {
+    return result;
 }
