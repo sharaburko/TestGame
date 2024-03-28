@@ -9,6 +9,10 @@ GameEngine::GameEngine() {
     window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
 }
 
+GameEngine::GameEngine(const std::string& Title) {
+    window.create(sf::VideoMode(640, 480), Title, sf::Style::Close);
+}
+
 void GameEngine::inpute() {    
     time = clock.getElapsedTime().asMicroseconds();
     clock.restart();
@@ -146,6 +150,8 @@ void GameEngine::end() {
         window.draw(AssetManager::getText());
         window.display();
     }
+
+    window.close();
 }
 
 void GameEngine::run(Config& config) {

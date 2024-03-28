@@ -21,6 +21,7 @@ private:
 	
 public:
 	Menu(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
+	Menu(const std::string& Title);
 	Menu();
 	int run();
 

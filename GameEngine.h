@@ -45,6 +45,7 @@ inline float RoadBackground::widthShape = 20;
 class GameEngine {
 public:
 	GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
+    GameEngine(const std::string& Title);
 	GameEngine();
 	void run(Config& config);
 

@@ -8,6 +8,10 @@ Menu::Menu() {
 	window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
 }
 
+Menu::Menu(const std::string& Title) {
+	window.create(sf::VideoMode(640, 480), Title, sf::Style::Close);
+}
+
 int Menu::run() {
 
 	 while (window.isOpen()) {
