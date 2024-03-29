@@ -46,12 +46,17 @@ class ResultsTable {
 private:
     sf::RectangleShape rectangle;
     sf::Text result;
-    sf::Text record;
+    sf::Text textRecord;
+    int record;
 public:
     ResultsTable();
-    void setFormatText(const sf::Color &color, const sf::Font &font, int size);
+    void setFormatText(sf::Text& text, const sf::Color &color, const sf::Font &font, int size);
     void setFormatRectangle(const sf::Color& OutlineColor);
     void setResult(int result);
+    void setRecord(const std::string &pathRecordFile);
+    void setNewRecord(const std::string & pathRecordFile, const int& NewRecord);
+    sf::Text & getTextRecord();
+    int& getRecord();
     sf::Text & getResult();
     sf::RectangleShape & getRectangle();
 };

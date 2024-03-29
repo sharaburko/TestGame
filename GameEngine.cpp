@@ -27,8 +27,6 @@ void GameEngine::inpute() {
         if (event.type == sf::Event::Closed)
             window.close();
 
-        if (event.type == sf::Keyboard::Escape)
-            window.close();    
     }
 
     fillingBusyPoints();
@@ -133,6 +131,7 @@ void GameEngine::draw() {
 
     window.draw(resultsTable.getRectangle());
     window.draw(resultsTable.getResult());
+    window.draw(resultsTable.getTextRecord());
 
     for (auto& square : square) {
         window.draw(square.getPoint());
@@ -151,6 +150,10 @@ void GameEngine::draw() {
 
 void GameEngine::end() {
     AssetManager::getSoundWin().play();
+
+    if (resultsTable.getRecord() > numberOfMoves || !resultsTable.getRecord()) {
+        resultsTable.setNewRecord("record.txt", numberOfMoves);
+    }
 
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         window.clear(sf::Color::Black);
@@ -359,6 +362,7 @@ void GameEngine::setPositionResultsTable (sf::RenderWindow& window) {
     int height = resultsTable.getResult().getCharacterSize() + 10;
     resultsTable.getRectangle().setSize(sf::Vector2f (width, height));
     resultsTable.getResult().setPosition(5, 0);
+    resultsTable.getTextRecord().setPosition(350, 0);
 }
 
 void GameEngine::setNumberOfMoves(int& result) {
@@ -367,15 +371,17 @@ void GameEngine::setNumberOfMoves(int& result) {
 
 ResultsTable::ResultsTable() {
     AssetManager::instance().setFont("font/conthrax-sb.ttf");
-    setFormatText(sf::Color (49, 49, 49), AssetManager::getFont(), 25);
+    setFormatText(result, sf::Color (49, 49, 49), AssetManager::getFont(), 25);
+    setFormatText(textRecord, sf::Color(49, 49, 49), AssetManager::getFont(), 25);
     setFormatRectangle(sf::Color(49, 49, 49));
     setResult(0);
+    setRecord("record.txt");
 }
 
-void ResultsTable::setFormatText(const sf::Color &color, const sf::Font &font, int size) {
-    result.setFillColor(color);
-    result.setFont(font);
-    result.setCharacterSize(size);
+void ResultsTable::setFormatText(sf::Text &text, const sf::Color &color, const sf::Font &font, int size) {
+    text.setFillColor(color);
+    text.setFont(font);
+    text.setCharacterSize(size);
 }
 
 void ResultsTable::setFormatRectangle(const sf::Color& OutlineColor) {
@@ -388,8 +394,48 @@ void ResultsTable::setResult(int result) {
     this->result.setString("step: " + std::to_string(result));
 }
 
+void ResultsTable::setRecord(const std::string & pathRecordFile){
+    std::ifstream recordFromFile;
+    recordFromFile.open(pathRecordFile);
+
+    if (recordFromFile.is_open()) {
+         recordFromFile >> record;
+
+        if (!record) {
+            textRecord.setString("record: no result");
+        }
+        else {
+            textRecord.setString("record: " + std::to_string(record));
+        }
+
+    }
+    else {
+        textRecord.setString("record: no result");
+    }
+
+    recordFromFile.close();
+}
+
+void ResultsTable::setNewRecord(const std::string & pathRecordFile, const int &NewRecord) {
+    std::ofstream recordFromFile;
+    recordFromFile.open(pathRecordFile);
+
+    if (recordFromFile.is_open()) {
+        recordFromFile << NewRecord;
+    }
+
+    recordFromFile.close();
+}
+
 sf::RectangleShape & ResultsTable::getRectangle() {
     return rectangle;
+}
+
+sf::Text& ResultsTable::getTextRecord() {
+    return textRecord;
+}
+int& ResultsTable::getRecord() {
+    return record;
 }
 
 sf::Text & ResultsTable::getResult() {
