@@ -18,7 +18,6 @@ int main() {
             gameEngine.run(config);
             break;
         }
-
         case 2: {
             GameEngine gameEngine("Level 2");
             Config config;

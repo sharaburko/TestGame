@@ -42,9 +42,12 @@ public:
 
 inline float RoadBackground::widthShape = 20;
 
+
+
 class ResultsTable {
 private:
     sf::RectangleShape rectangle;
+
     sf::Text result;
     sf::Text textRecord;
     int record;
@@ -66,6 +69,7 @@ public:
 	GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
     GameEngine(const std::string& Title);
 	GameEngine();
+
 	void run(Config& config);
 private:
     sf::RenderWindow window;
@@ -85,6 +89,7 @@ private:
     bool moveChip = false;
     float time = 0;
     float radiusChip = 15;
+    std::string pathRecord;
     sf::Vector2i mousePosition{ 0, 0 };
     sf::Vector2f sizePoints{ 40, 40 };
     std::vector <sf::Color> arrColor{ sf::Color::Black, sf::Color::White, sf::Color::Green,
@@ -109,6 +114,7 @@ private:
     void initialization(Config& config);
     void setChip(Config& config);
     void setSquare(Config& config);
+    void setPathRecord(Config& config);
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
     void setRoadsBackground();
@@ -117,7 +123,8 @@ private:
 
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);
-
+   
+    void restart(Config& config);
 	void inpute();
 	void update();
 	void draw();

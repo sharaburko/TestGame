@@ -81,5 +81,8 @@ void Config::readConfig(std::string  const configFilePath) {
         }
 
     }
+
+    cfg >> pathRecord;
+
     cfg.close();
 }

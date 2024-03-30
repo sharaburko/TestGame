@@ -67,21 +67,22 @@ sf::Music& AssetManager::getBackgroundMusic()
 }
 
 void AssetManager::setFont(const std::string& pathFont) {
-    font.loadFromFile(pathFont);
-    
+    font.loadFromFile(pathFont);    
 }
 
+void AssetManager::setText(const std::string text, const sf::Color& color, const std::string pathText) {
+    auto& manager = AssetManager::instance();
 
-sf::Text& AssetManager::getText()
-{
-    auto &manager = AssetManager::instance();
-    manager.setFont("arial.ttf");
-
+    manager.setFont(pathText);
     manager.text.setFont(manager.font);
     manager.text.setPosition(80, 200);
     manager.text.setCharacterSize(60);
-    manager.text.setString("YOU WIN!!!");
+    manager.text.setString(text);
+    manager.text.setFillColor(color);
+}
 
+sf::Text& AssetManager::getText() {
+    auto& manager = AssetManager::instance();
     return manager.text;
 }
 

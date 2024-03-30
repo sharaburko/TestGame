@@ -8,6 +8,7 @@ class Config {
     int chipCount = 0;
     int pointsCount = 0;
     int connectCount = 0;
+    std::string pathRecord;
     struct Coordinate;
     struct ConnectionsBetweenPoints;
     std::vector <Coordinate> points;
@@ -39,6 +40,7 @@ public:
     int getArrStartPoints(int i) { return arrStartPoints[i]; }
     int getArrWinnerPoints(int i) { return arrWinnerPoints[i]; }
     int getConnectCount() const { return connectCount; }
+    std::string getPathRecord() { return pathRecord; }
     Coordinate getCoordinatePoints(int pointNumber) { return points[pointNumber - 1]; }
     ConnectionsBetweenPoints getConnectionsBetweenPoints(int connectCount) { return connection[connectCount]; }
 }; 

@@ -27,6 +27,13 @@ void GameEngine::inpute() {
         if (event.type == sf::Event::Closed)
             window.close();
 
+        if (event.type == sf::Event::KeyPressed) {
+        
+            if (event.key.code == sf::Keyboard::Q) {
+                window.close();
+            }
+        }
+
     }
 
     fillingBusyPoints();
@@ -152,7 +159,11 @@ void GameEngine::end() {
     AssetManager::getSoundWin().play();
 
     if (resultsTable.getRecord() > numberOfMoves || !resultsTable.getRecord()) {
-        resultsTable.setNewRecord("record.txt", numberOfMoves);
+        resultsTable.setNewRecord(pathRecord, numberOfMoves);
+        AssetManager::instance().setText("NEW RECORD " +std::to_string(numberOfMoves) + "\nYOU WIN!!", sf::Color::Red);
+    }
+    else {
+        AssetManager::instance().setText("YOU WIN!!");
     }
 
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -176,6 +187,11 @@ void GameEngine::run(Config& config) {
             end();
             break;
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            restart(config);
+        }
+
     }
 
 }
@@ -186,6 +202,7 @@ void GameEngine::initialization(Config& config) {
     setConnectPoints(config);
     setRoadsBackground();
     setChip(config);
+    setPathRecord(config);
 }
 
 int GameEngine::searchActivPosition() {
@@ -263,6 +280,11 @@ void GameEngine::setChip(Config& config) {
         int numberPositionShape = config.getArrStartPoints(i);
         chips.emplace_back(config.getArrStartPoints(i), config.getArrWinnerPoints(i), arrColor[i], config.getCoordinatePoints(numberPositionShape).getCoordinateX(), config.getCoordinatePoints(numberPositionShape).getCoordinateY(), radiusChip);
     }
+}
+
+void GameEngine::setPathRecord(Config& config) {
+    pathRecord = config.getPathRecord();
+    resultsTable.setRecord(pathRecord);
 }
 
 void GameEngine::setSquare(Config& config) {
@@ -375,7 +397,6 @@ ResultsTable::ResultsTable() {
     setFormatText(textRecord, sf::Color(49, 49, 49), AssetManager::getFont(), 25);
     setFormatRectangle(sf::Color(49, 49, 49));
     setResult(0);
-    setRecord("record.txt");
 }
 
 void ResultsTable::setFormatText(sf::Text &text, const sf::Color &color, const sf::Font &font, int size) {
@@ -434,10 +455,24 @@ sf::RectangleShape & ResultsTable::getRectangle() {
 sf::Text& ResultsTable::getTextRecord() {
     return textRecord;
 }
+
 int& ResultsTable::getRecord() {
     return record;
 }
 
 sf::Text & ResultsTable::getResult() {
     return result;
+}
+
+void GameEngine::restart(Config& config) {
+    chips.clear();
+    setChip(config);
+    numberOfMoves = 0;
+    activPosition = 0;
+    activChip = 0;
+    stepActivChip = 1;
+    countWinPosition = 0;
+    moveChip = false;
+    time = 0;
+    setNumberOfMoves(numberOfMoves);
 }

@@ -20,6 +20,7 @@ public:
     static sf::Music& getBackgroundMusic();
 
     static sf::Text& getText();
+    void setText(const std::string text, const sf::Color & color = sf::Color::White, const std::string pathText = "arial.ttf");
     static sf::Font& getFont();
     void setFont(const std::string& pathFont);
 
