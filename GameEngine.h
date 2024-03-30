@@ -42,26 +42,42 @@ public:
 
 inline float RoadBackground::widthShape = 20;
 
-
-
-class ResultsTable {
-private:
+class Table {
+protected:
     sf::RectangleShape rectangle;
+    int sizeText = 25;
+public:
+    Table();
+    void setFormatRectangle(const sf::Color& OutlineColor);
+    void setFormatText(sf::Text& text);
+    virtual void setPositionTable(sf::RenderWindow& window) = 0;
+    sf::RectangleShape& getRectangle();
+};
 
+class ResultsTable : public Table {
+private:
     sf::Text result;
     sf::Text textRecord;
     int record;
 public:
     ResultsTable();
-    void setFormatText(sf::Text& text, const sf::Color &color, const sf::Font &font, int size);
-    void setFormatRectangle(const sf::Color& OutlineColor);
+    void setPositionTable(sf::RenderWindow& window);
     void setResult(int result);
     void setRecord(const std::string &pathRecordFile);
     void setNewRecord(const std::string & pathRecordFile, const int& NewRecord);
     sf::Text & getTextRecord();
     int& getRecord();
     sf::Text & getResult();
-    sf::RectangleShape & getRectangle();
+};
+
+class FooterTable : public Table {
+protected:
+    sf::Text text;
+public:
+    FooterTable();
+    void setPositionTable(sf::RenderWindow& window);
+    void setText(std::string text);
+    sf::Text& getText();
 };
 
 class GameEngine {
@@ -80,6 +96,7 @@ private:
     sf::Event event;
 
     ResultsTable resultsTable;
+    FooterTable footerTable;
     
     int numberOfMoves = 0;
     int activPosition = 0;
@@ -118,7 +135,6 @@ private:
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
     void setRoadsBackground();
-    void setPositionResultsTable(sf::RenderWindow& window);
     void setNumberOfMoves(int& result);
 
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }

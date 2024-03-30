@@ -20,7 +20,7 @@ void GameEngine::inpute() {
 
     countWinPosition = 0;
 
-    setPositionResultsTable(window);
+
 
     while (window.pollEvent(event)) {
 
@@ -140,6 +140,9 @@ void GameEngine::draw() {
     window.draw(resultsTable.getResult());
     window.draw(resultsTable.getTextRecord());
 
+    window.draw(footerTable.getRectangle());
+    window.draw(footerTable.getText());
+
     for (auto& square : square) {
         window.draw(square.getPoint());
     }
@@ -203,6 +206,9 @@ void GameEngine::initialization(Config& config) {
     setRoadsBackground();
     setChip(config);
     setPathRecord(config);
+    resultsTable.setPositionTable(window);
+    footerTable.setPositionTable(window);
+    footerTable.setText("R - restart      Q - exit");
 }
 
 int GameEngine::searchActivPosition() {
@@ -378,13 +384,11 @@ void RoadBackground::setPositionShape(float coordinateX, float coordinateY) {
     shape.setPosition(coordinateX, coordinateY);
 }
 
-void GameEngine::setPositionResultsTable (sf::RenderWindow& window) {
-    resultsTable.getRectangle().setPosition(0, 0);
+void ResultsTable::setPositionTable (sf::RenderWindow& window) {
+    rectangle.setPosition(0, 0);
     int width = window.getSize().x;
-    int height = resultsTable.getResult().getCharacterSize() + 10;
-    resultsTable.getRectangle().setSize(sf::Vector2f (width, height));
-    resultsTable.getResult().setPosition(5, 0);
-    resultsTable.getTextRecord().setPosition(350, 0);
+    int height = sizeText + 10;
+    rectangle.setSize(sf::Vector2f (width, height));
 }
 
 void GameEngine::setNumberOfMoves(int& result) {
@@ -393,19 +397,24 @@ void GameEngine::setNumberOfMoves(int& result) {
 
 ResultsTable::ResultsTable() {
     AssetManager::instance().setFont("font/conthrax-sb.ttf");
-    setFormatText(result, sf::Color (49, 49, 49), AssetManager::getFont(), 25);
-    setFormatText(textRecord, sf::Color(49, 49, 49), AssetManager::getFont(), 25);
-    setFormatRectangle(sf::Color(49, 49, 49));
+    setFormatText(result);
+    setFormatText(textRecord);
+    result.setPosition(5, 0);
+    textRecord.setPosition(350, 0);
     setResult(0);
 }
 
-void ResultsTable::setFormatText(sf::Text &text, const sf::Color &color, const sf::Font &font, int size) {
-    text.setFillColor(color);
-    text.setFont(font);
-    text.setCharacterSize(size);
+void Table::setFormatText(sf::Text &text) {
+    text.setFillColor(sf::Color::Black);
+    text.setFont(AssetManager::getFont());
+    text.setCharacterSize(sizeText);
 }
 
-void ResultsTable::setFormatRectangle(const sf::Color& OutlineColor) {
+Table::Table() {
+    setFormatRectangle(sf::Color(49, 49, 49));
+}
+
+void Table::setFormatRectangle(const sf::Color& OutlineColor) {
     rectangle.setFillColor(sf::Color::Transparent);
     rectangle.setOutlineColor(OutlineColor);
     rectangle.setOutlineThickness(2);
@@ -448,7 +457,7 @@ void ResultsTable::setNewRecord(const std::string & pathRecordFile, const int &N
     recordFromFile.close();
 }
 
-sf::RectangleShape & ResultsTable::getRectangle() {
+sf::RectangleShape & Table::getRectangle() {
     return rectangle;
 }
 
@@ -475,4 +484,26 @@ void GameEngine::restart(Config& config) {
     moveChip = false;
     time = 0;
     setNumberOfMoves(numberOfMoves);
+}
+
+FooterTable::FooterTable() {
+    setFormatText(text);
+    text.setPosition(5, 300);
+
+}
+
+void FooterTable::setPositionTable(sf::RenderWindow& window) {
+    int width = window.getSize().x;
+    int height = sizeText + 10;
+    rectangle.setPosition(0, window.getSize().y - height);
+    rectangle.setSize(sf::Vector2f(width, height));
+}
+
+void FooterTable::setText(std::string text) {
+    this->text.setString(text);
+    this->text.setPosition(5, rectangle.getPosition().y);
+}
+
+sf::Text& FooterTable::getText() {    
+    return text;
 }
