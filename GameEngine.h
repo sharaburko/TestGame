@@ -93,10 +93,13 @@ private:
     sf::Mouse mouse;
     sf::Clock clock;
 
+    sf::Sprite cursor;
+
     sf::Event event;
 
     ResultsTable resultsTable;
     FooterTable footerTable;
+
     
     int numberOfMoves = 0;
     int activPosition = 0;
@@ -136,6 +139,7 @@ private:
     void setConnectPoints(Config& config);
     void setRoadsBackground();
     void setNumberOfMoves(int& result);
+    void updateCursor();
 
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);

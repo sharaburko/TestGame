@@ -73,6 +73,8 @@ void GameEngine::inpute() {
 
 void GameEngine::update() {
 
+    cursor.setPosition(sf::Vector2f(mouse.getPosition(window)));
+
     for (auto road : roads) {
         movingPlaces.emplace_back(road.back());
     }
@@ -155,6 +157,8 @@ void GameEngine::draw() {
         window.draw(chip.getShape());
     }
 
+    window.draw(cursor);
+
     window.display();
 }
 
@@ -166,7 +170,7 @@ void GameEngine::end() {
         AssetManager::instance().setText("NEW RECORD " +std::to_string(numberOfMoves) + "\nYOU WIN!!", sf::Color::Red);
     }
     else {
-        AssetManager::instance().setText("YOU WIN!!");
+        AssetManager::instance().setText("YOU LOSE!!");
     }
 
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -199,6 +203,7 @@ void GameEngine::run(Config& config) {
 
 }
 
+
 void GameEngine::initialization(Config& config) {
     setSquare(config);
     setPositionPoints(config);
@@ -209,6 +214,7 @@ void GameEngine::initialization(Config& config) {
     resultsTable.setPositionTable(window);
     footerTable.setPositionTable(window);
     footerTable.setText("R - restart      Q - exit");
+    updateCursor();
 }
 
 int GameEngine::searchActivPosition() {
@@ -393,6 +399,11 @@ void ResultsTable::setPositionTable (sf::RenderWindow& window) {
 
 void GameEngine::setNumberOfMoves(int& result) {
     resultsTable.setResult(result);
+}
+
+void GameEngine::updateCursor() {
+    window.setMouseCursorVisible(false);
+    cursor.setTexture(AssetManager::getImgCursor());
 }
 
 ResultsTable::ResultsTable() {

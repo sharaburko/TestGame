@@ -18,11 +18,13 @@ public:
     static sf::Sound& getSoundSelectItemMenu();
     static sf::Music & getSoundWin();
     static sf::Music& getBackgroundMusic();
+    static sf::Texture & getImgCursor();
 
     static sf::Text& getText();
     void setText(const std::string text, const sf::Color & color = sf::Color::White, const std::string pathText = "arial.ttf");
     static sf::Font& getFont();
     void setFont(const std::string& pathFont);
+    void setImgCursor(std::string pathCursor);
 
 private:
     void addTexture(const std::string& path);
@@ -34,11 +36,15 @@ private:
     sf::Text text;
     sf::Font font;
 
+    sf::Texture imgCursor;
+
     sf::Music backgroundMusic;
     sf::Music soundWin;
     sf::Sound soundMoveChip;
     sf::Sound soundSelectItemMenu;
     sf::SoundBuffer buffer;
+
+    const sf::Cursor getCursor();
 
     AssetManager() {}
     AssetManager(AssetManager const&) = delete;

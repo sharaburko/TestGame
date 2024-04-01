@@ -7,6 +7,7 @@ void AssetManager::addTexture(const std::string& path)
     texture.loadFromFile(path);
 }
 
+
 sf::Texture* AssetManager::getTexture(const std::string &path)
 {
     auto& manager = AssetManager::instance();
@@ -66,8 +67,18 @@ sf::Music& AssetManager::getBackgroundMusic()
     return manager.backgroundMusic;
 }
 
+sf::Texture& AssetManager::getImgCursor() {
+    auto &manager = AssetManager::instance();
+    manager.setImgCursor("img/cursor.png");
+    return manager.imgCursor;
+}
+
 void AssetManager::setFont(const std::string& pathFont) {
     font.loadFromFile(pathFont);    
+}
+
+void AssetManager::setImgCursor(std::string pathCursor) {
+    imgCursor.loadFromFile(pathCursor);
 }
 
 void AssetManager::setText(const std::string text, const sf::Color& color, const std::string pathText) {
