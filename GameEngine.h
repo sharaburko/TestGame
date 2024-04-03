@@ -7,78 +7,10 @@
 #include "PositionPoints.h"
 #include "Square.h"
 #include "config.h"
-
-class MovingPlace {
-private:
-    sf::CircleShape place;
-    int radiusMovingPlace = 4;
-    sf::Color colorPlace = sf::Color::Red;
-    int position;
-
-public:
-    MovingPlace(int numberPosition);
-    void setCoordinatePlace(float coordinateX, float coordinateY);
-
-    const int& getPositin() { return position; }
-    const sf::CircleShape& getMovingPlace()  { return place;};
-    const int& getRadiusMovingPlace() { return radiusMovingPlace; }
-};
-
-class RoadBackground {
-private:
-    sf::RectangleShape shape;
-    static float widthShape;
-    sf::Color colorShape = sf::Color(216, 216, 216);
-public:
-    RoadBackground();
-    RoadBackground(sf::Vector2f& size, sf::Vector2f& position);
-    const sf::RectangleShape& getRoad() { return shape; }
-    void setSizeShape(sf::Vector2f &size) { shape.setSize(size); }
-    void setPositionShape(sf::Vector2f& position) { shape.setPosition(position); }
-    void setPositionShape(float coordinateX, float coordinateY);
-    void setColorShape(sf::Color color) { colorShape = color; }
-    static const float& getWidthShape() { return widthShape; }
-};
-
-inline float RoadBackground::widthShape = 20;
-
-class Table {
-protected:
-    sf::RectangleShape rectangle;
-    int sizeText = 25;
-public:
-    Table();
-    void setFormatRectangle(const sf::Color& OutlineColor);
-    void setFormatText(sf::Text& text);
-    virtual void setPositionTable(sf::RenderWindow& window) = 0;
-    sf::RectangleShape& getRectangle();
-};
-
-class ResultsTable : public Table {
-private:
-    sf::Text result;
-    sf::Text textRecord;
-    int record;
-public:
-    ResultsTable();
-    void setPositionTable(sf::RenderWindow& window);
-    void setResult(int result);
-    void setRecord(const std::string &pathRecordFile);
-    void setNewRecord(const std::string & pathRecordFile, const int& NewRecord);
-    sf::Text & getTextRecord();
-    int& getRecord();
-    sf::Text & getResult();
-};
-
-class FooterTable : public Table {
-protected:
-    sf::Text text;
-public:
-    FooterTable();
-    void setPositionTable(sf::RenderWindow& window);
-    void setText(std::string text);
-    sf::Text& getText();
-};
+#include "menu.h"
+#include "MovingPlace.h"
+#include "RoadBackground.h"
+#include "Table.h"
 
 class GameEngine {
 public:
@@ -89,21 +21,15 @@ public:
 	void run(Config& config);
 private:
     sf::RenderWindow window;
-
+    sf::Event event;
     sf::Mouse mouse;
     sf::Clock clock;
-
-    sf::Sprite cursor;
-
-    sf::Event event;
 
     ResultsTable resultsTable;
     FooterTable footerTable;
 
     sf::Sound soundMoveChip;
-
-
-
+    sf::Sprite cursor;
     sf::Text text;
         
     int numberOfMoves = 0;

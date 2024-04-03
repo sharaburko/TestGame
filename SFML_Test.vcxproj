@@ -152,8 +152,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="move.cpp" />
+    <ClCompile Include="MovingPlace.cpp" />
     <ClCompile Include="PositionPoints.cpp" />
+    <ClCompile Include="RoadBackground.cpp" />
     <ClCompile Include="Square.cpp" />
+    <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
@@ -163,8 +166,11 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="move.h" />
+    <ClInclude Include="MovingPlace.h" />
     <ClInclude Include="PositionPoints.h" />
+    <ClInclude Include="RoadBackground.h" />
     <ClInclude Include="Square.h" />
+    <ClInclude Include="Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
