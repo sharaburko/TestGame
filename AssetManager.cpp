@@ -32,22 +32,9 @@ sf::Texture* AssetManager::getTexture(const std::string &path)
     return sprite;
 }
 
-sf::Sound& AssetManager::getSoundMoveChip()
-{
-    auto &manager = AssetManager::instance();
-    manager.buffer.loadFromFile("music/move.ogg");
-    manager.soundMoveChip.setBuffer(manager.buffer);
-
-    return manager.soundMoveChip;
-}
-
-sf::Sound& AssetManager::getSoundSelectItemMenu()
-{
+sf::SoundBuffer& AssetManager::getBuffer() {
     auto& manager = AssetManager::instance();
-    manager.buffer.loadFromFile("music/click.mp3");
-    manager.soundSelectItemMenu.setBuffer(manager.buffer);
-
-    return manager.soundSelectItemMenu;
+    return manager.buffer;
 }
 
 sf::Music& AssetManager::getSoundWin()
@@ -67,29 +54,12 @@ sf::Music& AssetManager::getBackgroundMusic()
     return manager.backgroundMusic;
 }
 
-sf::Texture& AssetManager::getImgCursor() {
-    auto &manager = AssetManager::instance();
-    manager.setImgCursor("img/cursor.png");
-    return manager.imgCursor;
-}
-
 void AssetManager::setFont(const std::string& pathFont) {
     font.loadFromFile(pathFont);    
 }
 
-void AssetManager::setImgCursor(std::string pathCursor) {
-    imgCursor.loadFromFile(pathCursor);
-}
-
-void AssetManager::setText(const std::string text, const sf::Color& color, const std::string pathText) {
-    auto& manager = AssetManager::instance();
-
-    manager.setFont(pathText);
-    manager.text.setFont(manager.font);
-    manager.text.setPosition(80, 200);
-    manager.text.setCharacterSize(60);
-    manager.text.setString(text);
-    manager.text.setFillColor(color);
+void AssetManager::setBuffer(const std::string& pathFont) {
+    buffer.loadFromFile(pathFont);
 }
 
 sf::Text& AssetManager::getText() {

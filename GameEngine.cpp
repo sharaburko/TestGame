@@ -105,7 +105,7 @@ void GameEngine::update() {
                 }
                 else {
                     chip.getShape().setPosition(getPositionPoint((roads.front())[stepActivChip]).x, getPositionPoint((roads.front())[stepActivChip]).y);
-                    AssetManager::getSoundMoveChip().play();
+                    getSoundMoveChip().play();
                     stepActivChip++;
                     numberOfMoves++;
                     setNumberOfMoves(numberOfMoves);
@@ -167,10 +167,10 @@ void GameEngine::end() {
 
     if (resultsTable.getRecord() > numberOfMoves || !resultsTable.getRecord()) {
         resultsTable.setNewRecord(pathRecord, numberOfMoves);
-        AssetManager::instance().setText("NEW RECORD " +std::to_string(numberOfMoves) + "\nYOU WIN!!", sf::Color::Red);
+        setText("NEW RECORD " +std::to_string(numberOfMoves) + "\nYOU WIN!!", sf::Color::Red);
     }
     else {
-        AssetManager::instance().setText("YOU LOSE!!");
+        setText("YOU LOSE!!");
     }
 
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -201,6 +201,13 @@ void GameEngine::run(Config& config) {
 
     }
 
+}
+
+sf::Sound& GameEngine::getSoundMoveChip() {
+    auto& manager = AssetManager::instance();
+    manager.setBuffer("music/move.ogg");
+    soundMoveChip.setBuffer(manager.getBuffer());
+    return soundMoveChip;
 }
 
 
@@ -401,9 +408,19 @@ void GameEngine::setNumberOfMoves(int& result) {
     resultsTable.setResult(result);
 }
 
+void GameEngine::setText(const std::string text, const sf::Color& color, const std::string pathText) {
+    auto& manager = AssetManager::instance();
+    manager.setFont(pathText);
+    this->text.setFont(manager.getFont());
+    this->text.setPosition(80, 200);
+    this->text.setCharacterSize(60);
+    this->text.setString(text);
+    this->text.setFillColor(color);
+}
+
 void GameEngine::updateCursor() {
     window.setMouseCursorVisible(false);
-    cursor.setTexture(AssetManager::getImgCursor());
+    cursor.setTexture(*AssetManager::getTexture("img/cursor.png"));
 }
 
 ResultsTable::ResultsTable() {

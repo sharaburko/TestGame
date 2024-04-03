@@ -74,7 +74,7 @@ void Menu::update() {
 		position++;
 
 		if (sf::IntRect(item.getGlobalBounds()).contains(mousePosition)) {
-			AssetManager::getSoundSelectItemMenu().play();
+			getSoundSelectItemMenu().play();
 			item.setFillColor(sf::Color::Red);
 			activItem = position;
 			item.move(3, 3);
@@ -96,4 +96,13 @@ void Menu::draw() {
 }
 float Menu::positionTextX(sf::Vector2f sizeText) {
 	return ( window.getSize().x / 2  - sizeText.x / 2);
+}
+
+
+sf::Sound& Menu::getSoundSelectItemMenu() {
+	auto &manager = AssetManager::instance();
+	manager.setBuffer("music/click.mp3");
+	soundSelectItemMenu.setBuffer(manager.getBuffer());
+
+	return soundSelectItemMenu;
 }

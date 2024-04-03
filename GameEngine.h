@@ -100,7 +100,12 @@ private:
     ResultsTable resultsTable;
     FooterTable footerTable;
 
-    
+    sf::Sound soundMoveChip;
+
+
+
+    sf::Text text;
+        
     int numberOfMoves = 0;
     int activPosition = 0;
     int activChip = 0;
@@ -140,7 +145,9 @@ private:
     void setRoadsBackground();
     void setNumberOfMoves(int& result);
     void updateCursor();
+    void setText(const std::string text, const sf::Color& color = sf::Color::White, const std::string pathText = "arial.ttf");
 
+    sf::Sound& getSoundMoveChip();
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }
     const sf::Vector2f& getPositionPoint(int numberPosition);
    
