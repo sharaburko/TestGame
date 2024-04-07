@@ -14,8 +14,8 @@
 
 class GameEngine {
 public:
-	GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
-    GameEngine(const std::string& Title);
+	GameEngine(const int level, unsigned modeWidth, unsigned modeHeight);
+    GameEngine(const int level);
 	GameEngine();
 
 	void run(Config& config);
@@ -38,9 +38,9 @@ private:
     int stepActivChip = 1;
     int countWinPosition = 0;
     bool moveChip = false;
+    int level = 0;
     float time = 0;
     float radiusChip = 15;
-    std::string pathRecord;
     sf::Vector2i mousePosition{ 0, 0 };
     sf::Vector2f sizePoints{ 40, 40 };
     std::vector <sf::Color> arrColor{ sf::Color::Black, sf::Color::White, sf::Color::Green,
@@ -65,13 +65,12 @@ private:
     void initialization(Config& config);
     void setChip(Config& config);
     void setSquare(Config& config);
-    void setPathRecord(Config& config);
     void setPositionPoints(Config& config);
     void setConnectPoints(Config& config);
     void setRoadsBackground();
     void setNumberOfMoves(int& result);
     void updateCursor();
-    void setText(const std::string text, const sf::Color& color = sf::Color::White, const std::string pathText = "arial.ttf");
+    void setText(const std::string &text, const sf::Color& color = sf::Color::White, const std::string pathText = "arial.ttf");
 
     sf::Sound& getSoundMoveChip();
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }

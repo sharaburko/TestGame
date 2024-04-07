@@ -21,12 +21,13 @@ private:
     sf::Text result;
     sf::Text textRecord;
     int record;
+    std::string pathRecordFile;
 public:
     ResultsTable();
     void setPositionTable(sf::RenderWindow& window);
     void setResult(int result);
-    void setRecord(const std::string& pathRecordFile);
-    void setNewRecord(const std::string& pathRecordFile, const int& NewRecord);
+    void setRecord(const int &level);
+    void setNewRecord(const int &level, const int& NewRecord);
     sf::Text& getTextRecord();
     int& getRecord();
     sf::Text& getResult();

@@ -13,6 +13,7 @@ ResultsTable::ResultsTable() {
     setFormatText(textRecord);
     result.setPosition(5, 0);
     textRecord.setPosition(350, 0);
+    pathRecordFile = ".r";
     setResult(0);
 }
 
@@ -36,13 +37,15 @@ void ResultsTable::setResult(int result) {
     this->result.setString("step: " + std::to_string(result));
 }
 
-void ResultsTable::setRecord(const std::string& pathRecordFile) {
-    std::ifstream recordFromFile;
+void ResultsTable::setRecord(const int &level) {
+    std::fstream recordFromFile;
 
-    recordFromFile.open(pathRecordFile);
+    recordFromFile.open(pathRecordFile, std::ios::in | std::ios::out);
 
     if (recordFromFile.is_open()) {
-        recordFromFile >> record;
+        recordFromFile.seekg((level - 1) * sizeof(int));
+        recordFromFile.read((char*)&record, sizeof(int));
+        recordFromFile.seekg(0, std::ios::beg);
 
         if (!record) {
             textRecord.setString("record: no result");
@@ -59,12 +62,17 @@ void ResultsTable::setRecord(const std::string& pathRecordFile) {
     recordFromFile.close();
 }
 
-void ResultsTable::setNewRecord(const std::string& pathRecordFile, const int& NewRecord) {
+void ResultsTable::setNewRecord(const int &level, const int& NewRecord) {
     std::ofstream recordFromFile;
     recordFromFile.open(pathRecordFile);
 
     if (recordFromFile.is_open()) {
-        recordFromFile << NewRecord;
+        recordFromFile.seekp((level - 1) * sizeof(int));
+        recordFromFile.write((char*)&NewRecord, sizeof(int));
+        recordFromFile.seekp(0, std::ios::beg);    
+    }
+    else {
+        std::cout << "Error. Not file record\n";
     }
 
     recordFromFile.close();

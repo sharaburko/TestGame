@@ -1,16 +1,18 @@
 #include "GameEngine.h"
 #include <SFML/Window/Event.hpp>
 
-GameEngine::GameEngine(const std::string& Title, unsigned modeWidth, unsigned modeHeight) {
-    window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
+GameEngine::GameEngine(const int level, unsigned modeWidth, unsigned modeHeight) {
+    window.create(sf::VideoMode(modeWidth, modeHeight), "Level " + std::to_string(level), sf::Style::Close);
+    this->level = level;
 }
 
 GameEngine::GameEngine() {
     window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
 }
 
-GameEngine::GameEngine(const std::string& Title) {
-    window.create(sf::VideoMode(640, 480), Title, sf::Style::Close);
+GameEngine::GameEngine(const int level) {
+    window.create(sf::VideoMode(640, 480), "Level " + std::to_string(level), sf::Style::Close);
+    this->level = level;
 }
 
 void GameEngine::inpute() {    
@@ -166,7 +168,7 @@ void GameEngine::end() {
     AssetManager::getSoundWin().play();
 
     if (resultsTable.getRecord() > numberOfMoves || !resultsTable.getRecord()) {
-        resultsTable.setNewRecord(pathRecord, numberOfMoves);
+        resultsTable.setNewRecord(level, numberOfMoves);
         setText("NEW RECORD " +std::to_string(numberOfMoves) + "\nYOU WIN!!", sf::Color::Red);
     }
     else {
@@ -175,7 +177,7 @@ void GameEngine::end() {
 
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         window.clear(sf::Color::Black);
-        window.draw(AssetManager::getText());
+        window.draw(text);
         window.display();
     }
 
@@ -217,7 +219,7 @@ void GameEngine::initialization(Config& config) {
     setConnectPoints(config);
     setRoadsBackground();
     setChip(config);
-    setPathRecord(config);
+    resultsTable.setRecord(level);
     resultsTable.setPositionTable(window);
     footerTable.setPositionTable(window);
     footerTable.setText("R - restart      Q - exit");
@@ -301,11 +303,6 @@ void GameEngine::setChip(Config& config) {
     }
 }
 
-void GameEngine::setPathRecord(Config& config) {
-    pathRecord = config.getPathRecord();
-    resultsTable.setRecord(pathRecord);
-}
-
 void GameEngine::setSquare(Config& config) {
     square.reserve(config.getChipCount());
 
@@ -377,7 +374,7 @@ void GameEngine::setNumberOfMoves(int& result) {
     resultsTable.setResult(result);
 }
 
-void GameEngine::setText(const std::string text, const sf::Color& color, const std::string pathText) {
+void GameEngine::setText(const std::string &text, const sf::Color& color, const std::string pathText) {
     auto& manager = AssetManager::instance();
     manager.setFont(pathText);
     this->text.setFont(manager.getFont());
