@@ -27,6 +27,7 @@ private:
 
     ResultsTable resultsTable;
     FooterTable footerTable;
+    Menu menu;
 
     sf::Sound soundMoveChip;
     sf::Sprite cursor;
@@ -38,6 +39,7 @@ private:
     int stepActivChip = 1;
     int countWinPosition = 0;
     bool moveChip = false;
+    bool runMenu = true;
     int level = 0;
     float time = 0;
     float radiusChip = 15;

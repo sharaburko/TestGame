@@ -186,13 +186,18 @@ void GameEngine::end() {
 
 void GameEngine::run(Config& config) {
 
-    int level = menu.run();
+    int level = menu.run(window, mouse);
 
-    initialization(config);
-
-
-
-
+    switch (level) {
+    case 1:
+        initialization(config);
+        break;
+    case 2:
+        initialization(config);
+        break;
+    case 3:
+        window.close();
+    }
 
     while (window.isOpen()) {
         inpute();

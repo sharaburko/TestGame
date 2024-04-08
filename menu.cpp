@@ -1,26 +1,14 @@
 #include "menu.h"
 
-Menu::Menu(const std::string& Title, unsigned modeWidth, unsigned modeHeight) {
-	window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
-}
-
-Menu::Menu() {
-	window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
-}
-
-Menu::Menu(const std::string& Title) {
-	window.create(sf::VideoMode(640, 480), Title, sf::Style::Close);
-}
-
-int Menu::run() {
+int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
 
 	 while (window.isOpen()) {
 		 insert();
-		 update();
-		 draw();
+		 update(window, mouse);
+	  	 draw(window);
 
 		 if (mouse.isButtonPressed(sf::Mouse::Left) && activItem > 0) {
-			 window.close();
+			 window.clear();
 			 return activItem;
 		 }
 
@@ -53,27 +41,17 @@ void Menu::setMenuItem(){
 }
 
 void Menu::insert() {
-
-	while (window.pollEvent(event)) {
-
-		if (event.type == sf::Event::Closed)
-			window.close();
-	}
 	activItem = 0;
-
 	menuItem.clear();
-
 	setMenuItem();
-
-	mousePosition = mouse.getPosition(window);
 }
 
-void Menu::update() {
+void Menu::update(sf::RenderWindow& window, sf::Mouse& mouse) {
 
 	for (int position = 0; auto & item : menuItem) {
 		position++;
 
-		if (sf::IntRect(item.getGlobalBounds()).contains(mousePosition)) {
+		if (sf::IntRect(item.getLocalBounds()).contains(mouse.getPosition(window))) {
 			getSoundSelectItemMenu().play();
 			item.setFillColor(sf::Color::Red);
 			activItem = position;
@@ -84,7 +62,7 @@ void Menu::update() {
 
 }
 
-void Menu::draw() {
+void Menu::draw(sf::RenderWindow& window) {
 	window.clear(sf::Color(sf::Color::Black));
 	window.draw(AssetManager::instance().getBackground("img/back_menu.jpg"));
 
@@ -94,8 +72,13 @@ void Menu::draw() {
 
 	window.display();
 }
-float Menu::positionTextX(sf::Vector2f sizeText) {
+float Menu::positionTextX(sf::Vector2f sizeText, sf::RenderWindow& window) {
 	return ( window.getSize().x / 2  - sizeText.x / 2);
+}
+
+const int& Menu::getActivItem()
+{
+	return activItem;
 }
 
 

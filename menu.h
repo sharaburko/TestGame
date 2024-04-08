@@ -4,10 +4,6 @@
 
 class Menu {
 private:
-	//sf::RenderWindow window;
-	//sf::Event event;
-	//sf::Mouse mouse;
-	//sf::Vector2i mousePosition;
 	int activItem = 0;
 	sf::Sound soundSelectItemMenu;
 
@@ -15,15 +11,16 @@ private:
 	size_t countMenuItem = 3;
 
 	void setMenuItem();
-	void insert();
-	void update();
-	void draw();
-	float positionTextX(sf::Vector2f sizeText);
+
+	float positionTextX(sf::Vector2f sizeText, sf::RenderWindow& window);
+	const int &getActivItem();
 	sf::Sound& getSoundSelectItemMenu();
+
+	void insert();
+	void update(sf::RenderWindow& window, sf::Mouse& mouse);
+	void draw(sf::RenderWindow& window);
 	
 public:
-	Menu(const std::string& Title, unsigned modeWidth, unsigned modeHeight);
-	Menu(const std::string& Title);
-	Menu();
-	int run();
+	int run(sf::RenderWindow& window, sf::Mouse& mouse);
+
 };
