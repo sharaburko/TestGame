@@ -4,10 +4,10 @@
 
 class Menu {
 private:
-	sf::RenderWindow window;
-	sf::Event event;
-	sf::Mouse mouse;
-	sf::Vector2i mousePosition;
+	//sf::RenderWindow window;
+	//sf::Event event;
+	//sf::Mouse mouse;
+	//sf::Vector2i mousePosition;
 	int activItem = 0;
 	sf::Sound soundSelectItemMenu;
 

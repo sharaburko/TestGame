@@ -43,7 +43,8 @@ void ResultsTable::setRecord(const int &level) {
     recordFromFile.open(pathRecordFile, std::ios::in | std::ios::out);
 
     if (recordFromFile.is_open()) {
-        recordFromFile.seekg((level - 1) * sizeof(int));
+        constexpr int level_offset = 1;
+        recordFromFile.seekg((level - level_offset) * sizeof(int));
         recordFromFile.read((char*)&record, sizeof(int));
         recordFromFile.seekg(0, std::ios::beg);
 
@@ -65,9 +66,10 @@ void ResultsTable::setRecord(const int &level) {
 void ResultsTable::setNewRecord(const int &level, const int& NewRecord) {
     std::ofstream recordFromFile;
     recordFromFile.open(pathRecordFile);
+    constexpr int level_offset = 1;
 
     if (recordFromFile.is_open()) {
-        recordFromFile.seekp((level - 1) * sizeof(int));
+        recordFromFile.seekp((level - level_offset) * sizeof(int));
         recordFromFile.write((char*)&NewRecord, sizeof(int));
         recordFromFile.seekp(0, std::ios::beg);    
     }

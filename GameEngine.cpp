@@ -185,7 +185,14 @@ void GameEngine::end() {
 }
 
 void GameEngine::run(Config& config) {
+
+    int level = menu.run();
+
     initialization(config);
+
+
+
+
 
     while (window.isOpen()) {
         inpute();

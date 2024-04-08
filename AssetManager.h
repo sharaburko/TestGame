@@ -19,7 +19,6 @@ public:
     static sf::Music& getSoundWin();
     static sf::SoundBuffer& getBuffer();
 
-    static sf::Text& getText();
     static sf::Font& getFont();
     
    
