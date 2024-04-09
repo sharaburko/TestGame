@@ -14,8 +14,8 @@
 
 class GameEngine {
 public:
-	GameEngine(const int level, unsigned modeWidth, unsigned modeHeight);
-    GameEngine(const int level);
+	GameEngine(std::string& Title, unsigned modeWidth, unsigned modeHeight);
+    GameEngine(std::string& Title);
 	GameEngine();
 
 	void run(std:: vector <Config> & configs);
@@ -64,6 +64,7 @@ private:
     void searchRoadActivPosition();
     void fillingBusyPoints();
 
+    void checkEvent(Config& config);
     void clearData();
     void initialization(Config& config);
     void setChip(Config& config);

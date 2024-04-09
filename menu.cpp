@@ -7,7 +7,10 @@ int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
 		 update(window, mouse);
 	  	 draw(window);
 
-		 if (mouse.isButtonPressed(sf::Mouse::Left) && activItem > 0) {
+		 if (mouse.isButtonPressed(sf::Mouse::Left) && activItem == 3) {
+			 return 0;
+		 }
+		 else if (mouse.isButtonPressed(sf::Mouse::Left) && activItem ) {
 			 window.clear();
 			 return activItem;
 		 }
@@ -24,7 +27,6 @@ void Menu::setMenuItem(sf::RenderWindow & window){
 	menuItem.emplace_back("Level 2", AssetManager::instance().getFont());
 	menuItem.emplace_back("EXIT", AssetManager::instance().getFont());
 
-	//float positionX = 250;
 	float positionY = 50;
 
 	for (auto &item : menuItem) {
@@ -44,6 +46,7 @@ void Menu::insert(sf::RenderWindow& window) {
 	activItem = 0;
 	menuItem.clear();
 	window.setMouseCursorVisible(true);
+	window.setTitle("Menu");
 	setMenuItem(window);
 }
 
@@ -73,15 +76,14 @@ void Menu::draw(sf::RenderWindow& window) {
 
 	window.display();
 }
+
 float Menu::positionTextX(sf::Vector2f sizeText, sf::RenderWindow& window) {
 	return ( window.getSize().x / 2  - sizeText.x / 2);
 }
 
-const int& Menu::getActivItem()
-{
+const int& Menu::getActivItem() {
 	return activItem;
 }
-
 
 sf::Sound& Menu::getSoundSelectItemMenu() {
 	auto &manager = AssetManager::instance();

@@ -38,8 +38,8 @@ void ResultsTable::setResult(int result) {
 }
 
 void ResultsTable::setRecord(const int &level) {
+    record = 0;
     std::fstream recordFromFile;
-
     recordFromFile.open(pathRecordFile, std::ios::in | std::ios::out);
 
     if (recordFromFile.is_open()) {
@@ -57,15 +57,15 @@ void ResultsTable::setRecord(const int &level) {
 
     }
     else {
-        textRecord.setString("record: no result");
+        textRecord.setString("record: no file");
     }
 
     recordFromFile.close();
 }
 
 void ResultsTable::setNewRecord(const int &level, const int& NewRecord) {
-    std::ofstream recordFromFile;
-    recordFromFile.open(pathRecordFile);
+    std::fstream recordFromFile;
+    recordFromFile.open(pathRecordFile, std::ios::app | std::ios::out);
     constexpr int level_offset = 1;
 
     if (recordFromFile.is_open()) {

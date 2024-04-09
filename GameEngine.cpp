@@ -1,18 +1,17 @@
 #include "GameEngine.h"
 #include <SFML/Window/Event.hpp>
 
-GameEngine::GameEngine(const int level, unsigned modeWidth, unsigned modeHeight) {
-    window.create(sf::VideoMode(modeWidth, modeHeight), "Level " + std::to_string(level), sf::Style::Close);
+GameEngine::GameEngine(std::string & Title, unsigned modeWidth, unsigned modeHeight) {
+    window.create(sf::VideoMode(modeWidth, modeHeight), Title, sf::Style::Close);
     this->level = level;
+}
+
+GameEngine::GameEngine(std::string& Title) {
+    window.create(sf::VideoMode(640, 480), Title, sf::Style::Close);
 }
 
 GameEngine::GameEngine() {
     window.create(sf::VideoMode(640, 480), "Sharaburko_Game", sf::Style::Close);
-}
-
-GameEngine::GameEngine(const int level) {
-    window.create(sf::VideoMode(640, 480), "Level " + std::to_string(level), sf::Style::Close);
-    this->level = level;
 }
 
 void GameEngine::inpute() {    
@@ -159,7 +158,6 @@ void GameEngine::end() {
         setText("YOU LOSE!!");
     }
 
-
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         window.clear(sf::Color::Black);
         window.draw(text);
@@ -180,17 +178,15 @@ void GameEngine::run(std::vector <Config>& configs) {
         if (runMenu) {
             level = menu.run(window, mouse);
 
-            switch (level) {
-                case 1:
-                    initialization(configs[level - level_offset]);
-                    break;
-                case 2:
-                    initialization(configs[level - level_offset]);
-                    break;
-                case 3:
-                    window.close();
-                }
+            if (level) {
+                initialization(configs[level - level_offset]);
             }
+            else {
+                window.close();
+                break;
+            }
+
+        }
         else {
             inpute();
             update();
@@ -198,31 +194,9 @@ void GameEngine::run(std::vector <Config>& configs) {
 
             if (countWinPosition == chips.size()) {
                 end();
-            }
+            }           
 
-            while (window.pollEvent(event)) {
-
-                if (event.type == sf::Event::Closed) {
-                    clearData();
-                    runMenu = true;
-                }
-
-
-                if (event.type == sf::Event::KeyPressed) {
-
-                    if (event.key.code == sf::Keyboard::Q) {
-                        clearData();
-                        runMenu = true;
-                    }
-
-                    if (event.key.code == sf::Keyboard::R) {
-                        restart(configs[level - level_offset]);
-                    }
-                }
-
-            }
-
-
+            checkEvent(configs[level - level_offset]);
         }
 
     }
@@ -243,10 +217,11 @@ void GameEngine::initialization(Config& config) {
     setConnectPoints(config);
     setRoadsBackground();
     setChip(config);
+    window.setTitle("Level " + std::to_string(level));
     resultsTable.setRecord(level);
     resultsTable.setPositionTable(window);
     footerTable.setPositionTable(window);
-    footerTable.setText("R - restart    Q - quit");
+    footerTable.setText("R - Restart    Q - Quit");
     updateCursor();
     runMenu = false;
 }
@@ -412,6 +387,30 @@ void GameEngine::setText(const std::string &text, const sf::Color& color, const 
 void GameEngine::updateCursor() {
     window.setMouseCursorVisible(false);
     cursor.setTexture(*AssetManager::getTexture("img/cursor.png"));
+}
+
+void GameEngine::checkEvent(Config& config) {
+    while (window.pollEvent(event)) {
+
+        if (event.type == sf::Event::Closed) {
+            clearData();
+            runMenu = true;
+        }
+
+
+        if (event.type == sf::Event::KeyPressed) {
+
+            if (event.key.code == sf::Keyboard::Q) {
+                clearData();
+                runMenu = true;
+            }
+
+            if (event.key.code == sf::Keyboard::R) {
+                restart(config);
+            }
+        }
+
+    }
 }
 
 void GameEngine::clearData() {
