@@ -1,5 +1,9 @@
 #include "config.h"
 
+Config::Config(std::string const configFilePath) {
+    readConfig(configFilePath);
+}
+
 void Config::readConfig(std::string  const configFilePath) {
     std::ifstream cfg;
     cfg.open(configFilePath);

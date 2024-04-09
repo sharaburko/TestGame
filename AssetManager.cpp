@@ -62,11 +62,6 @@ void AssetManager::setBuffer(const std::string& pathFont) {
     buffer.loadFromFile(pathFont);
 }
 
-sf::Text& AssetManager::getText() {
-    auto& manager = AssetManager::instance();
-    return manager.text;
-}
-
 sf::Font& AssetManager::getFont()
 {
     auto& manager = AssetManager::instance();

@@ -10,13 +10,13 @@ private:
 	std::vector <sf::Text> menuItem;
 	size_t countMenuItem = 3;
 
-	void setMenuItem();
+	void setMenuItem(sf::RenderWindow& window);
 
 	float positionTextX(sf::Vector2f sizeText, sf::RenderWindow& window);
 	const int &getActivItem();
 	sf::Sound& getSoundSelectItemMenu();
 
-	void insert();
+	void insert(sf::RenderWindow& window);
 	void update(sf::RenderWindow& window, sf::Mouse& mouse);
 	void draw(sf::RenderWindow& window);
 	

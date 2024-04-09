@@ -22,22 +22,6 @@ void GameEngine::inpute() {
 
     countWinPosition = 0;
 
-
-
-    while (window.pollEvent(event)) {
-
-        if (event.type == sf::Event::Closed)
-            window.close();
-
-        if (event.type == sf::Event::KeyPressed) {
-        
-            if (event.key.code == sf::Keyboard::Q) {
-                window.close();
-            }
-        }
-
-    }
-
     fillingBusyPoints();
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !moveChip) {
@@ -175,42 +159,70 @@ void GameEngine::end() {
         setText("YOU LOSE!!");
     }
 
+
     while (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         window.clear(sf::Color::Black);
         window.draw(text);
+        cursor.setPosition(sf::Vector2f(mouse.getPosition(window)));
+        window.draw(cursor);
         window.display();
     }
 
-    window.close();
+    clearData();
+    runMenu = true;
 }
 
-void GameEngine::run(Config& config) {
-
-    int level = menu.run(window, mouse);
-
-    switch (level) {
-    case 1:
-        initialization(config);
-        break;
-    case 2:
-        initialization(config);
-        break;
-    case 3:
-        window.close();
-    }
+void GameEngine::run(std::vector <Config>& configs) {
+    constexpr auto level_offset = 1;
 
     while (window.isOpen()) {
-        inpute();
-        update();
-        draw();
 
-        if (countWinPosition == chips.size()) {
-            end();
-            break;
-        }
+        if (runMenu) {
+            level = menu.run(window, mouse);
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-            restart(config);
+            switch (level) {
+                case 1:
+                    initialization(configs[level - level_offset]);
+                    break;
+                case 2:
+                    initialization(configs[level - level_offset]);
+                    break;
+                case 3:
+                    window.close();
+                }
+            }
+        else {
+            inpute();
+            update();
+            draw();
+
+            if (countWinPosition == chips.size()) {
+                end();
+            }
+
+            while (window.pollEvent(event)) {
+
+                if (event.type == sf::Event::Closed) {
+                    clearData();
+                    runMenu = true;
+                }
+
+
+                if (event.type == sf::Event::KeyPressed) {
+
+                    if (event.key.code == sf::Keyboard::Q) {
+                        clearData();
+                        runMenu = true;
+                    }
+
+                    if (event.key.code == sf::Keyboard::R) {
+                        restart(configs[level - level_offset]);
+                    }
+                }
+
+            }
+
+
         }
 
     }
@@ -234,8 +246,9 @@ void GameEngine::initialization(Config& config) {
     resultsTable.setRecord(level);
     resultsTable.setPositionTable(window);
     footerTable.setPositionTable(window);
-    footerTable.setText("R - restart      Q - exit");
+    footerTable.setText("R - restart    Q - quit");
     updateCursor();
+    runMenu = false;
 }
 
 int GameEngine::searchActivPosition() {
@@ -401,9 +414,13 @@ void GameEngine::updateCursor() {
     cursor.setTexture(*AssetManager::getTexture("img/cursor.png"));
 }
 
-void GameEngine::restart(Config& config) {
+void GameEngine::clearData() {
+    roadsBackground.clear();
+    square.clear();
+    positionPoints.clear();
+    connectPoints.clear();
     chips.clear();
-    setChip(config);
+
     numberOfMoves = 0;
     activPosition = 0;
     activChip = 0;
@@ -412,4 +429,10 @@ void GameEngine::restart(Config& config) {
     moveChip = false;
     time = 0;
     setNumberOfMoves(numberOfMoves);
+}
+
+void GameEngine::restart(Config& config) {
+    clearData();
+    initialization(config);
+
 }

@@ -34,6 +34,8 @@ class Config {
     };
 
 public:
+    Config() {};
+    Config(std::string  const configFilePath);
     void readConfig(std::string const configFilePath);    
     int getPointsCount() const {return pointsCount;}
     int getChipCount() const { return chipCount; }

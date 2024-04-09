@@ -100,7 +100,6 @@ sf::Text& ResultsTable::getResult() {
 FooterTable::FooterTable() {
     setFormatText(text);
     text.setPosition(5, 300);
-
 }
 
 void FooterTable::setPositionTable(sf::RenderWindow& window) {

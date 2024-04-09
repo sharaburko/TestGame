@@ -18,7 +18,7 @@ public:
     GameEngine(const int level);
 	GameEngine();
 
-	void run(Config& config);
+	void run(std:: vector <Config> & configs);
 private:
     sf::RenderWindow window;
     sf::Event event;
@@ -64,6 +64,7 @@ private:
     void searchRoadActivPosition();
     void fillingBusyPoints();
 
+    void clearData();
     void initialization(Config& config);
     void setChip(Config& config);
     void setSquare(Config& config);

@@ -3,7 +3,7 @@
 int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
 
 	 while (window.isOpen()) {
-		 insert();
+		 insert(window);
 		 update(window, mouse);
 	  	 draw(window);
 
@@ -15,7 +15,7 @@ int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
 	 }
 }
 
-void Menu::setMenuItem(){
+void Menu::setMenuItem(sf::RenderWindow & window){
 	AssetManager::instance().setFont("font/conthrax-sb.ttf");
 
 	menuItem.reserve(countMenuItem);
@@ -30,7 +30,7 @@ void Menu::setMenuItem(){
 	for (auto &item : menuItem) {
 		item.setCharacterSize(50);
 
-		float positionX = positionTextX(item.getGlobalBounds().getSize());
+		float positionX = positionTextX(item.getGlobalBounds().getSize(), window);
 
 		item.setPosition(positionX, positionY);
 		item.setFillColor(sf::Color::Black);
@@ -40,10 +40,11 @@ void Menu::setMenuItem(){
 	}
 }
 
-void Menu::insert() {
+void Menu::insert(sf::RenderWindow& window) {
 	activItem = 0;
 	menuItem.clear();
-	setMenuItem();
+	window.setMouseCursorVisible(true);
+	setMenuItem(window);
 }
 
 void Menu::update(sf::RenderWindow& window, sf::Mouse& mouse) {
@@ -51,7 +52,7 @@ void Menu::update(sf::RenderWindow& window, sf::Mouse& mouse) {
 	for (int position = 0; auto & item : menuItem) {
 		position++;
 
-		if (sf::IntRect(item.getLocalBounds()).contains(mouse.getPosition(window))) {
+		if (sf::IntRect(item.getGlobalBounds()).contains(mouse.getPosition(window))) {
 			getSoundSelectItemMenu().play();
 			item.setFillColor(sf::Color::Red);
 			activItem = position;
