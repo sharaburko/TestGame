@@ -177,7 +177,7 @@ void GameEngine::run(std::vector <Config>& configs) {
     while (window.isOpen()) {
 
         if (IsMenuRunning) {
-            level = menu.run(window, mouse);                     
+            level = menu.run(window, mouse, event);                     
 
             //level = 0 - exit
             if (level) {

@@ -7,6 +7,7 @@ class Menu {
 private:
 	int activItem = 0;
 	sf::Sound soundSelectItemMenu;
+	sf::Event event;
 
 	std::vector <sf::Text> menuItem;
 	size_t countMenuItem = 3;
@@ -17,11 +18,11 @@ private:
 	const int &getActivItem();
 	sf::Sound& getSoundSelectItemMenu();
 
-	void insert(sf::RenderWindow& window);
+	void insert(sf::RenderWindow& window, sf::Event event);
 	void update(sf::RenderWindow& window, sf::Mouse& mouse);
 	void draw(sf::RenderWindow& window);
 	void initializingMenu(sf::RenderWindow& window);
 	
 public:
-	int run(sf::RenderWindow& window, sf::Mouse& mouse);
+	int run(sf::RenderWindow& window, sf::Mouse& mouse, sf::Event event);
 };

@@ -13,7 +13,6 @@
 #include "Table.h"
 
 class GameEngine {
-    friend Menu;
 public:
 	GameEngine(std::string& Title, unsigned modeWidth, unsigned modeHeight);
     GameEngine(std::string& Title);

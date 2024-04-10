@@ -1,15 +1,15 @@
 #include "menu.h"
 
-int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
+int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse, sf::Event event) {
 	initializingMenu(window);
 
-	 while (true) {
-		 insert(window);
+	 while (window.isOpen()) {
+		 insert(window, event);
 		 update(window, mouse);
 	  	 draw(window);
 
 		 if (mouse.isButtonPressed(sf::Mouse::Left) && activItem == 3) {
-			 return 0;
+			 window.close();
 		 }
 		 else if (mouse.isButtonPressed(sf::Mouse::Left) && activItem ) {
 			 window.clear();
@@ -17,6 +17,8 @@ int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
 		 }
 
 	 }
+
+	 return 0;
 }
 
 void Menu::setMenuItem(sf::RenderWindow & window){
@@ -43,7 +45,15 @@ void Menu::setMenuItem(sf::RenderWindow & window){
 	}
 }
 
-void Menu::insert(sf::RenderWindow& window) {
+void Menu::insert(sf::RenderWindow& window, sf::Event event) {
+
+	while (window.pollEvent(event)) {
+
+		if (event.type == sf::Event::Closed) {			
+			window.close();
+		}
+	}
+
 	activItem = 0;
 	menuItem.clear();
 
