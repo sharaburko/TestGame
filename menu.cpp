@@ -1,8 +1,9 @@
 #include "menu.h"
 
 int Menu::run(sf::RenderWindow& window, sf::Mouse& mouse) {
+	initializingMenu(window);
 
-	 while (window.isOpen()) {
+	 while (true) {
 		 insert(window);
 		 update(window, mouse);
 	  	 draw(window);
@@ -45,8 +46,7 @@ void Menu::setMenuItem(sf::RenderWindow & window){
 void Menu::insert(sf::RenderWindow& window) {
 	activItem = 0;
 	menuItem.clear();
-	window.setMouseCursorVisible(true);
-	window.setTitle("Menu");
+
 	setMenuItem(window);
 }
 
@@ -75,6 +75,11 @@ void Menu::draw(sf::RenderWindow& window) {
 	}
 
 	window.display();
+}
+
+void Menu::initializingMenu(sf::RenderWindow& window) {
+	window.setMouseCursorVisible(true);
+	window.setTitle("Menu");
 }
 
 float Menu::positionTextX(sf::Vector2f sizeText, sf::RenderWindow& window) {

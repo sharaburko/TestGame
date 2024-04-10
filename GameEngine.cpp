@@ -167,17 +167,19 @@ void GameEngine::end() {
     }
 
     clearData();
-    runMenu = true;
+    IsMenuRunning = true;
 }
 
 void GameEngine::run(std::vector <Config>& configs) {
     constexpr auto level_offset = 1;
 
+
     while (window.isOpen()) {
 
-        if (runMenu) {
-            level = menu.run(window, mouse);
+        if (IsMenuRunning) {
+            level = menu.run(window, mouse);                     
 
+            //level = 0 - exit
             if (level) {
                 initialization(configs[level - level_offset]);
             }
@@ -223,7 +225,7 @@ void GameEngine::initialization(Config& config) {
     footerTable.setPositionTable(window);
     footerTable.setText("R - Restart    Q - Quit");
     updateCursor();
-    runMenu = false;
+    IsMenuRunning = false;
 }
 
 int GameEngine::searchActivPosition() {
@@ -394,7 +396,7 @@ void GameEngine::checkEvent(Config& config) {
 
         if (event.type == sf::Event::Closed) {
             clearData();
-            runMenu = true;
+            IsMenuRunning = true;
         }
 
 
@@ -402,7 +404,7 @@ void GameEngine::checkEvent(Config& config) {
 
             if (event.key.code == sf::Keyboard::Q) {
                 clearData();
-                runMenu = true;
+                IsMenuRunning = true;
             }
 
             if (event.key.code == sf::Keyboard::R) {

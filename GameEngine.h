@@ -13,6 +13,7 @@
 #include "Table.h"
 
 class GameEngine {
+    friend Menu;
 public:
 	GameEngine(std::string& Title, unsigned modeWidth, unsigned modeHeight);
     GameEngine(std::string& Title);
@@ -39,7 +40,7 @@ private:
     int stepActivChip = 1;
     int countWinPosition = 0;
     bool moveChip = false;
-    bool runMenu = true;
+    bool IsMenuRunning = true;
     int level = 0;
     float time = 0;
     float radiusChip = 15;
