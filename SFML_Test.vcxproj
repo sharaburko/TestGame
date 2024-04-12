@@ -24,6 +24,7 @@
     <ProjectGuid>{22a54461-5466-4205-8c45-fbf657387870}</ProjectGuid>
     <RootNamespace>SFMLTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Chip</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -123,7 +124,8 @@
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)openal32.dll  $(OutputPath)openal32.dll  /i
+      <Command>xcopy $(ProjectDir)openal32.dll  $(OutputPath)  /y /i
+xcopy $(ProjectDir).r  $(OutputPath)  /y /i
 xcopy $(ProjectDir)cfg\ $(OutputPath)cfg\ /y /c /i
 xcopy $(ProjectDir)img\ $(OutputPath)img\ /y /c /i
 xcopy $(ProjectDir)music\ $(OutputPath)music\ /y /c /i
