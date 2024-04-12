@@ -74,7 +74,7 @@ private:
     void setRoadsBackground();
     void setNumberOfMoves(int& result);
     void updateCursor();
-    void setText(const std::string &text, const sf::Color& color = sf::Color::White, const std::string pathText = "arial.ttf");
+    void setText(const std::string &text, const sf::Color& color = sf::Color::White, const std::string pathText = "font/arial.ttf");
 
     sf::Sound& getSoundMoveChip();
     const std::vector<std::vector <int>>& getConnectPoints() { return connectPoints; }

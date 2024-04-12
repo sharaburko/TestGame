@@ -11,5 +11,3 @@ namespace userColor {
 	inline sf::Color Aqua(0, 255, 255);
 	inline sf::Color Olive(128, 128, 0);
 }
-
-

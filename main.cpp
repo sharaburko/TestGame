@@ -10,8 +10,8 @@ int main() {
     std::vector <Config> configs;
     configs.reserve(CountOfLevels);
 
-    configs.emplace_back("config.txt");
-    configs.emplace_back("config1.txt");
+    configs.emplace_back("cfg/config.txt");
+    configs.emplace_back("cfg/config1.txt");
 
     GameEngine gameEngine;
     gameEngine.run(configs);

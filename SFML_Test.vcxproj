@@ -97,6 +97,10 @@
       <AdditionalLibraryDirectories>.\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -118,6 +122,13 @@
       <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;freetype.lib;sfml-audio-s.lib;winmm.lib;gdi32.lib.;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;openal32.lib;opengl32.lib;flac.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)openal32.dll  $(OutputPath)openal32.dll  /i
+xcopy $(ProjectDir)cfg\ $(OutputPath)cfg\ /y /c /i
+xcopy $(ProjectDir)img\ $(OutputPath)img\ /y /c /i
+xcopy $(ProjectDir)music\ $(OutputPath)music\ /y /c /i
+xcopy $(ProjectDir)font\ $(OutputPath)font\ /y /c  /i</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -173,9 +184,16 @@
     <ClInclude Include="move.h" />
     <ClInclude Include="MovingPlace.h" />
     <ClInclude Include="PositionPoints.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RoadBackground.h" />
     <ClInclude Include="Square.h" />
     <ClInclude Include="Table.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SFML_Test.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="img\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
